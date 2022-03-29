@@ -6,7 +6,10 @@ import java.util.List;
 import fr.ulille.but.sae2_02.graphes.CalculAffectation;
 import fr.ulille.but.sae2_02.graphes.GrapheNonOrienteValue;
 
-public class Salut {
+/**
+ * Classe pour tester une affectation avec un calcul utilisant les moyennes
+ */
+public class MoyenneCalcul {
     public static void main(String[] args) {
         // étudiants à aider (partieN)
         String[][] partieN = new String[][]{{"Jean","8.63","1"},{"Harry","7.97","1"},{"Paul","10.26","1"},{"Timothé","9.81","1"}};
