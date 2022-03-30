@@ -35,10 +35,10 @@ public class MoyenneCalcul {
         List<String> nomsF = new ArrayList<>();
 
         for (Etudiant etudiant : ok.listEtuN) {
-            nomsN.add(etudiant.nom);
+            nomsN.add(etudiant.name);
         }
         for (Etudiant etudiant : ok.listEtuF) {
-            nomsF.add(etudiant.nom);
+            nomsF.add(etudiant.name);
         }
 
         // nouveau graph
@@ -56,10 +56,10 @@ public class MoyenneCalcul {
         double calculN, calculF, total;
         for (Etudiant etudiantN : ok.listEtuN) {
             for (Etudiant etudiantF : ok.listEtuF) {
-                calculN = etudiantN.moyenne * etudiantN.niveau;
-                calculF = etudiantF.moyenne * etudiantF.niveau;
+                calculN = etudiantN.average * etudiantN.level;
+                calculF = etudiantF.average * etudiantF.level;
                 total = calculF - calculN;
-                graph.ajouterArete(etudiantN.nom, etudiantF.nom, total);
+                graph.ajouterArete(etudiantN.name, etudiantF.name, total);
             }
         }
 

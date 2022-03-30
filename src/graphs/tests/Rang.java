@@ -56,11 +56,11 @@ public class Rang {
         // on fait aussi une liste de prénom envie de mourir
         List<String> nomsN = new ArrayList<>();
         for (Etudiant etudiant : ok.listEtuN) {
-            nomsN.add(etudiant.nom);
+            nomsN.add(etudiant.name);
         }
         List<String> nomsF = new ArrayList<>();
         for (Etudiant etudiant : ok.listEtuF) {
-            nomsF.add(etudiant.nom);
+            nomsF.add(etudiant.name);
         }
 
         // on affiche la liste de base, on la sort, puis on la réaffiche
@@ -88,7 +88,7 @@ public class Rang {
             Etudiant etudiantN = ok.listEtuN.get(i);
             for (int j = 0; j < ok.listEtuF.size(); j++) {
                 Etudiant etudiantF = ok.listEtuF.get(j);
-                graph.ajouterArete(etudiantN.nom, etudiantF.nom, Math.abs(i - j));
+                graph.ajouterArete(etudiantN.name, etudiantF.name, Math.abs(i - j));
             }
         }
 

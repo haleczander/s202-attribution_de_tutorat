@@ -1,20 +1,20 @@
 package graphs.tests;
 
 public class Etudiant {
-    public String nom;
-    public double moyenne;
-    public int niveau;
+    public String name;
+    public double average;
+    public int level;
 
     /**
      * Instancie un étudiant
-     * @param nom
-     * @param moyenne
-     * @param niveau
+     * @param name
+     * @param average
+     * @param level
      */
-    public Etudiant(String nom, double moyenne, int niveau) {
-        this.nom = nom;
-        this.moyenne = moyenne;
-        this.niveau = niveau;
+    public Etudiant(String name, double average, int level) {
+        this.name = name;
+        this.average = average;
+        this.level = level;
     }
 
     /**
@@ -24,14 +24,14 @@ public class Etudiant {
      * @return 1 si l'étudiant comparant est meilleur, -1 si l'étudiant comparé est meilleur, 0 sinon.
      */
     public int compareToF(Etudiant etudiant) {
-        if (this.niveau > etudiant.niveau)
+        if (this.level > etudiant.level)
             return -1;
-        else if (this.niveau < etudiant.niveau)
+        else if (this.level < etudiant.level)
             return 1;
         else {
-            if (this.moyenne > etudiant.moyenne)
+            if (this.average > etudiant.average)
                 return -1;
-            else if (this.moyenne < etudiant.moyenne)
+            else if (this.average < etudiant.average)
                 return 1;
             else
                 return 0;
@@ -45,14 +45,14 @@ public class Etudiant {
      * @return 1 si l'étudiant comparé est meilleur, -1 si l'étudiant comparant est meilleur, 0 sinon.
      */
     public int compareToN(Etudiant etudiant) {
-        if (this.niveau > etudiant.niveau)
+        if (this.level > etudiant.level)
             return 1;
-        else if (this.niveau < etudiant.niveau)
+        else if (this.level < etudiant.level)
             return -1;
         else {
-            if (this.moyenne > etudiant.moyenne)
+            if (this.average > etudiant.average)
                 return 1;
-            else if (this.moyenne < etudiant.moyenne)
+            else if (this.average < etudiant.average)
                 return -1;
             else
                 return 0;
@@ -63,7 +63,7 @@ public class Etudiant {
 
     @Override
     public String toString() {
-        return "Etudiant [moyenne=" + moyenne + ", niveau=" + niveau + ", nom=" + nom + "]";
+        return "Etudiant [moyenne=" + average + ", niveau=" + level + ", nom=" + name + "]";
     }
     
     
