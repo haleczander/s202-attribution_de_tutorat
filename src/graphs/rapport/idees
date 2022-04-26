@@ -1,0 +1,11 @@
+alors comment on fait : 
+- formule du poids d'un tuteur : 1/annee + 1/note
+- formule du poids d'un tutoré : note/20
+- si y'a le même nombre on fait juste une affectation normale entre les étudiants
+- on passe sur la liste des tuteurs et s'ils peuvent en prendre plusieurs (avec un attribue genre nombreDeTutoré) on multiplie l'étudiant
+  en divisant son "poids" pour éviter de lui foutre des gens de ouf!
+- s'il y a encore trop d'étudiants, on trie la liste et les derniers étudiants sont virés (liste d'attente pour moins de violence)
+  dernier étudiants = plus fort pour les tutorés, plus faible pour les tuteurs (ofc)
+- voilà.
+
+AU SECOURS BORDEL.

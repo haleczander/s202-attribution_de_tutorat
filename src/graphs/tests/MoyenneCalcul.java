@@ -17,16 +17,16 @@ public class MoyenneCalcul {
             { "Paul", "10.26", "1" },
             { "Timothé", "9.81", "1" } };
 
-    private static String[][] testN = new String[][] { { "Claude", "Allard", "9.8", "1" },
-            { "Madeleine", "Barre", "6.9", "1" },
-            { "Sabine", "Besnard", "12.7", "1" },
-            { "Hugues", "Bigot", "0.2", "1" },
-            { "Lucas", "Bouchet", "17.3", "1" },
-            { "Alexandria", "Boulay", "12.5", "1" },
-            { "Anouk", "Brun", "10.5", "1" },
-            { "Hortense", "Chauveau", "9.1", "1" },
-            { "David", "Colin", "7.0", "1" },
-            { "Amélie", "Dijoux", "9.7", "1" } };
+    // private static String[][] testN = new String[][] { { "Claude", "Allard", "9.8", "1" },
+    //         { "Madeleine", "Barre", "6.9", "1" },
+    //         { "Sabine", "Besnard", "12.7", "1" },
+    //         { "Hugues", "Bigot", "0.2", "1" },
+    //         { "Lucas", "Bouchet", "17.3", "1" },
+    //         { "Alexandria", "Boulay", "12.5", "1" },
+    //         { "Anouk", "Brun", "10.5", "1" },
+    //         { "Hortense", "Chauveau", "9.1", "1" },
+    //         { "David", "Colin", "7.0", "1" },
+    //         { "Amélie", "Dijoux", "9.7", "1" } };
 
     // tableau étudiants tutorat jsp quoi
     private static String[][] partieF = new String[][] { { "Antoine", "13.64", "3" },
@@ -34,16 +34,16 @@ public class MoyenneCalcul {
             { "Florence", "16.39", "2" },
             { "Camille", "14.54", "2" } };
 
-    private static String[][] testF = new String[][] { { "Vincent", "Muller", "9.3", "2" },
-            { "Jacqueline", "Pons", "13.2", "2" },
-            { "Pénélope", "Renault", "13.2", "2" },
-            { "Nicolas", "Roche", "13.1", "2" },
-            { "Juliette", "Traore", "9.8", "2" },
-            { "Sophie", "Vallee", "15.8", "2" },
-            { "Édouard", "Auger", "13.9", "3" },
-            { "Olivier", "Gallet", "11.3", "3" },
-            { "Inès", "Gautier", "9.3", "3" },
-            { "Franck", "Hebert", "11.9", "3" } };
+    // private static String[][] testF = new String[][] { { "Vincent", "Muller", "9.3", "2" },
+    //         { "Jacqueline", "Pons", "13.2", "2" },
+    //         { "Pénélope", "Renault", "13.2", "2" },
+    //         { "Nicolas", "Roche", "13.1", "2" },
+    //         { "Juliette", "Traore", "9.8", "2" },
+    //         { "Sophie", "Vallee", "15.8", "2" },
+    //         { "Édouard", "Auger", "13.9", "3" },
+    //         { "Olivier", "Gallet", "11.3", "3" },
+    //         { "Inès", "Gautier", "9.3", "3" },
+    //         { "Franck", "Hebert", "11.9", "3" } };
 
     // listes
     List<Etudiant> listEtuN = new ArrayList<>();
@@ -116,14 +116,18 @@ public class MoyenneCalcul {
     // Arete(Jean, Romain), Arete(Timothé, Camille), Arete(Paul, Antoine)]
     // coeffAvg 0.75 et coeffLevel 1: affectation: [Arete(Jean, Antoine),
     // Arete(Paul, Camille), Arete(Harry, Romain), Arete(Timothé, Florence)]
-    
-    // idées pour la suite : faire prévaloir les étudiants qui ont des moyennes critiques
+
+    // idées pour la suite : faire prévaloir les étudiants qui ont des moyennes
+    // critiques
     // pour les étudiants tutorés
     // -> moyenne < 10 => moyenne compte 0.75 fois
     // -> moyenne < 8 => moyenne compte 0.5 fois (donc 2 fois plus basse)
 
-    // pour les tuteurs : garder cette idée de coefficient pour la moyenne et pour l'année
-    // je pensais peut être à faire genre comme si l'année était une moyenne sur 20 (ou moyenne sur 3)
-    // et on fait la moyenne des 2 moyennes pour optenir une moyenne, puis on pourrait soustraire
+    // pour les tuteurs : garder cette idée de coefficient pour la moyenne et pour
+    // l'année
+    // je pensais peut être à faire genre comme si l'année était une moyenne sur 20
+    // (ou moyenne sur 3)
+    // et on fait la moyenne des 2 moyennes pour optenir une moyenne, puis on
+    // pourrait soustraire
     // ce résultat à la moyenne d'un étudiant tutoré.
 }
