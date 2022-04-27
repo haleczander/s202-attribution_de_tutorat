@@ -63,7 +63,7 @@ public class Etudiant {
 
     @Override
     public String toString() {
-        return "Etudiant [moyenne=" + average + ", niveau=" + level + ", nom=" + name + "]";
+        return "Etudiant [nom=" + name + ", moyenne=" + average + ", niveau=" + level + "]";
     }
     
     

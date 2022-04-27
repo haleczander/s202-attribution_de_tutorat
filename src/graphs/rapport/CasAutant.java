@@ -6,7 +6,7 @@ import java.util.List;
 import fr.ulille.but.sae2_02.graphes.CalculAffectation;
 import fr.ulille.but.sae2_02.graphes.GrapheNonOrienteValue;
 
-public class CasSimple {
+public class CasAutant {
     // liste des étudiants tutorés : extrait des données pour tester
     private static String[][] testN = new String[][] { { "Claude", "Allard", "9.8", "1" },
             { "Madeleine", "Barre", "6.9", "1" },
@@ -38,7 +38,7 @@ public class CasSimple {
     public static void main(String[] args) {
         // on fait l'objet parce que c'est moins chiant mais on peut tout faire dans le main
         // je le referais plus tard avec tout dans le main mais là je voulais pondre un truc rapidement
-        CasSimple cas = new CasSimple();
+        CasAutant cas = new CasAutant();
 
         // je transforme le tableau de strings en étudiants et je les fous dans la liste
         for (String[] strings : testN) {
