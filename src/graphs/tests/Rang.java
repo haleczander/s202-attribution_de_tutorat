@@ -2,10 +2,11 @@ package graphs.tests;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.lang.Math;
 
 import fr.ulille.but.sae2_02.graphes.CalculAffectation;
 import fr.ulille.but.sae2_02.graphes.GrapheNonOrienteValue;
+import graphs.rapport.Etudiant;
+import graphs.rapport.Tutore;
 
 /**
  * Classe pour tester un affectation en triant les étudiants préalablement en fonction de leur rang
@@ -23,22 +24,22 @@ public class Rang {
     List<Etudiant> listEtuN = new ArrayList<>();
     List<Etudiant> listEtuF = new ArrayList<>();
 
-    /**
-     * Trie les étudiants dans l'ordre croissant de leur réussite
-     * @see graphs.tests.Etudiant#compareToN(Etudiant)
-     */
-    public void sortListN() {
-        this.listEtuN.sort((e1, e2) -> e1.compareToN(e2));
-    }
+    // /**
+    //  * Trie les étudiants dans l'ordre croissant de leur réussite
+    //  * @see graphs.tests.Etudiant#compareToN(Etudiant)
+    //  */
+    // public void sortListN() {
+    //     this.listEtuN.sort((e1, e2) -> e1.compareToN(e2));
+    // }
 
-    /**
-     * Trie les étudiants dans l'ordre décroissant de leur réussite
-     * @see graphs.tests.Etudiant#compareToF(Etudiant)
-     */
-    // compare les étudiants aideurs
-    public void sortListF() {
-        this.listEtuF.sort((e1, e2) -> e1.compareToF(e2));
-    }
+    // /**
+    //  * Trie les étudiants dans l'ordre décroissant de leur réussite
+    //  * @see graphs.tests.Etudiant#compareToF(Etudiant)
+    //  */
+    // // compare les étudiants aideurs
+    // public void sortListF() {
+    //     this.listEtuF.sort((e1, e2) -> e1.compareToF(e2));
+    // }
 
     public static void main(String[] args) {
         // la classe avec les listes
@@ -46,11 +47,11 @@ public class Rang {
 
         // on fout les étudiants dans les listes
         for (String[] strings : partieN) {
-            ok.listEtuN.add(new Etudiant(strings[0], Double.parseDouble(strings[1]), Integer.parseInt(strings[2])));
+            ok.listEtuN.add(new Tutore(strings[0], Double.parseDouble(strings[1]), Integer.parseInt(strings[2])));
         }
 
         for (String[] strings : partieF) {
-            ok.listEtuF.add(new Etudiant(strings[0], Double.parseDouble(strings[1]), Integer.parseInt(strings[2])));
+            ok.listEtuF.add(new Tutore(strings[0], Double.parseDouble(strings[1]), Integer.parseInt(strings[2])));
         }
 
         // on fait aussi une liste de prénom envie de mourir
@@ -65,12 +66,12 @@ public class Rang {
 
         // on affiche la liste de base, on la sort, puis on la réaffiche
         System.out.println("OG: " + ok.listEtuN.toString());
-        ok.sortListN();
+        // ok.sortListN();
         System.out.println("Sorted: " + ok.listEtuN.toString() + "\n");
 
         // la même mais pour les étudiants aideurs :)
         System.out.println("OG: " + ok.listEtuF.toString());
-        ok.sortListF();
+        // ok.sortListF();
         System.out.println("Sorted: " + ok.listEtuF.toString() + "\n");
 
         // nouveau graph

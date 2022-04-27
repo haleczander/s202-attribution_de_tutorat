@@ -2,8 +2,9 @@ package graphs.tests;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.lang.Math;
 
+import graphs.rapport.Etudiant;
+import graphs.rapport.Tutore;
 import fr.ulille.but.sae2_02.graphes.CalculAffectation;
 import fr.ulille.but.sae2_02.graphes.GrapheNonOrienteValue;
 
@@ -57,10 +58,10 @@ public class MoyenneCalcul {
         MoyenneCalcul ok = new MoyenneCalcul();
 
         for (String[] strings : partieN) {
-            ok.listEtuN.add(new Etudiant(strings[0], Double.parseDouble(strings[1]), Integer.parseInt(strings[2])));
+            ok.listEtuN.add(new Tutore(strings[0], Double.parseDouble(strings[1]), Integer.parseInt(strings[2])));
         }
         for (String[] strings : partieF) {
-            ok.listEtuF.add(new Etudiant(strings[0], Double.parseDouble(strings[1]), Integer.parseInt(strings[2])));
+            ok.listEtuF.add(new Tutore(strings[0], Double.parseDouble(strings[1]), Integer.parseInt(strings[2])));
         }
 
         // liste de noms parce que c'est de la merde
@@ -86,7 +87,9 @@ public class MoyenneCalcul {
         }
 
         // on fait un savant calcul pour faire les arêtes
-        double calculN, calculF, total;
+        double calculN;
+        double calculF;
+        double total;
         for (Etudiant etudiantN : ok.listEtuN) {
             for (Etudiant etudiantF : ok.listEtuF) {
                 calculN = coeffAvgN * etudiantN.average;
