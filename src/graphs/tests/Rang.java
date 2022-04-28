@@ -5,8 +5,8 @@ import java.util.List;
 
 import fr.ulille.but.sae2_02.graphes.CalculAffectation;
 import fr.ulille.but.sae2_02.graphes.GrapheNonOrienteValue;
-import graphs.rapport.Etudiant;
-import graphs.rapport.Tutore;
+import graphs.rapport.Student;
+import graphs.rapport.Tutored;
 
 /**
  * Classe pour tester un affectation en triant les étudiants préalablement en fonction de leur rang
@@ -21,8 +21,8 @@ public class Rang {
             { "Florence", "16.39", "2" }, { "Camille", "14.54", "2" } };
 
     // attributes
-    List<Etudiant> listEtuN = new ArrayList<>();
-    List<Etudiant> listEtuF = new ArrayList<>();
+    List<Student> listEtuN = new ArrayList<>();
+    List<Student> listEtuF = new ArrayList<>();
 
     // /**
     //  * Trie les étudiants dans l'ordre croissant de leur réussite
@@ -47,20 +47,20 @@ public class Rang {
 
         // on fout les étudiants dans les listes
         for (String[] strings : partieN) {
-            ok.listEtuN.add(new Tutore(strings[0], Double.parseDouble(strings[1]), Integer.parseInt(strings[2])));
+            ok.listEtuN.add(new Tutored(strings[0], Double.parseDouble(strings[1]), Integer.parseInt(strings[2])));
         }
 
         for (String[] strings : partieF) {
-            ok.listEtuF.add(new Tutore(strings[0], Double.parseDouble(strings[1]), Integer.parseInt(strings[2])));
+            ok.listEtuF.add(new Tutored(strings[0], Double.parseDouble(strings[1]), Integer.parseInt(strings[2])));
         }
 
         // on fait aussi une liste de prénom envie de mourir
         List<String> nomsN = new ArrayList<>();
-        for (Etudiant etudiant : ok.listEtuN) {
+        for (Student etudiant : ok.listEtuN) {
             nomsN.add(etudiant.name);
         }
         List<String> nomsF = new ArrayList<>();
-        for (Etudiant etudiant : ok.listEtuF) {
+        for (Student etudiant : ok.listEtuF) {
             nomsF.add(etudiant.name);
         }
 
@@ -86,9 +86,9 @@ public class Rang {
 
         // on fait les arêtes : poids = rangN - rangF
         for (int i = 0; i < ok.listEtuN.size(); i++) {
-            Etudiant etudiantN = ok.listEtuN.get(i);
+            Student etudiantN = ok.listEtuN.get(i);
             for (int j = 0; j < ok.listEtuF.size(); j++) {
-                Etudiant etudiantF = ok.listEtuF.get(j);
+                Student etudiantF = ok.listEtuF.get(j);
                 graph.ajouterArete(etudiantN.name, etudiantF.name, Math.abs(i - j));
             }
         }

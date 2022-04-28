@@ -3,8 +3,8 @@ package graphs.tests;
 import java.util.ArrayList;
 import java.util.List;
 
-import graphs.rapport.Etudiant;
-import graphs.rapport.Tutore;
+import graphs.rapport.Student;
+import graphs.rapport.Tutored;
 import fr.ulille.but.sae2_02.graphes.CalculAffectation;
 import fr.ulille.but.sae2_02.graphes.GrapheNonOrienteValue;
 
@@ -47,8 +47,8 @@ public class MoyenneCalcul {
     //         { "Franck", "Hebert", "11.9", "3" } };
 
     // listes
-    List<Etudiant> listEtuN = new ArrayList<>();
-    List<Etudiant> listEtuF = new ArrayList<>();
+    List<Student> listEtuN = new ArrayList<>();
+    List<Student> listEtuF = new ArrayList<>();
 
     public static double coeffAvg = 1;
     public static double coeffLevel = 1;
@@ -58,20 +58,20 @@ public class MoyenneCalcul {
         MoyenneCalcul ok = new MoyenneCalcul();
 
         for (String[] strings : partieN) {
-            ok.listEtuN.add(new Tutore(strings[0], Double.parseDouble(strings[1]), Integer.parseInt(strings[2])));
+            ok.listEtuN.add(new Tutored(strings[0], Double.parseDouble(strings[1]), Integer.parseInt(strings[2])));
         }
         for (String[] strings : partieF) {
-            ok.listEtuF.add(new Tutore(strings[0], Double.parseDouble(strings[1]), Integer.parseInt(strings[2])));
+            ok.listEtuF.add(new Tutored(strings[0], Double.parseDouble(strings[1]), Integer.parseInt(strings[2])));
         }
 
         // liste de noms parce que c'est de la merde
         List<String> nomsN = new ArrayList<>();
         List<String> nomsF = new ArrayList<>();
 
-        for (Etudiant etudiant : ok.listEtuN) {
+        for (Student etudiant : ok.listEtuN) {
             nomsN.add(etudiant.name);
         }
-        for (Etudiant etudiant : ok.listEtuF) {
+        for (Student etudiant : ok.listEtuF) {
             nomsF.add(etudiant.name);
         }
 
@@ -90,8 +90,8 @@ public class MoyenneCalcul {
         double calculN;
         double calculF;
         double total;
-        for (Etudiant etudiantN : ok.listEtuN) {
-            for (Etudiant etudiantF : ok.listEtuF) {
+        for (Student etudiantN : ok.listEtuN) {
+            for (Student etudiantF : ok.listEtuF) {
                 calculN = coeffAvgN * etudiantN.average;
                 calculF = coeffAvg * (20 - etudiantF.average) + coeffLevel * Math.abs(etudiantF.level - 3);
                 total = calculN / calculF;

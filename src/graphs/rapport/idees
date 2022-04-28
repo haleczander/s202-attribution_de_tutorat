@@ -14,23 +14,23 @@ AU SECOURS BORDEL.
 pas envie de le faire mtn je le fais chez moi avec mon clavier hihihihihihihiihhi (osef)
 
 ajouter dans affectation : paramètre doublon vrai ou faux
--> si vrai alors des tuteurs seront split si nécessaire
--> si faux, dans tous les cas les tuteurs ne seront pas split et il y aura une liste d'attente si déséquilibre
+-> si vrai alors des tuteurs seront split si nécessaire ✓
+-> si faux, dans tous les cas les tuteurs ne seront pas split et il y aura une liste d'attente si déséquilibre ✓
 
 mieux de tout mettre dans la classe affectation
--> on passe en paramètre 2 listes et puis ça processe tout seul
--> faire en sorte que l'affectation soit faite directement avec des étudiants plutôt que leur nom
--> rajouter une couche d'abstraction quoi
+-> on passe en paramètre 2 listes et puis ça processe tout seul ✓
+-> faire en sorte que l'affectation soit faite directement avec des étudiants plutôt que leur nom ✓
+-> rajouter une couche d'abstraction quoi ✓
 
 modification de étudiants et classes dérivées
--> ajouter une simpleToString pour avoir une représentation d'un étudiant mais juste un nom genre
--> commenter tout en mieux
--> autre chose que j'ai oublié ofc
+-> ajouter une simpleToString pour avoir une représentation d'un étudiant mais juste un nom genre ✓
+-> commenter tout en mieux ✓
+-> autre chose que j'ai oublié ofc ✓
 
 ajouter une classe utilitaire pour la gestion de listes d'étudiants
--> méthode statiques pour refactor
--> ne plus l"utiliser dans les classes de cas directement mais dans la classe affectation
--> quelques méthodes pour les cas genre transformer un tableau à double entrée en liste d'étudiants
+-> méthode statiques pour refactor ✓
+-> ne plus l"utiliser dans les classes de cas directement mais dans la classe affectation ✓
+-> quelques méthodes pour les cas genre transformer un tableau à double entrée en liste d'étudiants ✓
 
 pour affecter deux étudiants ensemble (2 propositions à tester les deux)
 -> forcer le poids de l'arête entre deux étudiants à 0 puis retirer 1 à chaque nouvelle affectation

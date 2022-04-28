@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import graphs.rapport.Tuteur;
-import graphs.rapport.Tutore;
+import graphs.rapport.Tutor;
+import graphs.rapport.Tutored;
 
 public final class TestSplitEtu {
 
@@ -41,16 +41,16 @@ public final class TestSplitEtu {
             /*{ "Franck", "1", "11.9", "3" }*/ };
 
         // listes d'étudiants
-        List<Tutore> listeN = new ArrayList<>();
-        List<Tuteur> listeF = new ArrayList<>();
+        List<Tutored> listeN = new ArrayList<>();
+        List<Tutor> listeF = new ArrayList<>();
 
         // on fou les étudiants dans une liste lol
         for (String[] strings : testN) {
-            listeN.add(new Tutore(strings[0], Double.parseDouble(strings[2]), Integer.parseInt(strings[3])));
+            listeN.add(new Tutored(strings[0], Double.parseDouble(strings[2]), Integer.parseInt(strings[3])));
         }
 
         for (String[] strings : testF) {
-            listeF.add(new Tuteur(strings[0], Double.parseDouble(strings[2]), Integer.parseInt(strings[3]), Integer.parseInt(strings[1])));
+            listeF.add(new Tutor(strings[0], Double.parseDouble(strings[2]), Integer.parseInt(strings[3]), Integer.parseInt(strings[1])));
         }
 
         System.out.println(listeN.size());
@@ -67,13 +67,13 @@ public final class TestSplitEtu {
         int diff = listeN.size() - listeF.size();
         System.out.println("diff de base : " + diff);
         while (diff > 0) {
-            Iterator<Tuteur> it = listeF.iterator();
+            Iterator<Tutor> it = listeF.iterator();
             while (it.hasNext()) {
-                Tuteur t = it.next();
-                if (t.nbTutores == 2) {
+                Tutor t = it.next();
+                if (t.nbofTutored == 2) {
                     listeF.remove(t);
-                    listeF.add(new Tuteur(t.name, t.average, t.level, 1));
-                    listeF.add(new Tuteur(t.name, t.average, t.level, 1));
+                    listeF.add(new Tutor(t.name, t.average, t.level, 1));
+                    listeF.add(new Tutor(t.name, t.average, t.level, 1));
                     break;
                 }
             }
