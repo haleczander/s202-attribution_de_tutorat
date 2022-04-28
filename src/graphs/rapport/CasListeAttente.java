@@ -110,8 +110,9 @@ public final class CasListeAttente {
             throw new NullPointerException("Je sais pas c'que j'ai foutu mais ça marche pas");
         }
 
-        // dans ce qu'il y a avant y'a vraiment de quoi refactor de ouf je le ferais
-        // plus tard
+        // TODO : refactor cette merde
+        // avec des ? extends Etudiant et des instanceOf pour faire un traitement différenciés
+
         // maintenant on a des belles listes on peut affecter :)
         Affectation affectation = new Affectation(listeTutores, listeTuteurs);
         System.out.println("affectation: " + affectation.obtenirAffectation(true) + "\n");

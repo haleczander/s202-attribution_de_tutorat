@@ -16,11 +16,13 @@ public class Affectation {
     List<Tutore> etudiantsTutores;
     List<Tuteur> etudiantsTuteurs;
 
+    // TODO : ajouter un boolean pour prendre en charge ou pas le split d'étudiants
     public Affectation(List<Tutore> etudiantsTutores, List<Tuteur> etudiantsTuteurs) {
         this.etudiantsTutores = etudiantsTutores;
         this.etudiantsTuteurs = etudiantsTuteurs;
     }
 
+    // TODO : changer le type d'affectation en Etudiant
     /**
      * Méthode qui fait une affectation à partir de deux listes d'étudiants
      * 
@@ -55,7 +57,7 @@ public class Affectation {
         double poids;
         for (Etudiant tutore : this.etudiantsTutores) {
             for (Etudiant tuteur : this.etudiantsTuteurs) {
-                poids = 1 / tuteur.level + 1 / tuteur.average + tutore.average / 20;
+                poids = 1 / tuteur.level + 20 / tuteur.average + tutore.average / 20;
                 graph.ajouterArete(tutore.name, tuteur.name, poids);
             }
         }
@@ -85,15 +87,17 @@ public class Affectation {
      *                 incluse.
      * @return String Affectation résultante sous forme textuelle.
      */
-    public String obtenirAffectation(boolean... getGraph) {
+    public String obtenirAffectation(boolean getGraph) {
         StringBuilder s = new StringBuilder();
-        if (getGraph.length > 1) {
-            throw new IllegalArgumentException("Do not pass more than 1 boolean parameter");
-        } else if (getGraph.length == 1 && getGraph[0]) {
+        if (getGraph) {
             s.append(graphSetup().toString() + "\n\n");
         }
         s.append("affectation: " + this.affectation().getAffectation());
         return s.toString();
+    }
+
+    public String obtenirAffectation() {
+        return this.obtenirAffectation(false);
     }
 
     /**

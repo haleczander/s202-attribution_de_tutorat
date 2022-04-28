@@ -75,6 +75,10 @@ public final class CasPlusDeTutores {
             }
             diff--;
         }
+        // TODO : modifier ce truc dégueulasse faut faire autrement là c'est pas beau
+        // si on parcours toute la liste d'étudiant et que y'en a plus qui peuvent se split ça sert à rien de continuer
+        // de boucler sur la principale
+        // solution : mettre !it.hasNext() après le it.next(), si vrai diff = 0
 
         // si la différence n'est toujours pas nulle bah là c'est dommage mais c'est un autre cas de figure
         diff = listeTutores.size() - listeTuteurs.size();

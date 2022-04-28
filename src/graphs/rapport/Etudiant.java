@@ -13,6 +13,10 @@ public abstract class Etudiant {
 
     public abstract int compareTo(Etudiant etudiant);
 
+    public String simpleToString() {
+        return this.name;
+    }
+
     @Override
     public String toString() {
         return "Etudiant [nom=" + name + ", moyenne=" + average + ", niveau=" + level + "]";
