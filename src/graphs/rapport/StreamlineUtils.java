@@ -7,7 +7,7 @@ import java.util.ListIterator;
 
 /**
  * Utility class that regroups multiple static methods useful for list
- * streamlining and
+ * streamlining, assignment, and retrieving information.
  */
 public final class StreamlineUtils {
     private StreamlineUtils() {
@@ -89,5 +89,22 @@ public final class StreamlineUtils {
         }
 
         return waitingList;
+    }
+
+    /**
+     * Retrieves a student in a list of student given its name.
+     * 
+     * @param studentName the name to look for.
+     * @param list the list to search.
+     * @return the student associated with the name.
+     * @throws IllegalArgumentException if there was no match between a name and the students in the list.
+     */
+    public static Student retrieveStudent(String studentName, List<? extends Student> list) {
+        for (Student student : list) {
+            if (student.getName() == studentName) {
+                return student;
+            }
+        }
+        throw new IllegalArgumentException("Student name could not be found");
     }
 }

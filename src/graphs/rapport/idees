@@ -34,5 +34,5 @@ ajouter une classe utilitaire pour la gestion de listes d'étudiants
 
 pour affecter deux étudiants ensemble (2 propositions à tester les deux)
 -> forcer le poids de l'arête entre deux étudiants à 0 puis retirer 1 à chaque nouvelle affectation
--> sinon construire manuellement la liste d'étudiants à affecter, les retirer de la liste et append la liste d'affectation résultante
+-> sinon construire manuellement la liste d'étudiants à affecter, les retirer de la liste et append la liste d'affectation résultante ✓
 -> lequel est le plus propre/opti, jsp :) peut être demander à Boneva jsp

@@ -1,4 +1,4 @@
-package alexsauce;
+package graphs.alexsauce;
 
 /**Classe abstraite student comprenant
  * un nom
@@ -62,7 +62,7 @@ public abstract class Student implements Comparable<Student> {
     /**Fonction du calcul du poids, 
      * à définir selon tuteur ou tutoré  
      */
-    private abstract double computeWeight();
+    protected abstract double computeWeight();
 
     /**Compare deux étudiants en fonction de leurs poids respectifs */
     public int compareTo(Student o){

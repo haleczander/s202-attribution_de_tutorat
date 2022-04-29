@@ -1,5 +1,8 @@
 package graphs.rapport;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Cas qui représente une affectation dans le cas ou il y a plus de tutorés que de tuteurs.
  * Explication de notre méthode au fur et à mesure en commentaire.
@@ -34,9 +37,11 @@ public final class CasPlusDeTutores {
             /*{ "Inès", "1", "9.3", "3" },
             { "Franck", "1", "11.9", "3" }*/ };
 
+        Map<String,String> forcing = new HashMap<>();
+        forcing.put("Claude", "Sophie");
 
-        Assignment assignment = new Assignment(data);
-        System.out.println(assignment.getTextAffectation(true) + "\n");
-        System.out.println(assignment.getTextCout() + "\n");
+        Assignment assignment = new Assignment(data, false, forcing);
+        System.out.println(assignment.getTextAssignment(true) + "\n");
+        System.out.println(assignment.getTextCost() + "\n");
     }
 }

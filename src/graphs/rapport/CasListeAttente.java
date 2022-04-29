@@ -1,5 +1,8 @@
 package graphs.rapport;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Cette classe représente un cas où un ou plusieurs étudiants doivent être mis
  * en liste d'attente (pour ne pas dire virés).
@@ -35,9 +38,11 @@ public final class CasListeAttente {
                 { "Inès", "1", "9.3", "3" },
                 { "Franck", "1", "11.9", "3" } };
 
-        
-        Assignment assignment = new Assignment(data);
-        System.out.println("affectation: " + assignment.getTextAffectation(true) + "\n");
-        System.out.println("coût total: " + assignment.getTextCout() + "\n");
+        Map<String,String> forcing = new HashMap<>();
+        forcing.put("Lucas", "Inès");
+
+        Assignment assignment = new Assignment(data, true, forcing);
+        System.out.println("affectation: " + assignment.getTextAssignment(true) + "\n");
+        System.out.println("coût total: " + assignment.getTextCost() + "\n");
     }
 }

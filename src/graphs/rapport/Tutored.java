@@ -16,15 +16,10 @@ public class Tutored extends Student {
     public int compareTo(Student student) {
         if (this.average > student.average) {
             return 1;
-        }
-
-        else if (this.average < student.average) {
+        } else if (this.average < student.average) {
             return -1;
-        }
-
-        else {
+        } else {
             return 0;
         }
-
     }
 }

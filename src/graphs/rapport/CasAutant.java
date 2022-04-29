@@ -1,5 +1,8 @@
 package graphs.rapport;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Cette classe une affectation dans un cas où il y a un nombre égal de tutorés et de tuteurs
  */
@@ -12,7 +15,7 @@ public final class CasAutant {
     public static void main(String[] args) {
         // list of students
         String[][] data = new String[][] { 
-            { "Claude", "Allard", "salut", "1" },
+            { "Claude", "Allard", "9.8", "1" },
             { "Madeleine", "Barre", "6.9", "1" },
             { "Sabine", "Besnard", "12.7", "1" },
             { "Hugues", "Bigot", "0.2", "1" },
@@ -35,9 +38,20 @@ public final class CasAutant {
             { "Franck", "1", "11.9", "3" }
         };
 
-        Assignment assignment = new Assignment(data);
-        System.out.println(assignment.getTextAffectation(true) + "\n");
-        System.out.println(assignment.getTextCout() + "\n");
+        Map<String,String> forcing = new HashMap<>();
+        forcing.put("Claude", "Vincent");
+        forcing.put("Madeleine", "Franck");
+
+        Assignment assignment = new Assignment(data, true, forcing);
+        System.out.println(assignment.getTextAssignment(false) + "\n");
+        System.out.println(assignment.getTextCost() + "\n");
+
+        forcing.clear();
+        forcing.put("Claude", "Franck");
+        forcing.put("Madeleine", "Vincent");
+        assignment.changeManualAssignments(forcing);
+        System.out.println(assignment.getTextAssignment(false) + "\n");
+        System.out.println(assignment.getTextCost() + "\n");
 
         // affectation: [Arete(David, Franck), Arete(Madeleine, Vincent), Arete(Hugues,
         // Pénélope), Arete(Amélie, Olivier), Arete(Alexandria, Inès), Arete(Claude,

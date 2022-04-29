@@ -1,4 +1,4 @@
-package alexsauce;
+package graphs.alexsauce;
 
 public class Tutor extends Student{
     private int capacity=1;

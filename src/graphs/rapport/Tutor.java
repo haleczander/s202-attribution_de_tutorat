@@ -10,7 +10,11 @@ public class Tutor extends Student {
 
     @Override
     public String toString() {
-        return super.toString() + " " + nbofTutored;
+        if (Student.shortString) {
+            return super.toString();
+        } else {
+            return super.toString() + " " + nbofTutored;
+        }
     }
 
     /**
