@@ -1,23 +1,20 @@
 package alexsauce;
 
 public class ATutor extends AStudent{
-    private int capacity = 1, nbOfCopies=1;
-    private boolean isDoublon = false;
+    private int capacity = 1;
     private static boolean polyTutor = false;
 
     public ATutor(String name, double grades, int level) {
         super(name, grades, level);
     }
 
-    public ATutor(ATutor t, int nbOfDoublon){
+    public ATutor(ATutor t){
         this(t.getName(),t.getGrades(),t.getLevel());
-        this.nbOfCopies=t.getNbOfCopies();
-        this.isDoublon = true;
     }
 
     @Override
     protected double computeWeight() {
-        return (20/(this.getLevel()*this.getGrades()))/nbOfCopies;
+        return 20 / ( this.getLevel() * this.getGrades() );
     }  
 
     /**Getter & Setter de la capacité de tutorat 
@@ -34,11 +31,13 @@ public class ATutor extends AStudent{
         return true;
     }
 
-    public int getNbOfCopies(){
-        return this.nbOfCopies;
+
+    public ATutor duplicate(){
+        this.setWeight(this.getWeight() * 2);
+        return new ATutorDoublon(this);
     }
-    public void incrementNbOfCopies(){
-        this.nbOfCopies++;
+    public boolean isDoublon(){
+        return false;
     }
     
     /**Permet d'activer ou désactiver la capacité de prendre en charge plusieurs tutorés */
@@ -49,10 +48,4 @@ public class ATutor extends AStudent{
         return ATutor.polyTutor;
     }
 
-    /**Prise en compte de l'affichage des doublons */
-    @Override
-    public String toString() {
-        if (!isDoublon) return super.toString();
-        return super.toString()+"(D)";
-    }
 }
