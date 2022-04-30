@@ -1,4 +1,4 @@
-package alexsauce;
+package graphs.alexsauce;
 
 /**Classe abstraite student comprenant
  * un nom

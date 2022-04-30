@@ -1,4 +1,4 @@
-package alexsauce;
+package graphs.alexsauce;
 
 public enum Resource {
 

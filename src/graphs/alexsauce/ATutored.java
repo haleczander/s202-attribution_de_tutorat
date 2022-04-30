@@ -1,8 +1,8 @@
 package graphs.alexsauce;
 
-public class Tutored extends Student{
+public class ATutored extends AStudent{
 
-    public Tutored(String name, double grades, int level) {
+    public ATutored(String name, double grades, int level) {
         super(name, grades, level);
     }
 

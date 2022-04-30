@@ -1,4 +1,4 @@
-package alexsauce;
+package graphs.alexsauce;
 
 public class ATutorDoublon extends ATutor{
     private final ATutor REFERENCE;
