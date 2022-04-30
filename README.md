@@ -1,9 +1,9 @@
 # S2.01 - S2.02 - Développement d'application
 
 ## A-G5
-Léopold Varlamoff 
-Alexandre Herssens
-Théo Franos
+Léopold Varlamoff  
+Alexandre Herssens  
+Théo Franos  
 
 ## Contenu du dossier "res"
   - Le sujet de la SAÉ  
