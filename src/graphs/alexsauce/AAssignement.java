@@ -23,13 +23,13 @@ public class AAssignement {
         else if ( tutors.size() > tutored.size() ) {
             this.tutors = (ArrayList<AStudent>) tutors.subList(0, tutored.size());}
         else { 
-            if (ATutor.polyTutorState()) {
-                 if (!polyTutoring(tutors, tutored.size())){
-                    whoIsWaiting(tutored,tutors.size(),waitingTutored);
-                 }
-            } else {
-                whoIsWaiting(tutored,tutors.size(),waitingTutored);
-            }
+            // if (ATutor.polyTutorState()) {
+            //      if (!polyTutoring(tutors, tutored.size())){
+            //         whoIsWaiting(tutored,tutors.size());
+            //      }
+            // } else {
+            //     whoIsWaiting(tutored,tutors.size());
+            // }
         }
         
 

@@ -1,7 +1,10 @@
-package graphs.alexsauce;
+package alexsauce;
+
+import java.util.ArrayList;
 
 public class ATutor extends AStudent{
     private int capacity = 1;
+    private ArrayList<ATutorDoublon> doublons = new ArrayList<>();
     private static boolean polyTutor = false;
 
     public ATutor(String name, double grades, int level) {
@@ -34,10 +37,15 @@ public class ATutor extends AStudent{
 
     public ATutor duplicate(){
         this.setWeight(this.getWeight() * 2);
-        return new ATutorDoublon(this);
+        ATutorDoublon doublon = new ATutorDoublon(this);
+        this.doublons.add(doublon);
+        return doublon;
     }
     public boolean isDoublon(){
         return false;
+    }
+    public ArrayList<ATutorDoublon> getDoublons(){
+        return this.doublons;
     }
     
     /**Permet d'activer ou désactiver la capacité de prendre en charge plusieurs tutorés */

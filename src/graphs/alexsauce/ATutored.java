@@ -1,4 +1,4 @@
-package graphs.alexsauce;
+package alexsauce;
 
 public class ATutored extends AStudent{
 

@@ -1,4 +1,4 @@
-package graphs.alexsauce;
+package alexsauce;
 
 public class ATutorDoublon extends ATutor{
     private final ATutor REFERENCE;
@@ -15,6 +15,8 @@ public class ATutorDoublon extends ATutor{
     /**Indiciatif de doublon "(D)" */
     @Override
     public String toString() {
-        return super.toString()+"(D)";
+        if (toStringShort) { return super.toString()+"(D)"; }
+        return super.toString();
+        
     }
 }

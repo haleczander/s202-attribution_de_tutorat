@@ -1,4 +1,4 @@
-package graphs.alexsauce;
+package alexsauce;
 
 /**Classe abstraite student comprenant
  * un nom
@@ -43,9 +43,13 @@ public abstract class AStudent implements Comparable<AStudent> {
     public void setWeight(double weight) {
         this.weight = weight;
     }
-    /**Setter de la fonction d'affichage réduite */
-    public void setToStringShort(){
-        AStudent.toStringShort=true;
+
+    /**Fonction d'affichage réduite */
+    public static boolean isToStringShort(){
+        return AStudent.toStringShort;
+    }
+    public static void toggleToStringShort(){
+        AStudent.toStringShort = !AStudent.toStringShort;
     }
 
     
@@ -56,7 +60,7 @@ public abstract class AStudent implements Comparable<AStudent> {
     @Override
     public String toString() {
         if (AStudent.toStringShort) { return this.getName(); }
-        return "Student [name=" + this.name + ", level=" + this.level + ", grades=" + this.grades  + "]";
+        return this.getClass().getSimpleName()+" [name=" + this.name + ", level=" + this.level + ", grades=" + this.grades  + "]";
     }
     
     /**Fonction du calcul du poids, 
