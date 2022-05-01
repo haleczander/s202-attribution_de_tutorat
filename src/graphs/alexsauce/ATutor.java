@@ -1,4 +1,4 @@
-package alexsauce;
+package graphs.alexsauce;
 
 import java.util.ArrayList;
 

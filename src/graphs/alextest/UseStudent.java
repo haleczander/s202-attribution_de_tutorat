@@ -1,11 +1,11 @@
-package alextest;
+package graphs.alextest;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
-import alexsauce.AStudent;
-import alexsauce.ATutor;
-import alexsauce.ATutored;
+import graphs.alexsauce.AStudent;
+import graphs.alexsauce.ATutor;
+import graphs.alexsauce.ATutored;
 
 
 public class UseStudent {

@@ -1,4 +1,4 @@
-package alexsauce;
+package graphs.alexsauce;
 
 import java.util.ArrayList;
 
@@ -6,7 +6,7 @@ public class ATutoring {
     private Resource resource;
     private AAssignement assignement;
 
-    public ATutoring(ArrayList<Student> )
+    // public ATutoring(ArrayList<Student> )
 
 
     

@@ -1,12 +1,7 @@
-package alexsauce;
+package graphs.alexsauce;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Map;
-
-import fr.ulille.but.sae2_02.graphes.Arete;
-import fr.ulille.but.sae2_02.graphes.CalculAffectation;
-import fr.ulille.but.sae2_02.graphes.GrapheNonOrienteValue;
 
 public class AAssignement {
     private Map<ATutor,AStudent> pairs;
