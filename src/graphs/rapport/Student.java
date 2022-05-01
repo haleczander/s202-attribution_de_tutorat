@@ -1,18 +1,34 @@
 package graphs.rapport;
 
+/**
+ * Abstract class that represents a student.
+ */
 public abstract class Student {
-    public String name;
-    public double average;
-    public int level;
-    public static boolean shortString = true;
+    private final String name;
+    protected double average;
+    protected int level;
+    protected static boolean shortString = true;
 
-    public Student(String name, double average, int level) {
+    /**
+     * Instantiate a student.
+     * 
+     * @param name    student's name.
+     * @param average student's average.
+     * @param level   student's level.
+     */
+    protected Student(final String name, final double average, final int level) {
         this.name = name;
         this.average = average;
         this.level = level;
     }
 
-    public abstract int compareTo(Student etudiant);
+    /**
+     * Method that compares 2 students.
+     * 
+     * @param student the student to compare to.
+     * @return -1, 1 or 0 depending on the comparision.
+     */
+    public abstract int compareTo(Student student);
 
     @Override
     public int hashCode() {
@@ -27,7 +43,7 @@ public abstract class Student {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
@@ -37,7 +53,7 @@ public abstract class Student {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        Student other = (Student) obj;
+        final Student other = (Student) obj;
         if (Double.doubleToLongBits(average) != Double.doubleToLongBits(other.average)) {
             return false;
         }
@@ -54,8 +70,13 @@ public abstract class Student {
         return true;
     }
 
-    public String simpleToString() {
-        return this.name;
+    /**
+     * Returns a simple String representation of a student.
+     * 
+     * @return the student's name.
+     */
+    protected String simpleToString() {
+        return this.getName();
     }
 
     @Override
@@ -63,7 +84,7 @@ public abstract class Student {
         if (shortString) {
             return shortToString();
         } else {
-            return "Etudiant [nom=" + name + ", moyenne=" + average + ", niveau=" + level + "]";
+            return "Student [nom=" + name + ", moyenne=" + average + ", niveau=" + level + "]";
         }
     }
 
@@ -71,7 +92,30 @@ public abstract class Student {
         return this.name;
     }
 
+    /**
+     * Gets the student's name.
+     * 
+     * @return the student's name.
+     */
     public String getName() {
         return name;
+    }
+
+    /**
+     * Returns the student's average.
+     * 
+     * @return the student's average.
+     */
+    public double getAverage() {
+        return average;
+    }
+
+    /**
+     * Gets the student's level.
+     * 
+     * @return the student's level.
+     */
+    public int getLevel() {
+        return level;
     }
 }

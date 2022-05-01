@@ -1,6 +1,17 @@
 package graphs.rapport;
 
+/**
+ * Class that represents a tutored student.
+ */
 public class Tutored extends Student {
+
+    /**
+     * Instantiate a tutored student.
+     * 
+     * @param name    tutored student's name.
+     * @param average tutored student's average.
+     * @param level   tutoredd student's level.
+     */
     public Tutored(String name, double average, int level) {
         super(name, average, level);
     }

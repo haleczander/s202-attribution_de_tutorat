@@ -25,21 +25,21 @@ public class Assignment {
     private CalculAffectation<Student> assignment;
     private List<Student> waitingList;
     private Map<String, String> forcedAssignments;
-    private List<Arete<Student>> pendingAretes;
+    private List<Arete<Student>> pendingEdges;
 
     /**
-     * Instantiation of an assignment. Affectation will be done right away with or
+     * Instantiation of an assignment. Assignment will be done right away with or
      * without spliting tutors depending on the need to do so and/or the parameter
      * specified, and students in the Map specified will be assigned manually.
      * 
-     * @param students         String list as follows : [name, number of students to
-     *                         take in charge, average, level]. Number of students
-     *                         to
-     *                         take in change is irrelevant for tutored students.
-     * @param tutorsSplit      True if students that can be in charge of multiple
-     *                         students must do so, false othersise.
-     * @param forcedAssignment Map of Tutored and Tutor students (in this order) to
-     *                         be assigned together.
+     * @param students          String list as follows : [name, number of students
+     *                          to take in charge, average, level]. Number of
+     *                          students to take in change is irrelevant for tutored
+     *                          students.
+     * @param tutorsSplit       True if students that can be in charge of multiple
+     *                          students must do so, false othersise.
+     * @param forcedAssignments Map of Tutored and Tutor students (in this order) to
+     *                          be assigned together.
      * @throws IllegalArgumentException if the level of one of the students is not
      *                                  between 1 and 3 included.
      * @throws NumberFormatException    if one of the string cannot be converted to
@@ -64,7 +64,7 @@ public class Assignment {
         }
         this.tutorsSplit = tutorsSplit;
         this.forcedAssignments = forcedAssignments;
-        this.pendingAretes = new ArrayList<>();
+        this.pendingEdges = new ArrayList<>();
         this.waitingList = new ArrayList<>();
         this.assignment = assignment();
     }
@@ -73,7 +73,7 @@ public class Assignment {
      * Instantiate an assignment with {@code tutorsSplit} and
      * {@code forcedAssignments} default values (true and an empty Map).
      * 
-     * @param students
+     * @param students String list as follows : [name, number of students to take in charge, average, level]. Number of students to take in change is irrelevant for tutored students.
      * 
      * @see #Assignment(String[][], boolean, Map)
      */
@@ -85,8 +85,8 @@ public class Assignment {
      * Instantiate an assignment with {@code forcedAssignment} default value (empty
      * Map)
      * 
-     * @param students
-     * @param tutorsSplit
+     * @param students String list as follows : [name, number of students to take in charge, average, level]. Number of students to take in change is irrelevant for tutored students.
+     * @param tutorsSplit True if students that can be in charge of multiple students must do so, false othersise.
      * 
      * @see #Assignment(String[][], boolean, Map)
      */
@@ -97,8 +97,8 @@ public class Assignment {
     /**
      * Instantiate an assignment with {@code tutorsSplit} default value (true)
      * 
-     * @param students
-     * @param forcedAssignments
+     * @param students String list as follows : [name, number of students to take in charge, average, level]. Number of students to take in change is irrelevant for tutored students.
+     * @param forcedAssignments Map of Tutored and Tutor students (in this order) to be assigned together.
      * 
      * @see #Assignment(String[][], boolean, Map)
      */
@@ -189,7 +189,7 @@ public class Assignment {
             Tutored tutored = (Tutored) StreamlineUtils.retrieveStudent(entry.getKey(), this.TutoredStudents);
             Tutor tutor = (Tutor) StreamlineUtils.retrieveStudent(entry.getValue(), this.TutorStudents);
             Arete<Student> arete = new Arete<Student>(tutored, tutor);
-            this.pendingAretes.add(arete);
+            this.pendingEdges.add(arete);
             this.TutoredStudents.remove(tutored);
             this.TutorStudents.remove(tutor);
         }
@@ -208,7 +208,7 @@ public class Assignment {
         if (getGraph) {
             s.append(graphSetup().toString() + "\n\n");
         }
-        s.append("affectation: " + this.getAssignment() + "\n");
+        s.append("assignment: " + this.getAssignment() + "\n");
         if (!waitingList.isEmpty()) {
             s.append("waiting list: " + this.waitingList);
         }
@@ -216,13 +216,14 @@ public class Assignment {
     }
 
     /**
-     * {@code getGraph} default (false).
+     * Returns a textual representation of the assignment with {@code getGraph}
+     * default value (false).
      * 
      * @return String Assignment.
      * 
      * @see #getTextAssignment(boolean)
      */
-    public String getTextAffectation() {
+    public String getTextAssignment() {
         return this.getTextAssignment(false);
     }
 
@@ -234,7 +235,7 @@ public class Assignment {
      */
     public List<Arete<Student>> getAssignment() {
         List<Arete<Student>> aretes = this.assignment.getAffectation();
-        aretes.addAll(this.pendingAretes);
+        aretes.addAll(this.pendingEdges);
         return List.copyOf(aretes);
     }
 
@@ -275,14 +276,14 @@ public class Assignment {
      * @param manualAssignments new assignments.
      */
     public void changeManualAssignments(Map<String, String> manualAssignments) {
-        for (Arete<Student> edge : this.pendingAretes) {
+        for (Arete<Student> edge : this.pendingEdges) {
             Tutored tutored = (Tutored) edge.getExtremite1();
             Tutor tutor = (Tutor) edge.getExtremite2();
             this.TutoredStudents.add(tutored);
             this.TutorStudents.add(tutor);
         }
         this.waitingList.clear();
-        this.pendingAretes.clear();
+        this.pendingEdges.clear();
         this.forcedAssignments = manualAssignments;
         assignment();
     }

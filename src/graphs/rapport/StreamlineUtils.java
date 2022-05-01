@@ -7,7 +7,14 @@ import java.util.ListIterator;
 
 /**
  * Utility class that regroups multiple static methods useful for list
- * streamlining, assignment, and retrieving information.
+ * streamlining, assignment, and retrieving information. Those method were
+ * seperated from the {@code Assignment.java} class for multiple reasons :
+ * methods might be reused later in the application, and these methods do not
+ * fundamentally work with the graph itself, they only help with data
+ * processing.
+ * 
+ * @see Assignment
+ * 
  */
 public final class StreamlineUtils {
     private StreamlineUtils() {
@@ -45,10 +52,10 @@ public final class StreamlineUtils {
             Iterator<Tutor> it = list.iterator();
             while (it.hasNext()) {
                 Tutor tuteur = it.next();
-                if (tuteur.nbofTutored == 2) {
+                if (tuteur.getNbofTutored() == 2) {
                     list.remove(tuteur);
-                    list.add(new Tutor(tuteur.name + "α", tuteur.average * 1.5, tuteur.level, 1));
-                    list.add(new Tutor(tuteur.name + "β", tuteur.average * 1.5, tuteur.level, 1));
+                    list.add(new Tutor(tuteur.getName() + "α", tuteur.average * 1.5, tuteur.level, 1));
+                    list.add(new Tutor(tuteur.getName() + "β", tuteur.average * 1.5, tuteur.level, 1));
                     break;
                 }
                 if (!it.hasNext()) {
@@ -95,9 +102,10 @@ public final class StreamlineUtils {
      * Retrieves a student in a list of student given its name.
      * 
      * @param studentName the name to look for.
-     * @param list the list to search.
+     * @param list        the list to search.
      * @return the student associated with the name.
-     * @throws IllegalArgumentException if there was no match between a name and the students in the list.
+     * @throws IllegalArgumentException if there was no match between a name and the
+     *                                  students in the list.
      */
     public static Student retrieveStudent(String studentName, List<? extends Student> list) {
         for (Student student : list) {

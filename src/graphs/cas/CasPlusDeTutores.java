@@ -1,7 +1,9 @@
-package graphs.rapport;
+package graphs.cas;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import graphs.rapport.Assignment;
 
 /**
  * Cas qui représente une affectation dans le cas ou il y a plus de tutorés que de tuteurs.
