@@ -10,10 +10,11 @@ public class AAssignement {
     private ArrayList<AStudent> tutored;
 
 
-    public AAssignement(ArrayList<AStudent> tutors, ArrayList<AStudent> tutored){
+public AAssignement(ArrayList<AStudent> tutors, ArrayList<AStudent> tutored){
+        this.tutors=tutors;
+        this.tutored=tutored;
+        
         if (tutors.size() == tutored.size()){
-            this.tutors=tutors;
-            this.tutored=tutored;
         }
         else if ( tutors.size() > tutored.size() ) {
             this.tutors = (ArrayList<AStudent>) tutors.subList(0, tutored.size());}
@@ -32,12 +33,12 @@ public class AAssignement {
 
 
 
-    private void whoIsWaiting(ArrayList<AStudent> origin, int targetSize, ArrayList<AStudent> destination){
-        for (int i = origin.size(); i < targetSize; i++){
-            destination.add(origin.get(i));
-        }
-        origin.removeAll(destination);
-    }
+    // private void whoIsWaiting(ArrayList<AStudent> origin, int targetSize, ArrayList<AStudent> destination){
+    //     for (int i = origin.size(); i < targetSize; i++){
+    //         destination.add(origin.get(i));
+    //     }
+    //     origin.removeAll(destination);
+    // }
 
     /**Retourne TRUE s'il y a assez de doublons tuteurs par rapport aux tutorés */
     private boolean polyTutoring(ArrayList<AStudent> tutors, int targetSize){
