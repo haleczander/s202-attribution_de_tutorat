@@ -73,7 +73,9 @@ public class Assignment {
      * Instantiate an assignment with {@code tutorsSplit} and
      * {@code forcedAssignments} default values (true and an empty Map).
      * 
-     * @param students String list as follows : [name, number of students to take in charge, average, level]. Number of students to take in change is irrelevant for tutored students.
+     * @param students String list as follows : [name, number of students to take in
+     *                 charge, average, level]. Number of students to take in change
+     *                 is irrelevant for tutored students.
      * 
      * @see #Assignment(String[][], boolean, Map)
      */
@@ -85,8 +87,11 @@ public class Assignment {
      * Instantiate an assignment with {@code forcedAssignment} default value (empty
      * Map)
      * 
-     * @param students String list as follows : [name, number of students to take in charge, average, level]. Number of students to take in change is irrelevant for tutored students.
-     * @param tutorsSplit True if students that can be in charge of multiple students must do so, false othersise.
+     * @param students    String list as follows : [name, number of students to take
+     *                    in charge, average, level]. Number of students to take in
+     *                    change is irrelevant for tutored students.
+     * @param tutorsSplit True if students that can be in charge of multiple
+     *                    students must do so, false othersise.
      * 
      * @see #Assignment(String[][], boolean, Map)
      */
@@ -97,8 +102,12 @@ public class Assignment {
     /**
      * Instantiate an assignment with {@code tutorsSplit} default value (true)
      * 
-     * @param students String list as follows : [name, number of students to take in charge, average, level]. Number of students to take in change is irrelevant for tutored students.
-     * @param forcedAssignments Map of Tutored and Tutor students (in this order) to be assigned together.
+     * @param students          String list as follows : [name, number of students
+     *                          to take in charge, average, level]. Number of
+     *                          students to take in change is irrelevant for tutored
+     *                          students.
+     * @param forcedAssignments Map of Tutored and Tutor students (in this order) to
+     *                          be assigned together.
      * 
      * @see #Assignment(String[][], boolean, Map)
      */
