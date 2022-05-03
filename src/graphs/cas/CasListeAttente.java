@@ -43,7 +43,7 @@ public final class CasListeAttente {
         Map<String,String> forcing = new HashMap<>();
         forcing.put("Lucas", "Inès");
 
-        Assignment assignment = new Assignment(data, true, forcing);
+        Assignment assignment = new Assignment(data);
         System.out.println("affectation: " + assignment.getTextAssignment(true) + "\n");
         System.out.println("coût total: " + assignment.getTextCost() + "\n");
     }

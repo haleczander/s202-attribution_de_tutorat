@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import graphs.rapport.Assignment;
+import graphs.rapport.StreamlineUtils;
+import graphs.rapport.Tutored;
 
 /**
  * Cas qui représente une affectation dans le cas ou il y a plus de tutorés que de tuteurs.
@@ -39,11 +41,10 @@ public final class CasPlusDeTutores {
             /*{ "Inès", "1", "9.3", "3" },
             { "Franck", "1", "11.9", "3" }*/ };
 
-        Map<String,String> forcing = new HashMap<>();
-        forcing.put("Claude", "Sophie");
+        // Map<String,String> forcing = new HashMap<>();
+        // forcing.put(new Tutored("Claude", 9.8, 1), "Sophie");
 
-        Assignment assignment = new Assignment(data, false, forcing);
-        System.out.println(assignment.getTextAssignment(true) + "\n");
-        System.out.println(assignment.getTextCost() + "\n");
+        Assignment assignment = new Assignment(data);
+        System.out.println(assignment.getTextAssignment(false));
     }
 }

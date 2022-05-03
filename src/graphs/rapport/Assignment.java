@@ -4,115 +4,98 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import fr.ulille.but.sae2_02.graphes.Arete;
 import fr.ulille.but.sae2_02.graphes.CalculAffectation;
 import fr.ulille.but.sae2_02.graphes.GrapheNonOrienteValue;
 
 /**
- * Class that represent an assignment of two groups of students : one is
+ * Class that represents an assignment of two groups of students : one is
  * tutored, the other is tutoring.
  * 
- * @see #Assignment(String[][], boolean, Map)
+ * @see #Assignment(String[][])
  * @see #getAssignment()
  */
 public class Assignment {
+    // rappel perso : D'ABORD tutoré PUIS tuteur
     private List<Tutored> TutoredStudents;
     private List<Tutor> TutorStudents;
     private boolean tutorsSplit;
     private CalculAffectation<Student> assignment;
     private List<Student> waitingList;
-    private Map<String, String> forcedAssignments;
-    private List<Arete<Student>> pendingEdges;
+    private Map<Tutored, Tutor> forcedAssignments;
+    private Map<Tutored, Tutor> noAssignments;
 
-    /**
-     * Instantiation of an assignment. Assignment will be done right away with or
-     * without spliting tutors depending on the need to do so and/or the parameter
-     * specified, and students in the Map specified will be assigned manually.
-     * 
-     * @param students          String list as follows : [name, number of students
-     *                          to take in charge, average, level]. Number of
-     *                          students to take in change is irrelevant for tutored
-     *                          students.
-     * @param tutorsSplit       True if students that can be in charge of multiple
-     *                          students must do so, false othersise.
-     * @param forcedAssignments Map of Tutored and Tutor students (in this order) to
-     *                          be assigned together.
-     * @throws IllegalArgumentException if the level of one of the students is not
-     *                                  between 1 and 3 included.
-     * @throws NumberFormatException    if one of the string cannot be converted to
-     *                                  a necessary type.
-     */
-    public Assignment(String[][] students, boolean tutorsSplit, Map<String, String> forcedAssignments) {
+    private Assignment() {
         TutoredStudents = new ArrayList<>();
         TutorStudents = new ArrayList<>();
-
-        for (String[] strings : students) {
-            String level = strings[3];
-
-            if ("1".equals(level)) {
-                TutoredStudents
-                        .add(new Tutored(strings[0], Double.parseDouble(strings[2]), Integer.parseInt(strings[3])));
-            } else if ("2".equals(level) || "3".equals(level)) {
-                TutorStudents.add(new Tutor(strings[0], Double.parseDouble(strings[2]), Integer.parseInt(strings[3]),
-                        Integer.parseInt(strings[1])));
-            } else {
-                throw new IllegalArgumentException("Please enter a valid level (1-3)");
-            }
-        }
-        this.tutorsSplit = tutorsSplit;
-        this.forcedAssignments = forcedAssignments;
-        this.pendingEdges = new ArrayList<>();
+        this.tutorsSplit = true;
+        this.forcedAssignments = new HashMap<>();
+        this.noAssignments = new HashMap<>();
         this.waitingList = new ArrayList<>();
-        this.assignment = assignment();
     }
 
     /**
-     * Instantiate an assignment with {@code tutorsSplit} and
-     * {@code forcedAssignments} default values (true and an empty Map).
-     * 
-     * @param students String list as follows : [name, number of students to take in
-     *                 charge, average, level]. Number of students to take in change
-     *                 is irrelevant for tutored students.
-     * 
-     * @see #Assignment(String[][], boolean, Map)
-     */
-    public Assignment(String[][] students) {
-        this(students, true, new HashMap<String, String>());
-    }
-
-    /**
-     * Instantiate an assignment with {@code forcedAssignment} default value (empty
-     * Map)
-     * 
-     * @param students    String list as follows : [name, number of students to take
-     *                    in charge, average, level]. Number of students to take in
-     *                    change is irrelevant for tutored students.
-     * @param tutorsSplit True if students that can be in charge of multiple
-     *                    students must do so, false othersise.
-     * 
-     * @see #Assignment(String[][], boolean, Map)
-     */
-    public Assignment(String[][] students, boolean tutorsSplit) {
-        this(students, tutorsSplit, new HashMap<String, String>());
-    }
-
-    /**
-     * Instantiate an assignment with {@code tutorsSplit} default value (true)
+     * Instantiation of an assignment.
      * 
      * @param students          String list as follows : [name, number of students
      *                          to take in charge, average, level]. Number of
      *                          students to take in change is irrelevant for tutored
      *                          students.
-     * @param forcedAssignments Map of Tutored and Tutor students (in this order) to
-     *                          be assigned together.
      * 
-     * @see #Assignment(String[][], boolean, Map)
+     * @throws IllegalArgumentException if the level of one of the students is not
+     *                                  between 1 and 3 included.
      */
-    public Assignment(String[][] students, Map<String, String> forcedAssignments) {
-        this(students, true, forcedAssignments);
+    public Assignment(String[][] students) throws IllegalArgumentException {
+        this();
+
+        for (String[] strings : students) {
+            String name = strings[0];
+            String nbOfTutored = strings[1];
+            int number = 0;
+            Double average;
+            int level;
+
+            try { 
+                average = Double.parseDouble(strings[2]);
+                level = Integer.parseInt(strings[3]);
+            } catch (NumberFormatException e) {
+                System.err.println("Unable to parse values.");
+                throw e;
+            }
+
+            if (level == 1) {
+                this.TutoredStudents.add(new Tutored(name, average));
+            } else if (level == 2 || level == 3) {
+                try {
+                    number = Integer.parseInt(nbOfTutored);
+                } catch (NumberFormatException e) {
+                    System.err.println("Please enter an integer for the number of tutored students a tutor can take in charge.");
+                }
+                this.TutorStudents.add(new Tutor(name, average, level, number));
+            } else {
+                throw new IllegalArgumentException("Level of any students must be between 1 and 3 included.");
+            }
+        }
+    }
+
+    public Assignment(List<Tutored> tutored, List<Tutor> tutors) {
+        this();
+
+        this.TutoredStudents = tutored;
+        this.TutorStudents = tutors;
+    }
+
+    public void setForcedAssignments(Map<Tutored, Tutor> forcedAssignments) {
+        this.forcedAssignments = forcedAssignments;
+    }
+
+    public void setNoAssignments(Map<Tutored, Tutor> noAssignments) {
+        this.noAssignments = noAssignments;
+    }
+
+    public void setTutorsSplit(boolean tutorsSplit) {
+        this.tutorsSplit = tutorsSplit;
     }
 
     /**
@@ -120,14 +103,12 @@ public class Assignment {
      * 
      * @return CalculAffectation<Student> The resulting assignment;
      */
-    private CalculAffectation<Student> assignment() {
-        assignmentForce();
-
+    private void assignment() {
         listArrange();
 
         GrapheNonOrienteValue<Student> graph = graphSetup();
 
-        return new CalculAffectation<Student>(graph, StreamlineUtils.getEtudiantList(TutoredStudents),
+        this.assignment = new CalculAffectation<Student>(graph, StreamlineUtils.getEtudiantList(TutoredStudents),
                 StreamlineUtils.getEtudiantList(TutorStudents));
     }
 
@@ -148,10 +129,25 @@ public class Assignment {
         }
 
         double poids;
+        int countForced = 0;
+        int countNo = 50;
         for (Student tutored : this.TutoredStudents) {
             for (Student tutor : this.TutorStudents) {
                 // TODO : modifier "1 / tuteur.average" en "20 / tuteur.average"
                 poids = 1 / tutor.level + 1 / tutor.average + tutored.average / 20;
+
+                for (Map.Entry<Tutored, Tutor> entrySet : this.forcedAssignments.entrySet()) {
+                    if (entrySet.getKey().equals(tutored) && entrySet.getValue().equals(tutor)) {
+                        poids = countForced--;
+                    }
+                }
+                for (Map.Entry<Tutored, Tutor> entrySet : this.noAssignments.entrySet()) {
+                    if (entrySet.getKey().equals(tutored) && entrySet.getValue().equals(tutor)) {
+                        poids = countNo;
+                        countNo = countNo + 50;
+                    }
+                }
+
                 graph.ajouterArete(tutored, tutor, poids);
             }
         }
@@ -188,23 +184,6 @@ public class Assignment {
     }
 
     /**
-     * Forces an assignment by creating an edge between 2 students and removing them
-     * of their respective lists. Assignment is based on {@link #forcedAssignments}
-     * Map.
-     */
-    private void assignmentForce() {
-        Set<Entry<String, String>> set = this.forcedAssignments.entrySet();
-        for (Map.Entry<String, String> entry : set) {
-            Tutored tutored = (Tutored) StreamlineUtils.retrieveStudent(entry.getKey(), this.TutoredStudents);
-            Tutor tutor = (Tutor) StreamlineUtils.retrieveStudent(entry.getValue(), this.TutorStudents);
-            Arete<Student> arete = new Arete<Student>(tutored, tutor);
-            this.pendingEdges.add(arete);
-            this.TutoredStudents.remove(tutored);
-            this.TutorStudents.remove(tutor);
-        }
-    }
-
-    /**
      * Method that returns a textual representation of the assignment. Includes a
      * waiting list if there is one.
      * 
@@ -213,27 +192,17 @@ public class Assignment {
      * @return String Assignment.
      */
     public String getTextAssignment(boolean getGraph) {
+        assignment();
+
         StringBuilder s = new StringBuilder();
-        if (getGraph) {
-            s.append(graphSetup().toString() + "\n\n");
-        }
+        // if (getGraph) {
+        //     s.append(graphSetup().toString() + "\n\n");
+        // }
         s.append("assignment: " + this.getAssignment() + "\n");
         if (!waitingList.isEmpty()) {
             s.append("waiting list: " + this.waitingList);
         }
         return s.toString();
-    }
-
-    /**
-     * Returns a textual representation of the assignment with {@code getGraph}
-     * default value (false).
-     * 
-     * @return String Assignment.
-     * 
-     * @see #getTextAssignment(boolean)
-     */
-    public String getTextAssignment() {
-        return this.getTextAssignment(false);
     }
 
     /**
@@ -243,9 +212,8 @@ public class Assignment {
      * @return a copy of the assignment.
      */
     public List<Arete<Student>> getAssignment() {
-        List<Arete<Student>> aretes = this.assignment.getAffectation();
-        aretes.addAll(this.pendingEdges);
-        return List.copyOf(aretes);
+        assignment();
+        return List.copyOf(this.assignment.getAffectation());
     }
 
     /**
@@ -265,7 +233,7 @@ public class Assignment {
      * @return String Minimal cost.
      */
     public String getTextCost() {
-        return "cost: " + this.assignment.getCout();
+        return "cost: " + getCost();
     }
 
     /**
@@ -274,35 +242,7 @@ public class Assignment {
      * @return double Minimal cost.
      */
     public double getCost() {
-        return this.assignment.getCout();
-    }
-
-    /**
-     * Reassign the current assignment and <b>overwrites it</b> using a new Map of
-     * manually added assignments. Please beware and make sure you have no need of
-     * the previous assignment anymore as it will unretrievable.
-     * 
-     * @param manualAssignments new assignments.
-     */
-    public void changeManualAssignments(Map<String, String> manualAssignments) {
-        for (Arete<Student> edge : this.pendingEdges) {
-            Tutored tutored = (Tutored) edge.getExtremite1();
-            Tutor tutor = (Tutor) edge.getExtremite2();
-            this.TutoredStudents.add(tutored);
-            this.TutorStudents.add(tutor);
-        }
-        this.waitingList.clear();
-        this.pendingEdges.clear();
-        this.forcedAssignments = manualAssignments;
         assignment();
-    }
-
-    /**
-     * Reassign the current assignment with no manual assignment.
-     * 
-     * @see #changeManualAssignments(Map)
-     */
-    public void changeManualAssignments() {
-        this.changeManualAssignments(new HashMap<>());
+        return this.assignment.getCout();
     }
 }

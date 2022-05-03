@@ -10,10 +10,9 @@ public class Tutored extends Student {
      * 
      * @param name    tutored student's name.
      * @param average tutored student's average.
-     * @param level   tutoredd student's level.
      */
-    public Tutored(String name, double average, int level) {
-        super(name, average, level);
+    public Tutored(String name, double average) {
+        super(name, average, 1);
     }
 
     /**
