@@ -58,7 +58,7 @@
 </rule>
 <rule ref="category/java/codestyle.xml/MethodNamingConventions"/>
 <rule ref="category/java/codestyle.xml/NoPackage"/>
-<rule ref="category/java/codestyle.xml/OnlyOneReturn"/>
+<!-- <rule ref="category/java/codestyle.xml/OnlyOneReturn"/> -->
 <rule ref="category/java/codestyle.xml/PrematureDeclaration"/>
 <rule ref="category/java/codestyle.xml/ShortClassName">
 <properties>
@@ -139,7 +139,7 @@
 <rule ref="category/java/design.xml/FinalFieldCouldBeStatic"/>
 <rule ref="category/java/design.xml/GodClass"/>
 <rule ref="category/java/design.xml/ImmutableField"/>
-<rule ref="category/java/design.xml/LawOfDemeter"/>
+<!-- <rule ref="category/java/design.xml/LawOfDemeter"/> -->
 <rule ref="category/java/design.xml/LogicInversion"/>
 <rule ref="category/java/design.xml/NcssCount">
 <properties>
@@ -194,7 +194,7 @@ Documentation * configurer pour que ça réponde aux exigences pour le projet
 </rule>
 <rule ref="category/java/documentation.xml/CommentSize">
 <properties>
-<property name="maxLines" value="6"/>
+<property name="maxLines" value="20"/>
 <property name="maxLineLength" value="80"/>
 </properties>
 </rule>

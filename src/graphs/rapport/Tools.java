@@ -7,7 +7,7 @@ import java.util.ListIterator;
 
 /**
  * Utility class that regroups multiple static methods useful for list
- * streamlining, assignment, and retrieving information. Those method were
+ * streamlining, assignments, and retrieving information. Those method were
  * seperated from the {@code Assignment.java} class for multiple reasons :
  * methods might be reused later in the application, and these methods do not
  * fundamentally work with the graph itself, they only help with data
@@ -16,8 +16,8 @@ import java.util.ListIterator;
  * @see Assignment
  * 
  */
-public final class StreamlineUtils {
-    private StreamlineUtils() {
+public final class Tools {
+    private Tools() {
         throw new UnsupportedOperationException("Utility class and cannot be instantiated");
     }
 
@@ -27,7 +27,7 @@ public final class StreamlineUtils {
      * @param list Student list to convert.
      * @return Resulting Student list.
      */
-    public static List<Student> getEtudiantList(List<? extends Student> list) {
+    public static List<Student> getStudentList(List<? extends Student> list) {
         List<Student> students = new ArrayList<>();
         for (Student student : list) {
             students.add(student);
@@ -54,8 +54,10 @@ public final class StreamlineUtils {
                 Tutor tuteur = it.next();
                 if (tuteur.getNbofTutored() == 2) {
                     list.remove(tuteur);
-                    list.add(new Tutor(tuteur.getName() + "α", tuteur.average * 1.5, tuteur.level, 1));
-                    list.add(new Tutor(tuteur.getName() + "β", tuteur.average * 1.5, tuteur.level, 1));
+                    list.add(new Tutor(tuteur.getName() + "(α)", tuteur.average * 1.5, tuteur.level, tuteur.absences,
+                            tuteur.motivation, 1));
+                    list.add(new Tutor(tuteur.getName() + "(β)", tuteur.average * 1.5, tuteur.level, tuteur.absences,
+                            tuteur.motivation, 1));
                     break;
                 }
                 if (!it.hasNext()) {
@@ -106,6 +108,7 @@ public final class StreamlineUtils {
      * @return the student associated with the name.
      * @throws IllegalArgumentException if there was no match between a name and the
      *                                  students in the list.
+     * @deprecated
      */
     public static Student retrieveStudent(String studentName, List<? extends Student> list) {
         for (Student student : list) {
@@ -114,5 +117,30 @@ public final class StreamlineUtils {
             }
         }
         throw new IllegalArgumentException("Student name could not be found");
+    }
+
+    public static double calcul(Tutored tutored, Tutor tutor) {
+        return tutor.weight * tutored.weight;
+    }
+
+    /**
+     * Static method that returns a numerical value of a character representing the
+     * motivation of a student.
+     * 
+     * @param motivation A, B, or C the motivation of the student.
+     * @return a value to assess the motivation of a student.
+     * @throws IllegalArgumentException if the motivation character is not A, B or C.
+     */
+    public static double motivationValue(char motivation) throws IllegalArgumentException {
+        switch (motivation) {
+            case 'A':
+                return 0.8;
+            case 'B':
+                return 1;
+            case 'C':
+                return 1.2;
+            default:
+                throw new IllegalArgumentException();
+        }
     }
 }
