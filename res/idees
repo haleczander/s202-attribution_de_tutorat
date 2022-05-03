@@ -40,6 +40,7 @@ pour affecter deux étudiants ensemble (2 propositions à tester les deux)
 AUJOURD'HUI ON EST LE 02/05/2022 ET VOILA CE QU'IL FAUT FAIRE :
 -> changer la manière d'affecter des étudiants manuellement
 -> au lieu de créer des arêtes, on fait leur poids à 0
+-> pendingEdges ça déguage.
 -> ça va nous éviter de les retirer de la liste et c'est moins chiant
 
 -> refaire des exceptions bien parce que là c'est un peu le bordel
@@ -49,14 +50,22 @@ AUJOURD'HUI ON EST LE 02/05/2022 ET VOILA CE QU'IL FAUT FAIRE :
 -> ajouter un moyen de pondérer les critères d'affectation.
 
 -> ajouter fonctionnalité pour éviter une affectation de plusieurs étudiants
--> ça remet un peu en cause des trucs
--> au lieu de calculer l'affectation direct, faire des setters ou on pourra avoir des maps
+-> ça remet un peu en cause des trucs.
+-> nouvel attribut genre "noAssignment" pour empêcher une affectation (= on met un poids de malade)
+-> poids de malade = le coût au final c'est pas non plus un truc de ouf c'est osef même.
+-> au lieu de calculer l'affectation direct, faire des setters ou on pourra donner des maps
    d'étudiants à affecter / à ne pas affecter et faire calculer l'affectation que quand on la demande (ie. getAssignment/getTextAssignment)
 -> ça va réduire l'interface publique mais bon who cares. quoi que non on aura des setters donc let's go!
 -> ça va prendre du temps mais pas envie de démarrer maintenant parce que j'ai pas de souris et ça va me saouler.
 
--> ce qui en découle = modifier les construteurs pour qu'ils soient moins relous quoi.
+-> ce qui en découle = modifier les construteurs pour qu'ils soient moins relous quoi :
+-> avec String[][] pour fonctionner avec données pour tester
+-> avec des listes de Tutored et de Tutor directement pour faciliter les tests
+-> l'attribut tutorSplit sera toujours là, mais true de base, et peut être modifier si on veut avant de réaliser l'affectation.
 
--> écrire une seule classe de test avec des tests ( :) ) et tester les fonctionnalités supplémentaire si on en a (?)
+-> écrire une seule classe de test avec des tests ( :) ) et tester les fonctionnalités supplémentaire si on en a (? jsp à voir)
 
 j'ai l'impression que cette fois c'est la bonne genre ça parait être le plus logique.
+si seulement j'avais pensé à l'implémenter comme ça dès le début :)
+
+-> RAJOUTER LA MOTIV :) (poids tuteur / motiv)
