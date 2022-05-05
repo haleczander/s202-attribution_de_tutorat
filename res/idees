@@ -74,3 +74,11 @@ B = *1
 C = *1.2
 
 -> RAJOUTER LES ABSENCES xDDDDDDDDDDDD
+
+05/05 c'est bientot la fin dernier ajustements: (j'ai envie de me suicider de ouf fr)
+
+-> déplacer le poids dans une méthode à implémenter getWeight(double averageWeighting, double levelWeighting)
+-> pour pouvoir foutre une pondération sur la moyenne et sur le niveau voilà
+-> ajouter soit dans le constructeur soit des setters osef
+-> potentiellement modifier le compareTo pour faire par rapport au poids au lieu du rang!
+-> 
