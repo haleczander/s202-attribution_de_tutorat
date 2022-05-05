@@ -16,6 +16,12 @@ import graphs.rapport.Assignment;
 import graphs.rapport.Tutor;
 import graphs.rapport.Tutored;
 
+/**
+ * Tests unitaire des différents scénarios imaginés.
+ * 
+ * @author Léopold V.
+ * @see Scenario
+ */
 public class GlobalTest {
     public Tutored 
             n1,
@@ -78,7 +84,7 @@ public class GlobalTest {
     @Test
     public void casPlusDeTutoresQueDeTuteurs() {
         tutoredList.addAll(List.of(n1, n2, n3, n4, n5, n6));
-        tutorList.addAll(List.of(f1, f2, f3, f4));
+        tutorList.addAll(List.of(f2, f4, f5, f6));
         assignment1 = new Assignment(tutoredList, tutorList);
 
         System.out.println(assignment1.getTextAssignment());
@@ -87,19 +93,19 @@ public class GlobalTest {
     @Test
     public void casAffectationManuelle() {
         tutoredList.addAll(List.of(n1, n2, n3, n4, n5));
-        tutorList.addAll(List.of(f1, f2, f3, f4));
+        tutorList.addAll(List.of(f2, f3, f4, f6));
         affectationsForces.put(n5, f4);
-
+        
         // faire un assertEquals ici pour montrer qu'ils étaient par forcément affecter
         // ensemble au début
-
+        
         assignment1 = new Assignment(tutoredList, tutorList);
         assignment1.setForcedAssignments(affectationsForces);
-
+        
         System.out.println(assignment1.getTextAssignment());
-
-        // grâce à l'utilisation d'une Map, on peut forcer plus d'affectation
-
+        
+        // grâce à l'utilisation d'une Map, on peut forcer plus d'affectations
+        
         affectationsForces.put(n4, f3);
         assignment1.setForcedAssignments(affectationsForces);
 
@@ -109,8 +115,8 @@ public class GlobalTest {
     @Test
     public void casIncompatibilite() {
         tutoredList.addAll(List.of(n1, n2, n3, n4, n5, n6));
-        tutorList.addAll(List.of(f1, f2, f3, f4));
-        incompatibilites.put(n6, f4);
+        tutorList.addAll(List.of(f4, f5, f6, f7));
+        incompatibilites.put(n3, f4);
 
         assignment1 = new Assignment(tutoredList, tutorList);
         System.out.println(assignment1.getTextAssignment());

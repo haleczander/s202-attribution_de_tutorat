@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 
 /**
  * Utility class that regroups multiple static methods useful for list
@@ -13,6 +14,7 @@ import java.util.ListIterator;
  * fundamentally work with the graph itself, they only help with data
  * processing.
  * 
+ * @author Léopold V.
  * @see Assignment
  * 
  */
@@ -100,28 +102,26 @@ public final class Tools {
         return waitingList;
     }
 
-    /**
-     * Retrieves a student in a list of student given its name.
-     * 
-     * @param studentName the name to look for.
-     * @param list        the list to search.
-     * @return the student associated with the name.
-     * @throws IllegalArgumentException if there was no match between a name and the
-     *                                  students in the list.
-     * @deprecated
-     */
-    public static Student retrieveStudent(String studentName, List<? extends Student> list) {
-        for (Student student : list) {
-            if (student.getName() == studentName) {
-                return student;
-            }
-        }
-        throw new IllegalArgumentException("Student name could not be found");
-    }
-
-    public static double calcul(Tutored tutored, Tutor tutor) {
-        return tutor.weight * tutored.weight;
-    }
+    // /**
+    // * Retrieves a student in a list of student given its name.
+    // *
+    // * @param studentName the name to look for.
+    // * @param list the list to search.
+    // * @return the student associated with the name.
+    // * @throws IllegalArgumentException if there was no match between a name and
+    // the
+    // * students in the list.
+    // * @deprecated
+    // */
+    // public static Student retrieveStudent(String studentName, List<? extends
+    // Student> list) {
+    // for (Student student : list) {
+    // if (student.getName() == studentName) {
+    // return student;
+    // }
+    // }
+    // throw new IllegalArgumentException("Student name could not be found");
+    // } useless. je la garde en artefact parce que l'aimais bien cette méthode :(
 
     /**
      * Static method that returns a numerical value of a character representing the
@@ -129,7 +129,8 @@ public final class Tools {
      * 
      * @param motivation A, B, or C the motivation of the student.
      * @return a value to assess the motivation of a student.
-     * @throws IllegalArgumentException if the motivation character is not A, B or C.
+     * @throws IllegalArgumentException if the motivation character is not A, B or
+     *                                  C.
      */
     public static double motivationValue(char motivation) throws IllegalArgumentException {
         switch (motivation) {
@@ -140,7 +141,53 @@ public final class Tools {
             case 'C':
                 return 1.2;
             default:
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("The motivation character is not valid (A, B or C).");
         }
+    }
+
+    /**
+     * Calculates the average from all students in a given list.
+     * 
+     * @param list students to get the average from.
+     * @return the average of all students.
+     */
+    public static double getAverage(List<? extends Student> list) {
+        int sum = 0;
+        for (Student student : list) {
+            sum += student.getAverage();
+        }
+        return sum / list.size();
+    }
+
+    /**
+     * Calculates the average of absences from all students in a given list.
+     * 
+     * @param list students to get the average of absences from.
+     * @return the average of absences of all students.
+     */
+    public static double getAbsenceAverage(List<? extends Student> list) {
+        int sum = 0;
+        for (Student student : list) {
+            sum += student.getAbsences();
+        }
+        return sum / list.size();
+    }
+
+    /**
+     * Searches for 2 students (one tutored student: the key, and one tutor student:
+     * the value) through the entry set of a given Map.
+     * 
+     * @param map mapping of Tutored students and Tutor students.
+     * @param tutored tutored student to look for.
+     * @param tutor tutor student to look for.
+     * @return true if the association 'tutored:tutor' exists, false otherwise.
+     */
+    public static boolean areStudentsInMap(Map<Tutored, Tutor> map, Tutored tutored, Tutor tutor) {
+        for (Map.Entry<Tutored, Tutor> entrySet : map.entrySet()) {
+            if (entrySet.getKey().equals(tutored) && entrySet.getValue().equals(tutor)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

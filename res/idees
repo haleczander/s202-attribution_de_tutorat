@@ -80,5 +80,6 @@ C = *1.2
 -> déplacer le poids dans une méthode à implémenter getWeight(double averageWeighting, double levelWeighting)
 -> pour pouvoir foutre une pondération sur la moyenne et sur le niveau voilà
 -> ajouter soit dans le constructeur soit des setters osef
--> potentiellement modifier le compareTo pour faire par rapport au poids au lieu du rang!
--> 
+
+commande de javadoc pour que j'arrête de l'oublier :
+javadoc -private -d "./javadoc" -sourcepath "./src" -subpackages graphs.rapport -classpath "./lib/*"

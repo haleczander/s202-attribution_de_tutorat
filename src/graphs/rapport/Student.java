@@ -2,6 +2,8 @@ package graphs.rapport;
 
 /**
  * Abstract class that represents a student.
+ * 
+ * @author Léopold V.
  */
 public abstract class Student {
     private final String name;
@@ -10,7 +12,6 @@ public abstract class Student {
     protected int absences;
     protected char motivation;
     protected static boolean shortString = true;
-    public double weight;
 
     /**
      * Instantiate a student.
@@ -47,12 +48,23 @@ public abstract class Student {
     }
 
     /**
-     * Method that compares 2 students.
+     * Method that compares the student to another.
      * 
      * @param student the student to compare to.
      * @return -1, 1 or 0 depending on the comparison.
      */
     protected abstract int compareTo(Student student);
+
+    /**
+     * Calculates the weight of the student.
+     * 
+     * @param averageAvg average of all students.
+     * @param absencesAvg average of absences of all students.
+     * @param averageWeighting weighting to apply to student's average.
+     * @param levelWeighting weighting to apply to student's level.
+     * @return the weight of the student.
+     */
+    protected abstract double weight(double averageAvg, double absencesAvg, double averageWeighting, double levelWeighting);
 
     @Override
     public int hashCode() {
@@ -102,26 +114,13 @@ public abstract class Student {
         return true;
     }
 
-    /**
-     * Returns a simple String representation of a student.
-     * 
-     * @return the student's name.
-     */
-    protected String simpleToString() {
-        return this.getName();
-    }
-
     @Override
     public String toString() {
         if (shortString) {
-            return shortToString();
+            return this.getName();
         } else {
             return "Student [nom=" + name + ", moyenne=" + average + ", niveau=" + level + "]";
         }
-    }
-
-    private String shortToString() {
-        return this.name;
     }
 
     /**
@@ -149,5 +148,14 @@ public abstract class Student {
      */
     public int getLevel() {
         return level;
+    }
+
+    /**
+     * Gets the student's absence count.
+     * 
+     * @return number of times the student was absent.
+     */
+    public int getAbsences() {
+        return absences;
     }
 }

@@ -2,6 +2,8 @@ package graphs.rapport;
 
 /**
  * Class that represents a tutor student.
+ * 
+ * @author Léopold V.
  */
 public class Tutor extends Student {
     private int nbofTutored;
@@ -23,8 +25,11 @@ public class Tutor extends Student {
     public Tutor(String name, double average, int level, int absences, char motivation, int nbofTutored)
             throws IllegalArgumentException {
         super(name, average, level, absences, motivation);
-        this.nbofTutored = nbofTutored;
-        this.weight = (20 / this.average * 1 / this.level) * Tools.motivationValue(this.motivation) * (this.absences / 3 + 1);
+        if (level == 3) {
+            this.nbofTutored = nbofTutored;
+        } else {
+            this.nbofTutored = 1;
+        }
     }
 
     @Override
@@ -37,8 +42,8 @@ public class Tutor extends Student {
     }
 
     /**
-     * Compare two tutor students on their level, then on their average if they have
-     * equal level.
+     * Compare the tutor with another one on their level, then on their average if
+     * they have equal level.
      * 
      * @param student Student to compare to.
      * @return 1 if Student to compare to is better, -1 if {@code this} is better, 0
@@ -68,5 +73,11 @@ public class Tutor extends Student {
      */
     public int getNbofTutored() {
         return nbofTutored;
+    }
+
+    @Override
+    public double weight(double averageAvg, double absencesAvg, double averageWeighting, double levelWeighting) {
+        return (averageAvg / this.average * averageWeighting + 3 / this.level * levelWeighting
+                + this.absences / absencesAvg) * Tools.motivationValue(this.motivation);
     }
 }

@@ -1,10 +1,19 @@
-package graphs.rapport;
+package graphs.cas;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import graphs.rapport.Assignment;
+import graphs.rapport.Tutor;
+import graphs.rapport.Tutored;
+
+/**
+ * Scénario pour représenter un cas concret d'utilisation de l'affection.
+ * 
+ * @author Alexandre H.
+ */
 public final class Scenario {
 
     private Scenario() {

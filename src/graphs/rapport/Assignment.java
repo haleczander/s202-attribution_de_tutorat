@@ -15,7 +15,8 @@ import fr.ulille.but.sae2_02.graphes.GrapheNonOrienteValue;
  * class to add a level of abstraction and hide data processing and heaving
  * calculations.
  * 
- * @see #Assignment(String[][])
+ * @author Léopold V.
+ * @see #Assignment(List, List)
  * @see #getAssignment()
  * @see fr.ulille.but.sae2_02.graphes.CalculAffectation
  */
@@ -50,11 +51,25 @@ public class Assignment {
      */
     private Map<Tutored, Tutor> noAssignments;
 
+    /**
+     * weighting of the average of a student in the calculation of its weight.
+     * Default value is 1.
+     */
+    private double averageWeighting;
+
+    /**
+     * weighting of the level of a student in the calculation of its weight. Default
+     * value is 1.
+     */
+    private double levelWeighting;
+
     private Assignment() {
         this.tutorsSplit = true;
         this.manualAssignments = new HashMap<>();
         this.noAssignments = new HashMap<>();
         this.waitingList = new ArrayList<>();
+        this.averageWeighting = 1;
+        this.levelWeighting = 1;
     }
 
     /**
@@ -99,9 +114,29 @@ public class Assignment {
     }
 
     /**
+     * Sets weighting of the average for students during the assignment process. The
+     * higher the weight, the more the student's average will count.
+     * 
+     * @param averageWeighting new average weighting.
+     */
+    public void setAverageWeighting(double averageWeighting) {
+        this.averageWeighting = averageWeighting;
+    }
+
+    /**
+     * Sets weighting of the level for students during the assignment process. The
+     * higher the weight, the more the student's level will count.
+     * 
+     * @param levelWeighting new level weighting.
+     */
+    public void setLevelWeighting(double levelWeighting) {
+        this.levelWeighting = levelWeighting;
+    }
+
+    /**
      * Creates an assignment from 2 lists of students of the object.
      * 
-     * @return CalculAffectation<Student> The resulting assignment;
+     * @return the resulting assignment;
      */
     private CalculAffectation<Student> assignment() {
         listArrange();
@@ -114,36 +149,39 @@ public class Assignment {
 
     /**
      * Method that returns a undirected weighted graph (bipartite graphs) from 2
-     * lists of students of the object. Also uses
+     * lists of students of the object.
      * 
      * @return the resulting graph.
+     * 
+     * @see Tutored#weight(double, double, double, double)
+     * @see Tutor#weight(double, double, double, double)
+     * @see Tools#areStudentsInMap(Map, Tutored, Tutor)
      */
     private GrapheNonOrienteValue<Student> graphSetup() {
         GrapheNonOrienteValue<Student> graph = new GrapheNonOrienteValue<>();
 
-        for (Student student : this.tutoredStudents) {
-            graph.ajouterSommet(student);
-        }
-        for (Student student : this.tutorStudents) {
-            graph.ajouterSommet(student);
-        }
+        studentsAsEdges(graph, this.tutoredStudents);
+        studentsAsEdges(graph, this.tutorStudents);
 
         double weight;
+
+        double tutoredAverageAvg = Tools.getAverage(tutoredStudents);
+        double tutoredAbsenceAvg = Tools.getAbsenceAverage(tutoredStudents);
+
+        double tutorAverageAvg = Tools.getAverage(tutorStudents);
+        double tutorAbsenceAvg = Tools.getAbsenceAverage(tutorStudents);
+
         for (Tutored tutored : this.tutoredStudents) {
             for (Tutor tutor : this.tutorStudents) {
-                weight = Tools.calcul(tutored, tutor);
+                weight = tutored.weight(tutoredAverageAvg, tutoredAbsenceAvg, averageWeighting, levelWeighting)
+                        + tutor.weight(tutorAverageAvg, tutorAbsenceAvg, averageWeighting, levelWeighting);
 
-                // TODO : virer cette merde autre part. c'est dégueulasse.
-                for (Map.Entry<Tutored, Tutor> entrySet : this.manualAssignments.entrySet()) {
-                    if (entrySet.getKey().equals(tutored) && entrySet.getValue().equals(tutor)) {
-                        weight = -1;
-                    }
+                if (Tools.areStudentsInMap(this.manualAssignments, tutored, tutor)) {
+                    weight = -50;
                 }
 
-                for (Map.Entry<Tutored, Tutor> entrySet : this.noAssignments.entrySet()) {
-                    if (entrySet.getKey().equals(tutored) && entrySet.getValue().equals(tutor)) {
-                        weight = 50;
-                    }
+                if (Tools.areStudentsInMap(this.noAssignments, tutored, tutor)) {
+                    weight = 50;
                 }
 
                 graph.ajouterArete(tutored, tutor, weight);
@@ -153,11 +191,23 @@ public class Assignment {
     }
 
     /**
+     * Adds all students that are in the list given as edges in a graph.
+     * 
+     * @param graph graph to add edges to.
+     * @param list  students to add to the graph.
+     */
+    private void studentsAsEdges(GrapheNonOrienteValue<Student> graph, List<? extends Student> list) {
+        for (Student student : list) {
+            graph.ajouterSommet(student);
+        }
+    }
+
+    /**
      * Modifies the lists of students of the object in order to have 2 lists of
      * the same size and suitable for an assignment.
      * 
-     * @see graphs.rapport.Tools#tutorsSplit(List, int)
-     * @see graphs.rapport.Tools#waitingListBuilder(List, int)
+     * @see Tools#tutorsSplit(List, int)
+     * @see Tools#waitingListBuilder(List, int)
      */
     private void listArrange() {
         int diff = tutoredStudents.size() - tutorStudents.size();
@@ -187,7 +237,7 @@ public class Assignment {
      * 
      * @param getGraph includes a textual representation of the bipartite graphs if
      *                 true.
-     * @return String Assignment.
+     * @return the assignment as text.
      */
     public String getTextAssignment(boolean getGraph) {
         StringBuilder string = new StringBuilder();
@@ -205,15 +255,15 @@ public class Assignment {
      * Method that returns a textual representation of the assignment. Includes a
      * waiting list if there is one. Does not include a graph.
      * 
-     * @return String Assignment.
+     * @return the assignment as text.
      */
     public String getTextAssignment() {
         return getTextAssignment(false);
     }
 
     /**
-     * Method that gives acces to an <b>immutable</b> copy of a list of edges of
-     * students that represent an assignment.
+     * Method that gives acces to an <strong>immutable<strong> copy of a list of
+     * edges of students that represent an assignment.
      * 
      * @return a copy of the assignment.
      */
@@ -222,8 +272,8 @@ public class Assignment {
     }
 
     /**
-     * Method that returns an <b>immutable</b> copy of the waiting list of an
-     * assignment.
+     * Method that returns an <strong>immutable<strong> copy of the waiting list of
+     * an assignment.
      * 
      * @return a copy of the waiting list.
      */
@@ -235,7 +285,7 @@ public class Assignment {
      * Method that returns a textual representation of the minimal cost of the
      * assignment.
      * 
-     * @return String Minimal cost.
+     * @return minimal cost.
      */
     public String getTextCost() {
         return "cost: " + getCost();
@@ -244,7 +294,7 @@ public class Assignment {
     /**
      * Returns the minimal cost of the assignment.
      * 
-     * @return double Minimal cost.
+     * @return minimal cost.
      */
     public double getCost() {
         return this.assignment().getCout();
