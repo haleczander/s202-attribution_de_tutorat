@@ -51,25 +51,11 @@ public class Assignment {
      */
     private Map<Tutored, Tutor> noAssignments;
 
-    /**
-     * weighting of the average of a student in the calculation of its weight.
-     * Default value is 1.
-     */
-    private double averageWeighting;
-
-    /**
-     * weighting of the level of a student in the calculation of its weight. Default
-     * value is 1.
-     */
-    private double levelWeighting;
-
     private Assignment() {
         this.tutorsSplit = true;
         this.manualAssignments = new HashMap<>();
         this.noAssignments = new HashMap<>();
         this.waitingList = new ArrayList<>();
-        this.averageWeighting = 1;
-        this.levelWeighting = 1;
     }
 
     /**
@@ -114,26 +100,6 @@ public class Assignment {
     }
 
     /**
-     * Sets weighting of the average for students during the assignment process. The
-     * higher the weight, the more the student's average will count.
-     * 
-     * @param averageWeighting new average weighting.
-     */
-    public void setAverageWeighting(double averageWeighting) {
-        this.averageWeighting = averageWeighting;
-    }
-
-    /**
-     * Sets weighting of the level for students during the assignment process. The
-     * higher the weight, the more the student's level will count.
-     * 
-     * @param levelWeighting new level weighting.
-     */
-    public void setLevelWeighting(double levelWeighting) {
-        this.levelWeighting = levelWeighting;
-    }
-
-    /**
      * Creates an assignment from 2 lists of students of the object.
      * 
      * @return the resulting assignment;
@@ -153,8 +119,8 @@ public class Assignment {
      * 
      * @return the resulting graph.
      * 
-     * @see Tutored#weight(double, double, double, double)
-     * @see Tutor#weight(double, double, double, double)
+     * @see Tutored#getWeight(double, double)
+     * @see Tutor#getWeight(double, double)
      * @see Tools#areStudentsInMap(Map, Tutored, Tutor)
      */
     private GrapheNonOrienteValue<Student> graphSetup() {
@@ -173,8 +139,8 @@ public class Assignment {
 
         for (Tutored tutored : this.tutoredStudents) {
             for (Tutor tutor : this.tutorStudents) {
-                weight = tutored.weight(tutoredAverageAvg, tutoredAbsenceAvg, averageWeighting, levelWeighting)
-                        + tutor.weight(tutorAverageAvg, tutorAbsenceAvg, averageWeighting, levelWeighting);
+                weight = tutored.getWeight(tutoredAverageAvg, tutoredAbsenceAvg)
+                        + tutor.getWeight(tutorAverageAvg, tutorAbsenceAvg);
 
                 if (Tools.areStudentsInMap(this.manualAssignments, tutored, tutor)) {
                     weight = -50;
@@ -262,7 +228,7 @@ public class Assignment {
     }
 
     /**
-     * Method that gives acces to an <strong>immutable<strong> copy of a list of
+     * Method that gives acces to an <strong>immutable</strong> copy of a list of
      * edges of students that represent an assignment.
      * 
      * @return a copy of the assignment.
@@ -272,7 +238,7 @@ public class Assignment {
     }
 
     /**
-     * Method that returns an <strong>immutable<strong> copy of the waiting list of
+     * Method that returns an <strong>immutable</strong> copy of the waiting list of
      * an assignment.
      * 
      * @return a copy of the waiting list.

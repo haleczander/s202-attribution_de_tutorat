@@ -39,12 +39,13 @@ public final class Scenario {
         /** Création des étudiants */
         /** Les étudiants sont issus des données pour tester */
         /** Tuteurs */
-        Tutor t1 = new Tutor("Vincent", 9.3, 2, 0, 'A', 2);
-        Tutor t2 = new Tutor("Jacqueline", 13.2, 2, 1, 'B', 1);
-        Tutor t3 = new Tutor("Pénélope", 13.2, 2, 3, 'A', 2);
+        Tutor t1 = new Tutor("Vincent", 9.3, 2, 0, 'A');
+        Tutor t2 = new Tutor("Jacqueline", 13.2, 2, 1, 'B');
+        Tutor t3 = new Tutor("Pénélope", 13.2, 2, 3, 'A');
         Tutor t4 = new Tutor("Édouard", 16.2, 3, 0, 'C', 1);
+        Tutor t5 = new Tutor("Olivier", 11.3, 3, 2, 'B');
         /** Ensemble T */
-        tutors.addAll(List.of(t1, t2, t3, t4));
+        tutors.addAll(List.of(t1, t2, t3, t4, t5));
 
         /** Tutorés */
         Tutored u1 = new Tutored("Claude", 9.8, 0, 'A');
@@ -59,10 +60,11 @@ public final class Scenario {
 
         /**
          * Cas 1 : pas de doublons chez les tuteurs
-         * Affectation 4 : 4
+         *         il n'y a aucun 
+         * Affectation 5 : 5
          */
         Assignment cas1 = new Assignment(tutored, tutors);
-        cas1.setTutorsSplit(false);
+
         System.out.println(cas1.getTextAssignment());
 
         /**

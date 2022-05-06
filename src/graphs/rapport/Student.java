@@ -11,7 +11,10 @@ public abstract class Student {
     protected int level;
     protected int absences;
     protected char motivation;
+
     protected static boolean shortString = true;
+    protected static double averageWeighting = 1;
+    protected static double levelWeighting = 1;
 
     /**
      * Instantiate a student.
@@ -58,13 +61,11 @@ public abstract class Student {
     /**
      * Calculates the weight of the student.
      * 
-     * @param averageAvg average of all students.
+     * @param averageAvg  average of all students.
      * @param absencesAvg average of absences of all students.
-     * @param averageWeighting weighting to apply to student's average.
-     * @param levelWeighting weighting to apply to student's level.
      * @return the weight of the student.
      */
-    protected abstract double weight(double averageAvg, double absencesAvg, double averageWeighting, double levelWeighting);
+    protected abstract double getWeight(double averageAvg, double absencesAvg);
 
     @Override
     public int hashCode() {
@@ -157,5 +158,25 @@ public abstract class Student {
      */
     public int getAbsences() {
         return absences;
+    }
+
+    /**
+     * Sets the weighting of the average of students for weight computing. Default
+     * value is 1.
+     * 
+     * @param levelWeighting new weighting.
+     */
+    public static void setLevelWeighting(double levelWeighting) {
+        Student.levelWeighting = levelWeighting;
+    }
+
+    /**
+     * Sets the weighting of the level of students for weight computing. Default
+     * value is 1.
+     * 
+     * @param averageWeighting
+     */
+    public static void setAverageWeighting(double averageWeighting) {
+        Student.averageWeighting = averageWeighting;
     }
 }
