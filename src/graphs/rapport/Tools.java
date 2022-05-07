@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Map;
 
 /**
  * Utility class that regroups multiple static methods useful for list
@@ -31,27 +30,28 @@ public final class Tools {
      */
     public static List<Student> getStudentList(List<? extends Student> list) {
         List<Student> students = new ArrayList<>();
-        for (Student student : list) {
-            students.add(student);
-        }
+        students.addAll(list);
+        // for (Student student : list) {
+        //     students.add(student);
+        // }
         return students;
     }
 
-    public static List<Tutored> duplicateTutoredList(List<Tutored> list) {
-        List<Tutored> students = new ArrayList<>();
-        for (Tutored student : list) {
-            students.add(student);
-        }
-        return students;
-    }
+    // public static List<Tutored> duplicateTutoredList(List<Tutored> list) {
+    //     List<Tutored> students = new ArrayList<>();
+    //     for (Tutored student : list) {
+    //         students.add(student);
+    //     }
+    //     return students;
+    // }
 
-    public static List<Tutor> duplicateTutorList(List<Tutor> list) {
-        List<Tutor> students = new ArrayList<>();
-        for (Tutor student : list) {
-            students.add(student);
-        }
-        return students;
-    }
+    // public static List<Tutor> duplicateTutorList(List<Tutor> list) {
+    //     List<Tutor> students = new ArrayList<>();
+    //     for (Tutor student : list) {
+    //         students.add(student);
+    //     }
+    //     return students;
+    // }
 
     /**
      * Splits up to all the tutors that can take multiple students in charge in a
@@ -158,16 +158,18 @@ public final class Tools {
      *                                  C.
      */
     public static double motivationValue(char motivation) throws IllegalArgumentException {
-        switch (motivation) {
-            case 'A':
-                return 0.9;
-            case 'B':
-                return 1;
-            case 'C':
-                return 1.1;
-            default:
-                throw new IllegalArgumentException("The motivation character is not valid (A, B or C).");
-        }
+        if (motivation<'A' && motivation>'C') {throw new IllegalArgumentException("The motivation character is not valid (A, B or C).");}
+        return 1 + (motivation - 'B')*0.1;
+        // switch (motivation) {
+        //     case 'A':
+        //         return 0.9;
+        //     case 'B':
+        //         return 1;
+        //     case 'C':
+        //         return 1.1;
+        //     default:
+        //         throw new IllegalArgumentException("The motivation character is not valid (A, B or C).");
+        // }
     }
 
     /**
@@ -176,11 +178,9 @@ public final class Tools {
      * @param list students to get the average from.
      * @return the average of all students.
      */
-    public static double getAverage(List<? extends Student> list) {
+    public static double computeAverage(List<? extends Student> list) {
         double sum = 0;
-        for (Student student : list) {
-            sum += student.getAverage();
-        }
+        for (Student student : list) {sum += student.getAverage();}
         return sum / list.size();
     }
 
@@ -190,11 +190,9 @@ public final class Tools {
      * @param list students to get the average of absences from.
      * @return the average of absences of all students.
      */
-    public static double getAbsenceAverage(List<? extends Student> list) {
+    public static double computeAbsenceAverage(List<? extends Student> list) {
         double sum = 0;
-        for (Student student : list) {
-            sum += student.getAbsences();
-        }
+        for (Student student : list) {sum += student.getAbsences();}
         return sum / list.size();
     }
 
@@ -207,21 +205,21 @@ public final class Tools {
      * @param tutor   tutor student to look for.
      * @return true if the association 'tutored:tutor' exists, false otherwise.
      */
-    public static boolean areStudentsInMap(Map<Tutored, Tutor> map, Tutored tutored, Tutor tutor) {
-        for (Map.Entry<Tutored, Tutor> entrySet : map.entrySet()) {
-            if (entrySet.getKey().equals(tutored) && entrySet.getValue().equals(tutor)) {
-                return true;
-            }
-        }
-        return false;
-    }
+    // public static boolean areStudentsInMap(Map<Tutored, Tutor> map, Tutored tutored, Tutor tutor) {
+    //     for (Map.Entry<Tutored, Tutor> entrySet : map.entrySet()) {
+    //         if (entrySet.getKey().equals(tutored) && entrySet.getValue().equals(tutor)) {
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }
 
-    public static boolean isTutoredKey(Map<Tutored, Tutor> map, Tutored tutored) {
-        for (Tutored t : map.keySet()) {
-            if (t.equals(tutored)) {
-                return true;
-            }
-        }
-        return false;
-    }
+    // public static boolean isTutoredKey(Map<Tutored, Tutor> map, Tutored tutored) {
+    //     for (Tutored t : map.keySet()) {
+    //         if (t.equals(tutored)) {
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }
 }
