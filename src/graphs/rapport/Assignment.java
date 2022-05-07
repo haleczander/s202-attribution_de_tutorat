@@ -44,7 +44,7 @@ public class Assignment {
     /**
      * Map of all duos who should be assigned together.
      */
-    private Map<Tutored, Tutor> manualAssignments;
+    private Map<Tutored, Tutor> forcedAssignments;
 
     /**
      * Map of all duos who should not be assigned together.
@@ -56,7 +56,7 @@ public class Assignment {
 
     private Assignment() {
         this.polyTutor = true;
-        this.manualAssignments = new HashMap<>();
+        this.forcedAssignments = new HashMap<>();
         this.forbiddenAssignments = new HashMap<>();
         this.waitingList = new ArrayList<>();
         this.assignmentCost = 0;
@@ -84,8 +84,8 @@ public class Assignment {
      * @throws IllegalArgumentException if this duo has already been put in the map.
      */
     public void addForcedAssignments(Tutored tutored, Tutor tutor) {
-        if (this.manualAssignments.containsKey(tutored)){ throw new IllegalArgumentException("This forced assignment already exists.");}
-        this.manualAssignments.put(tutored, tutor);
+        if (this.forcedAssignments.containsKey(tutored)){ throw new IllegalArgumentException("This forced assignment already exists.");}
+        this.forcedAssignments.put(tutored, tutor);
     }
 
     /**
@@ -110,8 +110,8 @@ public class Assignment {
      *                                  assignment with anyone.
      */
     public void removeForcedAssignment(Tutored tutored) {
-        if (!this.manualAssignments.containsKey(tutored)){throw new IllegalArgumentException("This forced assignment does not exist.");}
-        this.manualAssignments.remove(tutored);
+        if (!this.forcedAssignments.containsKey(tutored)){throw new IllegalArgumentException("This forced assignment does not exist.");}
+        this.forcedAssignments.remove(tutored);
     }
 
     /**
@@ -140,6 +140,13 @@ public class Assignment {
     public void setPolyTutor(boolean polyTutor) {
         this.polyTutor = polyTutor;
     }
+    public void togglePolyTutor() {
+        this.polyTutor = !this.polyTutor;
+    }
+    public boolean isPolyTutorOn() {
+        return this.polyTutor;
+    }
+
 
     /**
      * Creates an assignment from 2 lists of students of the object.
@@ -149,9 +156,6 @@ public class Assignment {
     private CalculAffectation<Student> assignment() {
         this.waitingList.clear();
         computeStudentsWeight();
-
-        // List<Tutored> duplicateTutored = Tools.duplicateTutoredList(this.tutoredStudents);
-        // List<Tutor> duplicateTutor = Tools.duplicateTutorList(this.tutorStudents);
 
         List<Tutored> duplicateTutored = new ArrayList<>();
         duplicateTutored.addAll(this.tutoredStudents);
@@ -164,11 +168,11 @@ public class Assignment {
 
         GrapheNonOrienteValue<Student> graph = graphSetup(duplicateTutored, duplicateTutor);
 
-        CalculAffectation<Student> c = new CalculAffectation<>(graph, Tools.getStudentList(duplicateTutored), Tools.getStudentList(duplicateTutor));
+        CalculAffectation<Student> calcul = new CalculAffectation<>(graph, Tools.getStudentList(duplicateTutored), Tools.getStudentList(duplicateTutor));
 
-        this.assignmentCost = c.getCout();
+        this.assignmentCost = calcul.getCout();
 
-        return c;
+        return calcul;
     }
 
     /**
@@ -184,14 +188,14 @@ public class Assignment {
     private GrapheNonOrienteValue<Student> graphSetup(List<Tutored> duplicateTutored, List<Tutor> duplicateTutor) {
         GrapheNonOrienteValue<Student> graph = new GrapheNonOrienteValue<>();
 
-        studentsAsEdges(graph, duplicateTutored);
-        studentsAsEdges(graph, duplicateTutor);
+        addVertices(graph, duplicateTutored);
+        addVertices(graph, duplicateTutor);
 
         double weight;
 
         for (Tutored tutored : duplicateTutored) {
             for (Tutor tutor : duplicateTutor) {
-                if (this.manualAssignments.containsKey(tutored) && this.manualAssignments.get(tutored)==tutor){
+                if (this.forcedAssignments.containsKey(tutored) && this.forcedAssignments.get(tutored)==tutor){
                     weight = -1000;
                 } else if (this.forbiddenAssignments.containsKey(tutored) && this.forbiddenAssignments.get(tutored)==tutor) {
                     weight = 1000;
@@ -211,7 +215,7 @@ public class Assignment {
      * @param graph graph to add edges to.
      * @param list  students to add to the graph.
      */
-    private void studentsAsEdges(GrapheNonOrienteValue<Student> graph, List<? extends Student> list) {
+    private void addVertices(GrapheNonOrienteValue<Student> graph, List<? extends Student> list) {
         for (Student student : list) {
             graph.ajouterSommet(student);
         }
@@ -224,24 +228,24 @@ public class Assignment {
      * @see Tools#tutorsSplit(List, int)
      * @see Tools#waitingListBuilder(List, int)
      */
-    private void listArrange(List<Tutored> duplicateTutored, List<Tutor> duplicateTutor) {
-        int diff =  duplicateTutored.size() - duplicateTutor.size();
+    private void listArrange(List<Tutored> tutored, List<Tutor> tutor) {
+        int diff =  tutored.size() - tutor.size();
 
         if (polyTutor) {
-           // duplicateTutor = Tools.tutorsSplit(duplicateTutor, diff);
-            duplicateTutor = Tools.tutorsSplit2(duplicateTutor, diff);
+           // tutor = Tools.tutorsSplit(tutor, diff);
+           tutor = Tools.tutorsSplit2(tutor, diff);
         }
 
-        diff = duplicateTutored.size() - duplicateTutor.size();
+        diff = tutored.size() - tutor.size();
         if (diff > 0) {
             // tutored in waiting list
-            waitingList = Tools.waitingListBuilder(duplicateTutored, Math.abs(diff));
+            waitingList = Tools.waitingListBuilder(tutored, Math.abs(diff));
         } else if (diff < 0) {
             // tutors in waiting list
-            waitingList = Tools.waitingListBuilder(duplicateTutor, Math.abs(diff));
+            waitingList = Tools.waitingListBuilder(tutor, Math.abs(diff));
         }
 
-        diff = duplicateTutored.size() - duplicateTutor.size();
+        diff = tutored.size() - tutor.size();
         if (diff != 0) {
             throw new IllegalArgumentException("marche pas dommage");
         }

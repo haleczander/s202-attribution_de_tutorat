@@ -129,6 +129,7 @@ public final class Tools {
         return waitingList;
     }
 
+
     /**
      * Static method that returns a numerical value of a character representing the
      * motivation of a student.

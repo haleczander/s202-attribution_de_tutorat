@@ -5,7 +5,7 @@ package graphs.rapport;
  * 
  * @author Léopold V.
  */
-public abstract class Student {
+public abstract class Student implements Comparable<Student>{
     private final String name;
     protected double average;
     protected int level;
@@ -58,14 +58,8 @@ public abstract class Student {
      * @param student the student to compare to.
      * @return -1, 1 or 0 depending on the comparison.
      */
-    protected int compareTo(Student student) {
-        if (this.weight > student.weight) {
-            return 1;
-        } else if (this.weight < student.weight) {
-            return -1;
-        } else {
-            return 0;
-        }
+    public int compareTo(Student student) {
+        return (int) (100*(this.weight-student.getWeight()));
     }
 
     /**

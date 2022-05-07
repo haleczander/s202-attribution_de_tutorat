@@ -74,20 +74,27 @@ public class Tutor extends Student {
 
     @Override
     public void setWeight(double averageAvg, double absencesAvg) {
-        // System.out.println((averageAvg / this.average) * averageWeighting);
-        // System.out.println((double)(3.0 / this.level) * levelWeighting);
-        // System.out.println(Math.sqrt((1 + this.absences) / (1 + absencesAvg)) * absenceWeighting);
-        // System.out.println();
-        this.weight =  ((averageAvg / this.average) * averageWeighting 
-                + (double)(3.0 / this.level) * levelWeighting 
-                + Math.sqrt((1 + this.absences) / (1 + absencesAvg)) * absenceWeighting) / 3
-                * Tools.motivationValue(this.motivation);
+        this.weight =  (
+            (averageAvg / this.average) * averageWeighting                              //poids de la moyenne
+            + (double)(3.0 / this.level) * levelWeighting                               //poids du niveau
+            + Math.sqrt((1 + this.absences) / (1 + absencesAvg)) * absenceWeighting     //poids des absences
+            ) / 3
+            * Tools.motivationValue(this.motivation);                                   // motivation
     }
-    public double getWeight(){return this.weight;}
+
+    public double getWeight(){
+        return this.weight;
+    }
 
     public Tutor copyOf(char toAppend) {
         return new Tutor(this.getName() + "(" + toAppend + ")", average, level, absences, motivation, 1);
     }
-    public boolean isDuplicate(){return false;}
-    protected TutorDuplicate duplicate(){return new TutorDuplicate(this);}
+
+    public boolean isDuplicate(){
+        return false;
+    }
+
+    protected TutorDuplicate duplicate(){
+        return new TutorDuplicate(this);
+    }
 }
