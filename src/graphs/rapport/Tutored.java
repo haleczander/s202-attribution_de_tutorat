@@ -22,27 +22,13 @@ public class Tutored extends Student {
         super(name, average, 1, absences, motivation);
     }
 
-    /**
-     * Compare the tutored student with another one on their average.
-     * 
-     * @param student Student to compare to.
-     * @return 1 if {@code this} is better, -1 if Student to compare to is better, 0
-     *         otherwise.
-     */
     @Override
-    public int compareTo(Student student) {
-        if (this.average > student.average) {
-            return 1;
-        } else if (this.average < student.average) {
-            return -1;
-        } else {
-            return 0;
-        }
-    }
-
-    @Override
-    public double getWeight(double averageAvg, double absencesAvg) {
-        return (averageAvg / this.average * Student.averageWeighting + this.absences / absencesAvg)
+    public void setWeight(double averageAvg, double absencesAvg) {
+        // System.out.println((this.average / averageAvg) * averageWeighting);
+        // System.out.println(Math.sqrt((1 + this.absences) / (1 + absencesAvg)) * absenceWeighting);
+        // System.out.println();
+        this.weight = ((this.average / averageAvg) * averageWeighting
+                + Math.sqrt((1 + this.absences) / (1 + absencesAvg)) * absenceWeighting) / 2
                 * Tools.motivationValue(this.motivation);
     }
 }

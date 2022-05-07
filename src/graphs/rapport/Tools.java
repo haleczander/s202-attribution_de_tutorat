@@ -8,7 +8,7 @@ import java.util.Map;
 
 /**
  * Utility class that regroups multiple static methods useful for list
- * streamlining, assignments, and retrieving information. Those method were
+ * optimisation, assignments, and retrieving information. Those method were
  * seperated from the {@code Assignment.java} class for multiple reasons :
  * methods might be reused later in the application, and these methods do not
  * fundamentally work with the graph itself, they only help with data
@@ -37,30 +37,55 @@ public final class Tools {
         return students;
     }
 
+    public static List<Tutored> duplicateTutoredList(List<Tutored> list) {
+        List<Tutored> students = new ArrayList<>();
+        for (Tutored student : list) {
+            students.add(student);
+        }
+        return students;
+    }
+
+    public static List<Tutor> duplicateTutorList(List<Tutor> list) {
+        List<Tutor> students = new ArrayList<>();
+        for (Tutor student : list) {
+            students.add(student);
+        }
+        return students;
+    }
+
     /**
      * Splits up to all the tutors that can take multiple students in charge in a
      * given list. Number of splits is determined by the number of tutored students
-     * without an available tutors. Order of splits is random. Returns the list with
-     * potential student splits. Current max number of tutored students that a tutor
-     * can take in charge is 2, thinking about going up to 3.
+     * without an available tutors. Splits are done after list has been sorted.
+     * Returns the list with potential student splits. Current max number of tutored
+     * students that a tutor can take in charge is 2.
      * 
      * @param list List of tutors to process.
      * @param diff Number of potential splits.
      * @return List of tutors with all available or necessary splits.
+     * 
+     * @throws IllegalArgumentException if number of students to take in charge is
+     *                                  superior to 2.
+     * 
+     * @see Tutored#compareTo(Student)
+     * @see Tutor#compareTo(Student)
      */
     public static List<Tutor> tutorsSplit(List<Tutor> list, int diff) {
+        list.sort((s1, s2) -> s1.compareTo(s2));
         boolean noMoreAvailableStudents = false;
         while (diff > 0 && !noMoreAvailableStudents) {
             Iterator<Tutor> it = list.iterator();
             while (it.hasNext()) {
                 Tutor tuteur = it.next();
                 if (tuteur.getNbofTutored() == 2) {
+                    Tutor newTutor1 = tuteur.copyOf('α');
+                    Tutor newTutor2 = tuteur.copyOf('β');
+                    newTutor2.setWeight(tuteur.getWeight() * 2);
                     list.remove(tuteur);
-                    list.add(new Tutor(tuteur.getName() + "(α)", tuteur.average * 1.5, tuteur.level, tuteur.absences,
-                            tuteur.motivation, 1));
-                    list.add(new Tutor(tuteur.getName() + "(β)", tuteur.average * 1.5, tuteur.level, tuteur.absences,
-                            tuteur.motivation, 1));
+                    list.addAll(List.of(newTutor1, newTutor2));
                     break;
+                } else if (tuteur.getNbofTutored() > 2) {
+                    throw new IllegalArgumentException("Max number of tutored taken in charge is 3.");
                 }
                 if (!it.hasNext()) {
                     noMoreAvailableStudents = true;
@@ -78,12 +103,12 @@ public final class Tools {
      * arbitrary. Order does not change after building the waiting list as it does
      * not impact the assignment.
      * 
-     * @see graphs.rapport.Tutored#compareTo(Student)
-     * @see graphs.rapport.Tutor#compareTo(Student)
-     * 
      * @param list list to sort and build the waiting list from.
      * @param diff number of students to remove.
      * @return The waiting list of
+     * 
+     * @see Tutored#compareTo(Student)
+     * @see Tutor#compareTo(Student)
      */
     public static List<Student> waitingListBuilder(List<? extends Student> list, int diff) {
         List<Student> waitingList = new ArrayList<>();
@@ -135,11 +160,11 @@ public final class Tools {
     public static double motivationValue(char motivation) throws IllegalArgumentException {
         switch (motivation) {
             case 'A':
-                return 0.8;
+                return 0.9;
             case 'B':
                 return 1;
             case 'C':
-                return 1.2;
+                return 1.1;
             default:
                 throw new IllegalArgumentException("The motivation character is not valid (A, B or C).");
         }
@@ -152,7 +177,7 @@ public final class Tools {
      * @return the average of all students.
      */
     public static double getAverage(List<? extends Student> list) {
-        int sum = 0;
+        double sum = 0;
         for (Student student : list) {
             sum += student.getAverage();
         }
@@ -166,7 +191,7 @@ public final class Tools {
      * @return the average of absences of all students.
      */
     public static double getAbsenceAverage(List<? extends Student> list) {
-        int sum = 0;
+        double sum = 0;
         for (Student student : list) {
             sum += student.getAbsences();
         }
@@ -177,14 +202,23 @@ public final class Tools {
      * Searches for 2 students (one tutored student: the key, and one tutor student:
      * the value) through the entry set of a given Map.
      * 
-     * @param map mapping of Tutored students and Tutor students.
+     * @param map     mapping of Tutored students and Tutor students.
      * @param tutored tutored student to look for.
-     * @param tutor tutor student to look for.
+     * @param tutor   tutor student to look for.
      * @return true if the association 'tutored:tutor' exists, false otherwise.
      */
     public static boolean areStudentsInMap(Map<Tutored, Tutor> map, Tutored tutored, Tutor tutor) {
         for (Map.Entry<Tutored, Tutor> entrySet : map.entrySet()) {
             if (entrySet.getKey().equals(tutored) && entrySet.getValue().equals(tutor)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isTutoredKey(Map<Tutored, Tutor> map, Tutored tutored) {
+        for (Tutored t : map.keySet()) {
+            if (t.equals(tutored)) {
                 return true;
             }
         }

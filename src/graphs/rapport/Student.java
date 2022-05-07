@@ -11,10 +11,12 @@ public abstract class Student {
     protected int level;
     protected int absences;
     protected char motivation;
+    public double weight;
 
     protected static boolean shortString = true;
     protected static double averageWeighting = 1;
     protected static double levelWeighting = 1;
+    protected static double absenceWeighting = 1;
 
     /**
      * Instantiate a student.
@@ -56,7 +58,15 @@ public abstract class Student {
      * @param student the student to compare to.
      * @return -1, 1 or 0 depending on the comparison.
      */
-    protected abstract int compareTo(Student student);
+    protected int compareTo(Student student) {
+        if (this.weight > student.weight) {
+            return 1;
+        } else if (this.weight < student.weight) {
+            return -1;
+        } else {
+            return 0;
+        }
+    }
 
     /**
      * Calculates the weight of the student.
@@ -65,7 +75,7 @@ public abstract class Student {
      * @param absencesAvg average of absences of all students.
      * @return the weight of the student.
      */
-    protected abstract double getWeight(double averageAvg, double absencesAvg);
+    protected abstract void setWeight(double averageAvg, double absencesAvg);
 
     @Override
     public int hashCode() {
@@ -161,6 +171,19 @@ public abstract class Student {
     }
 
     /**
+     * Gets the student's motivation.
+     * 
+     * @return character representing the student's motivation.
+     */
+    public char getMotivation() {
+        return motivation;
+    }
+
+    public double getWeight() {
+        return weight;
+    }
+
+    /**
      * Sets the weighting of the average of students for weight computing. Default
      * value is 1.
      * 
@@ -178,5 +201,19 @@ public abstract class Student {
      */
     public static void setAverageWeighting(double averageWeighting) {
         Student.averageWeighting = averageWeighting;
+    }
+
+    /**
+     * Sets the weighting of the level of students for weight computing. Default
+     * value is 1.
+     * 
+     * @param absenceWeighting
+     */
+    public static void setAbsenceWeighting(double absenceWeighting) {
+        Student.absenceWeighting = absenceWeighting;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
     }
 }

@@ -1,9 +1,7 @@
 package graphs.cas;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 // import static org.junit.jupiter.api.Assertions.assertEquals;
 // import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -13,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import graphs.rapport.Assignment;
+import graphs.rapport.Tools;
 import graphs.rapport.Tutor;
 import graphs.rapport.Tutored;
 
@@ -43,8 +42,6 @@ public class GlobalTest {
             assignment2;
             public List<Tutored> tutoredList;
     public List<Tutor> tutorList;
-    public Map<Tutored, Tutor> affectationsForces;
-    public Map<Tutored, Tutor> incompatibilites;
 
     @BeforeEach
     public void initialize() {
@@ -66,10 +63,6 @@ public class GlobalTest {
 
         tutoredList = new ArrayList<>();
         tutorList = new ArrayList<>();
-
-        affectationsForces = new HashMap<>();
-
-        incompatibilites = new HashMap<>();
     }
 
     @Test
@@ -94,20 +87,18 @@ public class GlobalTest {
     public void casAffectationManuelle() {
         tutoredList.addAll(List.of(n1, n2, n3, n4, n5));
         tutorList.addAll(List.of(f2, f3, f4, f6));
-        affectationsForces.put(n5, f4);
         
         // faire un assertEquals ici pour montrer qu'ils étaient par forcément affecter
         // ensemble au début
         
         assignment1 = new Assignment(tutoredList, tutorList);
-        assignment1.setForcedAssignments(affectationsForces);
+        assignment1.addForcedAssignments(n5, f4);
         
         System.out.println(assignment1.getTextAssignment());
         
         // grâce à l'utilisation d'une Map, on peut forcer plus d'affectations
         
-        affectationsForces.put(n4, f3);
-        assignment1.setForcedAssignments(affectationsForces);
+        assignment1.addForcedAssignments(n4, f3);
 
         System.out.println(assignment1.getTextAssignment());
     }
@@ -116,14 +107,13 @@ public class GlobalTest {
     public void casIncompatibilite() {
         tutoredList.addAll(List.of(n1, n2, n3, n4, n5, n6));
         tutorList.addAll(List.of(f4, f5, f6, f7));
-        incompatibilites.put(n3, f4);
 
         assignment1 = new Assignment(tutoredList, tutorList);
         System.out.println(assignment1.getTextAssignment());
 
         // assertEquals sur le fait que tel et tel sont affectés ensemble.
 
-        assignment1.setNoAssignments(incompatibilites);
+        assignment1.addForbiddenAssignments(n3, f4);
         System.out.println(assignment1.getTextAssignment());
 
         // assertEquals sur le fait que tel et tel ne sont plus ensemble Sadge.
@@ -148,9 +138,32 @@ public class GlobalTest {
         tutorList.addAll(List.of(f1, f5, f6, f7));
 
         assignment2 = new Assignment(tutoredList, tutorList);
-        assignment2.setTutorsSplit(false);
+        assignment2.setPolyTutor(false);
         System.out.println(assignment2.getTextAssignment());
         // les tuteurs pourraient prendre en charge 7 étudiants mais doublons désactivés : certains tutorés en liste d'attente.
         
+    }
+
+    @Test
+    public void salut() {
+        f1.weight = 1.06;
+        f2.weight = 1.13;
+        f3.weight = 1.14;
+        f4.weight = 0.89;
+        f5.weight = 1.09;
+        tutorList.addAll(List.of(f1, f2, f3, f4, f5));
+
+        n1.weight = 0.68;
+        n2.weight = 1.05;
+        n3.weight = 1.0029;
+        n4.weight = 0.48;
+        n5.weight = 1.69;
+        n6.weight = 0.81;
+        n7.weight = 0.91;
+        tutoredList.addAll(List.of(n1, n2, n3, n4, n5, n6, n7));
+
+        Tools.waitingListBuilder(tutoredList, 0);
+        System.out.println();
+        Tools.waitingListBuilder(tutorList, 0);
     }
 }
