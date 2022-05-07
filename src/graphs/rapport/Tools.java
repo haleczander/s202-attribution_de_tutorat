@@ -78,9 +78,9 @@ public final class Tools {
             while (it.hasNext()) {
                 Tutor tuteur = it.next();
                 if (tuteur.getNbofTutored() == 2) {
-                    Tutor newTutor1 = tuteur.copyOf('α');
-                    Tutor newTutor2 = tuteur.copyOf('β');
-                    newTutor2.setWeight(tuteur.getWeight() * 2);
+                    Tutor newTutor1 = tuteur.copyOf('1');
+                    Tutor newTutor2 = tuteur.copyOf('2');
+                    newTutor2.setWeight(tuteur.getWeight() * 1.5);
                     list.remove(tuteur);
                     list.addAll(List.of(newTutor1, newTutor2));
                     break;

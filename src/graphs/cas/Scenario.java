@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import graphs.rapport.Assignment;
+import graphs.rapport.Student;
 import graphs.rapport.Tutor;
 import graphs.rapport.Tutored;
 
@@ -68,9 +69,10 @@ public final class Scenario {
         tutors.addAll(List.of(t1, t2, t3, t4, t5));
         Assignment cas1 = new Assignment(tutored, tutors);
         cas1.setPolyTutor(false);
-
+        System.out.println("Cas 1.A : Affectation (5,5)");
         System.out.println(cas1.getTextAssignment());
-        System.out.println(cas1.getTextCost() + "\n");
+        System.out.printf("Coût total : %.3f \n",cas1.getCost());
+        System.out.println();
 
         /**
          * Cas 2 : les tuteurs peuvent prendre en charge plusieurs tutorés
@@ -79,25 +81,69 @@ public final class Scenario {
          * Affectation - 6 tutorés : 6 tuteurs - liste d'attente = 1 tutoré
          */
         cas1.setPolyTutor(true);
+        System.out.println("Cas 1.B : Affectation (6,6) avec duplication de tuteurs");
         System.out.println(cas1.getTextAssignment());
-        System.out.println(cas1.getTextCost() + '\n');
-
+        System.out.printf("Coût total : %.3f \n",cas1.getCost());
+        System.out.println();
         /**
          * Cas 3 : affectation manuelle
          * Après le calcul des poids des arêtes,
          * mise-à-jour d'une valeur d'arête à (-1) afin de forcer cette affectation
          * Nous voulons qu'Edouard (t4) et Lucas (u5) soient affectés ensemble
          */
+        cas1.setPolyTutor(false);
         cas1.addForcedAssignments(u1, t2);
-        System.out.println(cas1.getTextAssignment() + '\n');
+        System.out.println("Cas 2.A : Assignation forcée : Claude & Jaqueline");
+        System.out.println(cas1.getTextAssignment());
+        System.out.printf("Coût total : %.3f \n",cas1.getCost());
+        System.out.println();
 
         /**
          * Cas 4 : incompatibilité entre deux étudiants
          * Comme ci-dessus mais la valeur de l'arête est artificiellement haute (5)
          * Jacqueline (t2) et Alexandria (u6) ont des animosités
          */
-        cas1.addForbiddenAssignments(u6, t3);
+        cas1.removeForcedAssignment(u1);
+        cas1.addForbiddenAssignments(u1, t4);
+        System.out.println("Cas 2.B : Affectation (5,5)");
         System.out.println(cas1.getTextAssignment());
+        System.out.printf("Coût total : %.3f \n",cas1.getCost());
+        System.out.println();
+        cas1.removeForbiddenAssignment(u1);
+
+        Student.setAverageWeighting(2);
+        System.out.println("Cas 3.A : Affectation (5,5)");
+        System.out.println(cas1.getTextAssignment());
+        System.out.printf("Coût total : %.3f \n",cas1.getCost());
+        System.out.println();
+        Student.setAverageWeighting(1);
+
+        Student.setLevelWeighting(2);
+        System.out.println("Cas 3.B : Affectation (5,5)");
+        System.out.println(cas1.getTextAssignment());
+        System.out.printf("Coût total : %.3f \n",cas1.getCost());
+        System.out.println();
+        Student.setLevelWeighting(1);
+
+        Student.setAbsenceWeighting(2);
+        System.out.println("Cas 3.C : Affectation (5,5)");
+        System.out.println(cas1.getTextAssignment());
+        System.out.printf("Coût total : %.3f \n",cas1.getCost());
+        System.out.println();
+        Student.setAbsenceWeighting(1);
+
+        cas1.removeStudent(t1);
+        System.out.println("Cas 4.A : Affectation (5,5)");
+        System.out.println(cas1.getTextAssignment());
+        System.out.printf("Coût total : %.3f \n",cas1.getCost());
+        System.out.println();
+
+        cas1.addStudent(t1);
+        cas1.removeStudent(u6);
+        System.out.println("Cas 4.B : Affectation (5,5)");
+        System.out.println(cas1.getTextAssignment());
+        System.out.printf("Coût total : %.3f \n",cas1.getCost());
+        System.out.println();
 
     }
 }

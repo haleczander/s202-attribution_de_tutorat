@@ -140,6 +140,19 @@ public class Assignment {
         }
     }
 
+    public void removeStudent(Tutor student) {
+              this.tutorStudents.remove(student);
+    }
+    public void removeStudent(Tutored student) {
+        this.tutoredStudents.remove(student);
+    }
+    public void addStudent(Tutor student) {
+        this.tutorStudents.add(student);
+    }
+    public void addStudent(Tutored student) {
+        this.tutoredStudents.add(student);
+    }
+
     /**
      * Sets whether or not tutors should be split if needed. Default value is true.
      * 
@@ -334,6 +347,6 @@ public class Assignment {
      * @return minimal cost.
      */
     public double getCost() {
-        return this.assignmentCost % 1000;
+        return (this.assignmentCost % 1000) + ((this.assignmentCost % 1000 < 0) ?   1000 : 0);
     }
 }
