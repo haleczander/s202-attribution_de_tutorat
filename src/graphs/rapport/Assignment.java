@@ -127,18 +127,10 @@ public class Assignment {
         this.forbiddenAssignments.remove(tutored);
     }
 
-    public void removeStudent(Tutor student) {
-              this.tutorStudents.remove(student);
-    }
-    public void removeStudent(Tutored student) {
-        this.tutoredStudents.remove(student);
-    }
-    public void addStudent(Tutor student) {
-        this.tutorStudents.add(student);
-    }
-    public void addStudent(Tutored student) {
-        this.tutoredStudents.add(student);
-    }
+    public void removeStudent(Tutor student) {this.tutorStudents.remove(student);}
+    public void removeStudent(Tutored student) {this.tutoredStudents.remove(student);}
+    public void addStudent(Tutor student) {this.tutorStudents.add(student);}
+    public void addStudent(Tutored student) {this.tutoredStudents.add(student);}
 
     /**
      * Sets whether or not tutors should be split if needed. Default value is true.
@@ -236,7 +228,8 @@ public class Assignment {
         int diff =  duplicateTutored.size() - duplicateTutor.size();
 
         if (polyTutor) {
-            duplicateTutor = Tools.tutorsSplit(duplicateTutor, diff);
+           // duplicateTutor = Tools.tutorsSplit(duplicateTutor, diff);
+            duplicateTutor = Tools.tutorsSplit2(duplicateTutor, diff);
         }
 
         diff = duplicateTutored.size() - duplicateTutor.size();
@@ -257,15 +250,8 @@ public class Assignment {
     private void computeStudentsWeight() {
         computeStudentWeight(this.tutoredStudents);
         computeStudentWeight(this.tutorStudents);
-
-        // double tutoredAverageAvg = Tools.computeAverage(tutoredStudents);
-        // double tutoredAbsenceAvg = Tools.computeAbsenceAverage(tutoredStudents);
-        // for (Student student : this.tutoredStudents) {student.setWeight(tutoredAverageAvg, tutoredAbsenceAvg);}        
-
-        // double tutorAverageAvg = Tools.computeAverage(tutorStudents);
-        // double tutorAbsenceAvg = Tools.computeAbsenceAverage(tutorStudents);
-        // for (Student student : this.tutorStudents) {student.setWeight(tutorAverageAvg, tutorAbsenceAvg);}
     }
+
     private void computeStudentWeight(List<? extends Student> list){
         double avgAvg = Tools.computeAverage(list);
         double absAvg = Tools.computeAbsenceAverage(list);

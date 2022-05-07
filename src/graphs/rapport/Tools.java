@@ -37,22 +37,6 @@ public final class Tools {
         return students;
     }
 
-    // public static List<Tutored> duplicateTutoredList(List<Tutored> list) {
-    //     List<Tutored> students = new ArrayList<>();
-    //     for (Tutored student : list) {
-    //         students.add(student);
-    //     }
-    //     return students;
-    // }
-
-    // public static List<Tutor> duplicateTutorList(List<Tutor> list) {
-    //     List<Tutor> students = new ArrayList<>();
-    //     for (Tutor student : list) {
-    //         students.add(student);
-    //     }
-    //     return students;
-    // }
-
     /**
      * Splits up to all the tutors that can take multiple students in charge in a
      * given list. Number of splits is determined by the number of tutored students
@@ -79,8 +63,10 @@ public final class Tools {
                 Tutor tuteur = it.next();
                 if (tuteur.getNbofTutored() == 2) {
                     Tutor newTutor1 = tuteur.copyOf('1');
+                    newTutor1.setWeight(tuteur.getWeight());
                     Tutor newTutor2 = tuteur.copyOf('2');
                     newTutor2.setWeight(tuteur.getWeight() * 1.5);
+                    // System.out.println("LEPOIDSSSS"+newTutor2.getWeight());
                     list.remove(tuteur);
                     list.addAll(List.of(newTutor1, newTutor2));
                     break;
@@ -94,6 +80,20 @@ public final class Tools {
             }
             diff--;
         }
+        return list;
+    }
+
+    public static List<Tutor> tutorsSplit2(List<Tutor> list, int diff){
+        list.sort((s1, s2) -> s1.compareTo(s2));
+        List<Tutor> toAdd = new ArrayList<>();
+        for (Tutor t : list) {
+            if (t.getNbofTutored()>1){
+                toAdd.add(t.duplicate());
+                diff--;
+            }
+            if (diff == 0) { break;}
+        }
+        list.addAll(toAdd);
         return list;
     }
 
@@ -127,27 +127,6 @@ public final class Tools {
         return waitingList;
     }
 
-    // /**
-    // * Retrieves a student in a list of student given its name.
-    // *
-    // * @param studentName the name to look for.
-    // * @param list the list to search.
-    // * @return the student associated with the name.
-    // * @throws IllegalArgumentException if there was no match between a name and
-    // the
-    // * students in the list.
-    // * @deprecated
-    // */
-    // public static Student retrieveStudent(String studentName, List<? extends
-    // Student> list) {
-    // for (Student student : list) {
-    // if (student.getName() == studentName) {
-    // return student;
-    // }
-    // }
-    // throw new IllegalArgumentException("Student name could not be found");
-    // } useless. je la garde en artefact parce que l'aimais bien cette méthode :(
-
     /**
      * Static method that returns a numerical value of a character representing the
      * motivation of a student.
@@ -160,16 +139,6 @@ public final class Tools {
     public static double motivationValue(char motivation) throws IllegalArgumentException {
         if (motivation<'A' && motivation>'C') {throw new IllegalArgumentException("The motivation character is not valid (A, B or C).");}
         return 1 + (motivation - 'B')*0.1;
-        // switch (motivation) {
-        //     case 'A':
-        //         return 0.9;
-        //     case 'B':
-        //         return 1;
-        //     case 'C':
-        //         return 1.1;
-        //     default:
-        //         throw new IllegalArgumentException("The motivation character is not valid (A, B or C).");
-        // }
     }
 
     /**
@@ -195,31 +164,4 @@ public final class Tools {
         for (Student student : list) {sum += student.getAbsences();}
         return sum / list.size();
     }
-
-    /**
-     * Searches for 2 students (one tutored student: the key, and one tutor student:
-     * the value) through the entry set of a given Map.
-     * 
-     * @param map     mapping of Tutored students and Tutor students.
-     * @param tutored tutored student to look for.
-     * @param tutor   tutor student to look for.
-     * @return true if the association 'tutored:tutor' exists, false otherwise.
-     */
-    // public static boolean areStudentsInMap(Map<Tutored, Tutor> map, Tutored tutored, Tutor tutor) {
-    //     for (Map.Entry<Tutored, Tutor> entrySet : map.entrySet()) {
-    //         if (entrySet.getKey().equals(tutored) && entrySet.getValue().equals(tutor)) {
-    //             return true;
-    //         }
-    //     }
-    //     return false;
-    // }
-
-    // public static boolean isTutoredKey(Map<Tutored, Tutor> map, Tutored tutored) {
-    //     for (Tutored t : map.keySet()) {
-    //         if (t.equals(tutored)) {
-    //             return true;
-    //         }
-    //     }
-    //     return false;
-    // }
 }

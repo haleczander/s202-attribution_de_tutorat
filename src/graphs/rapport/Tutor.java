@@ -83,8 +83,11 @@ public class Tutor extends Student {
                 + Math.sqrt((1 + this.absences) / (1 + absencesAvg)) * absenceWeighting) / 3
                 * Tools.motivationValue(this.motivation);
     }
+    public double getWeight(){return this.weight;}
 
     public Tutor copyOf(char toAppend) {
         return new Tutor(this.getName() + "(" + toAppend + ")", average, level, absences, motivation, 1);
     }
+    public boolean isDuplicate(){return false;}
+    protected TutorDuplicate duplicate(){return new TutorDuplicate(this);}
 }
