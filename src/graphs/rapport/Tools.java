@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import fr.ulille.but.sae2_02.graphes.Arete;
+
 /**
  * Utility class that regroups multiple static methods useful for list
  * optimisation, assignments, and retrieving information. Those method were
@@ -163,5 +165,9 @@ public final class Tools {
         double sum = 0;
         for (Student student : list) {sum += student.getAbsences();}
         return sum / list.size();
+    }
+
+    public static boolean edgeTextEquals(Arete<Student> edge1, Arete<Student> edge2) {
+        return edge1.toString().equals(edge2.toString());
     }
 }

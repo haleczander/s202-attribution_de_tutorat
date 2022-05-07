@@ -1,16 +1,21 @@
 package graphs.cas;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import java.util.ArrayList;
 import java.util.List;
-
-// import static org.junit.jupiter.api.Assertions.assertEquals;
-// import static org.junit.jupiter.api.Assertions.assertTrue;
-// import static org.junit.jupiter.api.Assertions.assertFalse;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import fr.ulille.but.sae2_02.graphes.Arete;
 import graphs.rapport.Assignment;
+import graphs.rapport.Student;
 import graphs.rapport.Tools;
 import graphs.rapport.Tutor;
 import graphs.rapport.Tutored;
@@ -23,147 +28,238 @@ import graphs.rapport.Tutored;
  */
 public class GlobalTest {
     public Tutored 
-            n1,
-            n2,
-            n3,
-            n4,
-            n5,
-            n6,
-            n7;
+            u1,
+            u2,
+            u3,
+            u4,
+            u5,
+            u6,
+            u7;
     public Tutor 
-            f1,
-            f2,
-            f3,
-            f4,
-            f5,
-            f6,
-            f7;
-    public Assignment assignment1,
-            assignment2;
-            public List<Tutored> tutoredList;
+            t1,
+            t2,
+            t3,
+            t4,
+            t5;
+    public Assignment assignment;
+    public List<Tutored> tutoredList;
     public List<Tutor> tutorList;
 
     @BeforeEach
     public void initialize() {
-        n1 = new Tutored("Claude", 9.8, 0, 'A');
-        n2 = new Tutored("Madeleine", 6.9, 8, 'A');
-        n3 = new Tutored("Sabine", 12.7, 0, 'C');
-        n4 = new Tutored("Hugues", 0.2, 2, 'B');
-        n5 = new Tutored("Lucas", 17.3, 5, 'C');
-        n6 = new Tutored("Alexandria", 12.5, 0, 'A');
-        n7 = new Tutored("Anouk", 10.5, 1, 'B');
+        u1 = new Tutored("Claude", 9.8, 0, 'A');
+        u2 = new Tutored("Madeleine", 6.9, 8, 'A');
+        u3 = new Tutored("Sabine", 12.7, 0, 'C');
+        u4 = new Tutored("Hugues", 0.2, 2, 'B');
+        u5 = new Tutored("Lucas", 17.3, 5, 'C');
+        u6 = new Tutored("Alexandria", 12.5, 0, 'A');
+        u7 = new Tutored("Anouk", 10.5, 1, 'B');
 
-        f1 = new Tutor("Vincent", 9.3, 2, 0, 'A', 2);
-        f2 = new Tutor("Jacqueline", 13.2, 2, 1, 'B', 1);
-        f3 = new Tutor("Pénélope", 13.2, 2, 3, 'A', 2);
-        f4 = new Tutor("Édouard", 13.9, 3, 0, 'C', 1);
-        f5 = new Tutor("Olivier", 11.3, 3, 2, 'B', 2);
-        f6 = new Tutor("Inès", 9.3, 3, 1, 'A', 2);
-        f7 = new Tutor("Franck", 11.9, 3, 4, 'C', 1);
+        t1 = new Tutor("Vincent", 9.3, 2, 0, 'A');
+        t2 = new Tutor("Jacqueline", 13.2, 2, 1, 'B');
+        t3 = new Tutor("Pénélope", 13.2, 2, 3, 'A');
+        t4 = new Tutor("Édouard", 16.2, 3, 0, 'C', 1);
+        t5 = new Tutor("Olivier", 11.3, 3, 2, 'B');
+
+        Student.setAbsenceWeighting(1);
+        Student.setAverageWeighting(1);
+        Student.setLevelWeighting(1);
 
         tutoredList = new ArrayList<>();
+        tutoredList.addAll(List.of(u1, u2, u3, u4, u5, u6, u7));
         tutorList = new ArrayList<>();
+        tutorList.addAll(List.of(t1, t2, t3, t4, t5));
+        assignment = new Assignment(tutoredList, tutorList);
     }
 
     @Test
-    public void casAutantDeTuteursEtTutores() {
-        tutoredList.addAll(List.of(n1, n2, n3, n4));
-        tutorList.addAll(List.of(f1, f2, f3, f4));
-        assignment1 = new Assignment(tutoredList, tutorList);
+    public void casDeBase() {
+        // cas 1.A
+        assignment.setPolyTutor(false);
+        List<Arete<Student>> edges = assignment.getAssignment();
+        List<Student> waitingList = assignment.getWaitingList();
+        double cost = Double.parseDouble(String.format("%.3f", assignment.getCost()));
 
-        System.out.println(assignment1.getTextAssignment());
+        assertEquals(edges.size(), 5);
+        assertEquals(waitingList.size(), 2);
+        assertEquals(cost, 9.242);
     }
 
     @Test
-    public void casPlusDeTutoresQueDeTuteurs() {
-        tutoredList.addAll(List.of(n1, n2, n3, n4, n5, n6));
-        tutorList.addAll(List.of(f2, f4, f5, f6));
-        assignment1 = new Assignment(tutoredList, tutorList);
+    public void casPolytutorat() {
+        // cas 1.B
+        assignment.setPolyTutor(true);
+        List<Arete<Student>> edges = assignment.getAssignment();
+        List<Student> waitingList = assignment.getWaitingList();
+        double cost = Double.parseDouble(String.format("%.3f", assignment.getCost()));
 
-        System.out.println(assignment1.getTextAssignment());
+        assertEquals(edges.size(), 6);
+        assertEquals(waitingList.size(), 1);
+        assertEquals(cost, 11.941);
+        assertEquals(waitingList.get(0), u5);
+        int olivierCount = 0;
+        Pattern pattern = Pattern.compile("olivier", Pattern.CASE_INSENSITIVE);
+        Matcher matcher;
+        for (Arete<Student> edge : edges) {
+            matcher = pattern.matcher(edge.getExtremite2().getName());
+            if(matcher.find()) {
+                olivierCount++;
+            }
+        }
+        assertEquals(olivierCount, 2);
     }
 
     @Test
-    public void casAffectationManuelle() {
-        tutoredList.addAll(List.of(n1, n2, n3, n4, n5));
-        tutorList.addAll(List.of(f2, f3, f4, f6));
+    public void casAffectationForcee() {
+        // cas 2.A
+        // rappel : on force l'affectation entre Claude & Jacqueline
+        assignment.setPolyTutor(false);
+        List<Arete<Student>> edges = assignment.getAssignment();
         
-        // faire un assertEquals ici pour montrer qu'ils étaient par forcément affecter
-        // ensemble au début
+        Arete<Student> wantedAssignment = new Arete<Student>(u1, t2);
+        for (Arete<Student> edge : edges) {
+            assertFalse(Tools.edgeTextEquals(edge, wantedAssignment));
+        }
         
-        assignment1 = new Assignment(tutoredList, tutorList);
-        assignment1.addForcedAssignments(n5, f4);
-        
-        System.out.println(assignment1.getTextAssignment());
-        
-        // grâce à l'utilisation d'une Map, on peut forcer plus d'affectations
-        
-        assignment1.addForcedAssignments(n4, f3);
+        assignment.addForcedAssignments(u1, t2);
+        edges = assignment.getAssignment();
+        List<Student> waitingList = assignment.getWaitingList();
+        boolean isEdgeInAssignment = false;
+        double cost = Double.parseDouble(String.format("%.3f", assignment.getCost()));
 
-        System.out.println(assignment1.getTextAssignment());
+        for (Arete<Student> edge : edges) {
+            if(Tools.edgeTextEquals(edge, wantedAssignment)) {
+                isEdgeInAssignment = true;
+            }
+        }
+        assertTrue(isEdgeInAssignment);
+        assertEquals(edges.size(), 5);
+        assertEquals(waitingList, List.of(u5, u2));
+        assertEquals(cost, 7.415);
+
+        assignment.removeForcedAssignment(u1);
+        edges = assignment.getAssignment();
+        for (Arete<Student> edge : edges) {
+            assertFalse(Tools.edgeTextEquals(edge, wantedAssignment));
+        }
+
     }
 
     @Test
     public void casIncompatibilite() {
-        tutoredList.addAll(List.of(n1, n2, n3, n4, n5, n6));
-        tutorList.addAll(List.of(f4, f5, f6, f7));
+        // cas 2.B
+        // rappel : on veut empêcher une affectation entre 
+        assignment.setPolyTutor(false);
+        List<Arete<Student>> edges = assignment.getAssignment();
 
-        assignment1 = new Assignment(tutoredList, tutorList);
-        System.out.println(assignment1.getTextAssignment());
+        Arete<Student> unwantedAssignment = new Arete<Student>(u1, t4);
+        boolean isEdgeInAssignment = false;
+        for (Arete<Student> edge : edges) {
+            if(Tools.edgeTextEquals(edge, unwantedAssignment)) {
+                isEdgeInAssignment = true;
+            }
+        }
+        assertTrue(isEdgeInAssignment);
 
-        // assertEquals sur le fait que tel et tel sont affectés ensemble.
+        assignment.addForbiddenAssignments(u1, t4);
+        edges = assignment.getAssignment();
+        List<Student> waitingList = assignment.getWaitingList();
+        double cost = Double.parseDouble(String.format("%.3f", assignment.getCost()));
 
-        assignment1.addForbiddenAssignments(n3, f4);
-        System.out.println(assignment1.getTextAssignment());
+        for (Arete<Student> edge : edges) {
+            assertFalse(Tools.edgeTextEquals(edge, unwantedAssignment));
+        }
+        assertEquals(edges.size(), 5);
+        assertEquals(waitingList, List.of(u5, u2));
+        assertEquals(cost, 9.242);
 
-        // assertEquals sur le fait que tel et tel ne sont plus ensemble Sadge.
-        // je mets "tel" jusqu'à ce qu'on trouve une formule définitive.
+        assignment.removeForbiddenAssignment(u1);
+        edges = assignment.getAssignment();
+        isEdgeInAssignment = false;
+        for (Arete<Student> edge : edges) {
+            if(Tools.edgeTextEquals(edge, unwantedAssignment)) {
+                isEdgeInAssignment = true;
+            }
+        }
+        assertTrue(isEdgeInAssignment);
     }
 
     @Test
-    public void casListeAttente() {
-        // fonctionnalités supplémentaires : 
-        // - on peut choisir de faire ou pas un doublon des étudiants qui peuvent s'occuper de plusieurs étudiants.
-        //   (valeur par défaut = true, comme vu précédemment).
-        // - liste d'attente dans le cas où il y aurait trop d'étudiants d'un côté ou de l'autre.
-        tutoredList.addAll(List.of(n1, n2, n3, n4));
-        tutorList.addAll(List.of(f1, f2, f3, f4, f5, f6, f7));
+    public void casPonderationMoyenne() {
+        // cas 3.A
+        assignment.setPolyTutor(false);
+        Student.setAverageWeighting(2);
+        List<Arete<Student>> edges = assignment.getAssignment();
+        List<Student> waitingList = assignment.getWaitingList();
+        double cost = (double)(((int)(1000 * assignment.getCost()))/1000.00);
 
-        assignment1 = new Assignment(tutoredList, tutorList);
-        // System.out.println(assignment1.getTextAssignment());
-        // trop de tuteurs : liste d'attente
-
-        tutoredList.addAll(List.of(n5, n6, n7));
-        tutorList.clear();
-        tutorList.addAll(List.of(f1, f5, f6, f7));
-
-        assignment2 = new Assignment(tutoredList, tutorList);
-        assignment2.setPolyTutor(false);
-        System.out.println(assignment2.getTextAssignment());
-        // les tuteurs pourraient prendre en charge 7 étudiants mais doublons désactivés : certains tutorés en liste d'attente.
-        
+        assertEquals(edges.size(), 5);
+        assertEquals(waitingList, List.of(u5, u3));
+        assertEquals(cost, 12.819);
     }
 
     @Test
-    public void salut() {
-        f1.weight = 1.06;
-        f2.weight = 1.13;
-        f3.weight = 1.14;
-        f4.weight = 0.89;
-        f5.weight = 1.09;
-        tutorList.addAll(List.of(f1, f2, f3, f4, f5));
+    public void casPonderationNiveau() {
+        // cas 3.B
+        assignment.setPolyTutor(false);
+        Student.setLevelWeighting(2);
+        List<Arete<Student>> edges = assignment.getAssignment();
+        List<Student> waitingList = assignment.getWaitingList();
+        double cost = Double.parseDouble(String.format("%.3f", assignment.getCost()));
 
-        n1.weight = 0.68;
-        n2.weight = 1.05;
-        n3.weight = 1.0029;
-        n4.weight = 0.48;
-        n5.weight = 1.69;
-        n6.weight = 0.81;
-        n7.weight = 0.91;
-        tutoredList.addAll(List.of(n1, n2, n3, n4, n5, n6, n7));
+        assertEquals(edges.size(), 5);
+        assertEquals(waitingList, List.of(u5, u2));
+        assertEquals(cost, 11.342);
+    }
 
-        Tools.waitingListBuilder(tutoredList, 0);
-        System.out.println();
-        Tools.waitingListBuilder(tutorList, 0);
+    @Test
+    public void casPonderationAbsences() {
+        // cas 3.C
+        assignment.setPolyTutor(false);
+        Student.setAbsenceWeighting(2);
+        List<Arete<Student>> edges = assignment.getAssignment();
+        List<Student> waitingList = assignment.getWaitingList();
+        double cost = Double.parseDouble(String.format("%.3f", assignment.getCost()));
+
+        assertEquals(edges.size(), 5);
+        assertEquals(waitingList, List.of(u5, u2));
+        assertEquals(cost, 12.471);
+    }
+
+    @Test
+    public void casExclusionTuteur() {
+        // cas 4.A
+        assignment.setPolyTutor(false);
+        assignment.removeStudent(t1);
+        List<Arete<Student>> edges = assignment.getAssignment();
+        List<Student> waitingList = assignment.getWaitingList();
+        double cost = Double.parseDouble(String.format("%.3f", assignment.getCost()));
+
+
+        for (Arete<Student> edge : edges) {
+            assertNotEquals(edge.getExtremite2(), t1);
+        }
+        assertEquals(edges.size(), 4);
+        assertEquals(waitingList.size(), 3);
+        assertEquals(waitingList, List.of(u5, u2, u3));
+        assertEquals(cost, 7.178, 0.002);
+    }
+
+    @Test
+    public void casExclusionTutore() {
+        // cas 4.B
+        assignment.setPolyTutor(false);
+        assignment.removeStudent(u6);
+        List<Arete<Student>> edges = assignment.getAssignment();
+        List<Student> waitingList = assignment.getWaitingList();
+        double cost = Double.parseDouble(String.format("%.3f", assignment.getCost()));
+
+        for (Arete<Student> edge : edges) {
+            assertNotEquals(edge.getExtremite1(), u6);
+        }
+        assertEquals(edges.size(), 5);
+        assertEquals(waitingList.size(), 1);
+        assertEquals(waitingList, List.of(u5));
+        assertEquals(cost, 9.457, 0.002);
     }
 }
