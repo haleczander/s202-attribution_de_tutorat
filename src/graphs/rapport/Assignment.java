@@ -199,15 +199,12 @@ public class Assignment {
 
         for (Tutored tutored : duplicateTutored) {
             for (Tutor tutor : duplicateTutor) {
-                weight = tutored.getWeight()
-                        + tutor.getWeight();
-
                 if (Tools.areStudentsInMap(this.manualAssignments, tutored, tutor)) {
                     weight = -1000;
-                }
-
-                if (Tools.areStudentsInMap(this.forbiddenAssignments, tutored, tutor)) {
+                } else if (Tools.areStudentsInMap(this.forbiddenAssignments, tutored, tutor)) {
                     weight = 1000;
+                } else {
+                    weight = tutored.getWeight() + tutor.getWeight();
                 }
 
                 graph.ajouterArete(tutored, tutor, weight);
@@ -337,6 +334,6 @@ public class Assignment {
      * @return minimal cost.
      */
     public double getCost() {
-        return this.assignmentCost;
+        return this.assignmentCost % 1000;
     }
 }
