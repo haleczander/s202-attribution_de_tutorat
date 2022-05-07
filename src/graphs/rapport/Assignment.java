@@ -294,10 +294,11 @@ public class Assignment {
         // if (getGraph) {
         //     string.append(graphSetup().toString() + "\n\n");
         // }
-        string.append("assignment: " + this.getAssignment() + "\n");
+        string.append("Arêtes:\t\t " + this.getAssignment().toString().replaceAll("Arete", "") + "\n");
         if (!waitingList.isEmpty()) {
-            string.append("waiting list: " + this.waitingList);
+            string.append("En attente:\t "+ this.waitingList+"\n");
         }
+        string.append("Coût total:\t "+ (double)(((int)(1000*this.getCost()))/1000.00) +"\n\n");
         return string.toString();
     }
 
@@ -318,6 +319,7 @@ public class Assignment {
      * @return a copy of the assignment.
      */
     public List<Arete<Student>> getAssignment() {
+        
         return List.copyOf(this.assignment().getAffectation());
     }
 
@@ -347,6 +349,12 @@ public class Assignment {
      * @return minimal cost.
      */
     public double getCost() {
-        return (this.assignmentCost % 1000) + ((this.assignmentCost % 1000 < 0) ?   1000 : 0);
+        return (this.assignmentCost % 1000) + ((this.assignmentCost % 1000 < 0) ? 1000 : 0);
+    }
+
+
+    public void printScenario(String id, String title){
+        System.out.println("\033[4mCas "+id+" : "+title+"\033[0m");
+        System.out.println(this.getTextAssignment());
     }
 }
