@@ -16,6 +16,7 @@ import fr.ulille.but.sae2_02.graphes.Arete;
  * processing.
  * 
  * @author Léopold V.
+ * @author Alexandre H.
  * @see Assignment
  * 
  */

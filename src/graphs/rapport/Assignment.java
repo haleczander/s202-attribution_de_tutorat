@@ -16,6 +16,7 @@ import fr.ulille.but.sae2_02.graphes.GrapheNonOrienteValue;
  * calculations.
  * 
  * @author Léopold V.
+ * @author Alexandre H.
  * @see #Assignment(List, List)
  * @see #getAssignment()
  * @see fr.ulille.but.sae2_02.graphes.CalculAffectation
@@ -330,7 +331,7 @@ public class Assignment {
      * @return minimal cost.
      */
     public double getCost() {
-        return (this.assignmentCost % 1000) + ((this.assignmentCost % 1000 < 0) ? 1000 : 0);
+        return this.assignmentCost % 1000 + (this.assignmentCost % 1000 < 0 ? 1000 : 0);
     }
 
 

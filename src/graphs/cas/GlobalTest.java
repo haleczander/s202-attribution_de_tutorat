@@ -44,6 +44,7 @@ public class GlobalTest {
     public Assignment assignment;
     public List<Tutored> tutoredList;
     public List<Tutor> tutorList;
+    public static final double DELTA = 0.002;
 
     @BeforeEach
     public void initialize() {
@@ -193,6 +194,17 @@ public class GlobalTest {
         List<Student> waitingList = assignment.getWaitingList();
         double cost = (double)(((int)(1000 * assignment.getCost()))/1000.00);
 
+        // assertNotEquals = poids sans pondération de la moyenne
+        assertEquals(u1.getWeight(), 1.131, DELTA);
+        assertNotEquals(u2.getWeight(), 1.055, DELTA);
+        assertEquals(u4.getWeight(), 0.497, DELTA);
+        assertNotEquals(u6.getWeight(), 0.811, DELTA);
+        assertEquals(u7.getWeight(), 1.441, DELTA);
+
+        assertEquals(t1.getWeight(), 1.467, DELTA);
+        assertEquals(t2.getWeight(), 1.456, DELTA);
+        assertNotEquals(t3.getWeight(), 1.141, DELTA);
+
         assertEquals(edges.size(), 5);
         assertEquals(waitingList, List.of(u5, u3));
         assertEquals(cost, 12.819);
@@ -207,6 +219,13 @@ public class GlobalTest {
         List<Student> waitingList = assignment.getWaitingList();
         double cost = Double.parseDouble(String.format("%.3f", assignment.getCost()));
 
+        // assertNotEquals = poids avec pondération de la moyenne uniquement
+        assertNotEquals(t1.getWeight(), 1.467, DELTA);
+        assertEquals(t2.getWeight(), 1.637, DELTA);
+        assertNotEquals(t3.getWeight(), 1.429, DELTA);
+        assertEquals(t4.getWeight(), 1.266, DELTA);
+        assertEquals(t5.getWeight(), 1.428, DELTA);
+
         assertEquals(edges.size(), 5);
         assertEquals(waitingList, List.of(u5, u2));
         assertEquals(cost, 11.342);
@@ -220,6 +239,17 @@ public class GlobalTest {
         List<Arete<Student>> edges = assignment.getAssignment();
         List<Student> waitingList = assignment.getWaitingList();
         double cost = Double.parseDouble(String.format("%.3f", assignment.getCost()));
+
+        // assertNotEquals = poids sans aucune pondération
+        assertNotEquals(u2.getWeight(), 1.055, DELTA);
+        assertEquals(u3.getWeight(), 1.306, DELTA);
+        assertEquals(u4.getWeight(), 0.965, DELTA);
+        assertNotEquals(u5.getWeight(), 1.696, DELTA);
+        assertEquals(u6.getWeight(), 1.059, DELTA);
+
+        assertEquals(t1.getWeight(), 1.262, DELTA);
+        assertNotEquals(t3.getWeight(), 1.141, DELTA);
+        assertEquals(t4.getWeight(), 1.147, DELTA);
 
         assertEquals(edges.size(), 5);
         assertEquals(waitingList, List.of(u5, u2));
@@ -242,7 +272,7 @@ public class GlobalTest {
         assertEquals(edges.size(), 4);
         assertEquals(waitingList.size(), 3);
         assertEquals(waitingList, List.of(u5, u2, u3));
-        assertEquals(cost, 7.178, 0.002);
+        assertEquals(cost, 7.178, DELTA);
     }
 
     @Test
@@ -260,6 +290,6 @@ public class GlobalTest {
         assertEquals(edges.size(), 5);
         assertEquals(waitingList.size(), 1);
         assertEquals(waitingList, List.of(u5));
-        assertEquals(cost, 9.457, 0.002);
+        assertEquals(cost, 9.457, DELTA);
     }
 }

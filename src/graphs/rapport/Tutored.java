@@ -4,6 +4,7 @@ package graphs.rapport;
  * Class that represents a tutored student.
  * 
  * @author Léopold V.
+ * @author Alexandre H.
  */
 public class Tutored extends Student {
 

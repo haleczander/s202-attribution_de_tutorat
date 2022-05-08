@@ -4,6 +4,7 @@ package graphs.rapport;
  * Abstract class that represents a student.
  * 
  * @author Léopold V.
+ * @author Alexandre H.
  */
 public abstract class Student implements Comparable<Student>{
     private final String name;
