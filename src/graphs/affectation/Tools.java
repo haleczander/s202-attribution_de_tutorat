@@ -1,4 +1,4 @@
-package graphs.rapport;
+package graphs.affectation;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -69,7 +69,6 @@ public final class Tools {
                     newTutor1.setWeight(tuteur.getWeight());
                     Tutor newTutor2 = tuteur.copyOf('2');
                     newTutor2.setWeight(tuteur.getWeight() * 1.5);
-                    // System.out.println("LEPOIDSSSS"+newTutor2.getWeight());
                     list.remove(tuteur);
                     list.addAll(List.of(newTutor1, newTutor2));
                     break;

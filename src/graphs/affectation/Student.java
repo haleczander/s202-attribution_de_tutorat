@@ -1,4 +1,4 @@
-package graphs.rapport;
+package graphs.affectation;
 
 /**
  * Abstract class that represents a student.

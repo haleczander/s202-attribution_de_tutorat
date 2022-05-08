@@ -1,4 +1,4 @@
-package graphs.rapport;
+package graphs.affectation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -336,7 +336,7 @@ public class Assignment {
 
 
     public void printScenario(String id, String title){
-        System.out.println("\033[4mCas "+id+" : "+title+"\033[0m");
+        System.out.println("\033[4m"+"Cas "+id+" : "+title+"\033[0m");
         System.out.println(this.getTextAssignment());
     }
 }

@@ -1,12 +1,12 @@
-package graphs.cas;
+package graphs.useAffectation;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import graphs.rapport.Assignment;
-import graphs.rapport.Student;
-import graphs.rapport.Tutor;
-import graphs.rapport.Tutored;
+import graphs.affectation.Assignment;
+import graphs.affectation.Student;
+import graphs.affectation.Tutor;
+import graphs.affectation.Tutored;
 
 /**
  * Scénario pour représenter un cas concret d'utilisation de l'affection.
@@ -33,7 +33,7 @@ public final class Scenario {
          */
 
         /** 
-         * Initialisation des listes
+         * Instanciation des listes
          */
         List<Tutor> tutors = new ArrayList<>();
         List<Tutored> tutored = new ArrayList<>();
@@ -61,7 +61,7 @@ public final class Scenario {
 
         /**
          * Ajout de tous les tuteurs et tutorés dans leur liste respective
-         * Initialisation de l'assignation
+         * Instanciation de l'assignation
          */
         tutored.addAll(List.of(u1, u2, u3, u4, u5, u6, u7));
         tutors.addAll(List.of(t1, t2, t3, t4, t5));
@@ -88,7 +88,7 @@ public final class Scenario {
          * Liste d'attente :    1 tutoré
          */
         cas1.setPolyTutor(true);        
-        cas1.printScenario("1.B", "Les tuteurs peuvent encadrer deux toturés");
+        cas1.printScenario("1.B", "Les tuteurs peuvent encadrer deux tutorés");
         cas1.setPolyTutor(false);
 
         /**

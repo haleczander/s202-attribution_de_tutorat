@@ -1,4 +1,4 @@
-package graphs.cas;
+package graphs.useAffectation;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -14,11 +14,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import fr.ulille.but.sae2_02.graphes.Arete;
-import graphs.rapport.Assignment;
-import graphs.rapport.Student;
-import graphs.rapport.Tools;
-import graphs.rapport.Tutor;
-import graphs.rapport.Tutored;
+import graphs.affectation.Assignment;
+import graphs.affectation.Student;
+import graphs.affectation.Tools;
+import graphs.affectation.Tutor;
+import graphs.affectation.Tutored;
 
 /**
  * Tests unitaire des différents scénarios imaginés.
@@ -79,11 +79,11 @@ public class GlobalTest {
         assignment.setPolyTutor(false);
         List<Arete<Student>> edges = assignment.getAssignment();
         List<Student> waitingList = assignment.getWaitingList();
-        double cost = Double.parseDouble(String.format("%.3f", assignment.getCost()));
+         
 
         assertEquals(edges.size(), 5);
         assertEquals(waitingList.size(), 2);
-        assertEquals(cost, 9.242);
+        assertEquals(assignment.getCost(), 9.242, DELTA);
     }
 
     @Test
@@ -92,11 +92,11 @@ public class GlobalTest {
         assignment.setPolyTutor(true);
         List<Arete<Student>> edges = assignment.getAssignment();
         List<Student> waitingList = assignment.getWaitingList();
-        double cost = Double.parseDouble(String.format("%.3f", assignment.getCost()));
+         
 
         assertEquals(edges.size(), 6);
         assertEquals(waitingList.size(), 1);
-        assertEquals(cost, 11.941);
+        assertEquals(assignment.getCost(), 11.941, DELTA);
         assertEquals(waitingList.get(0), u5);
         int olivierCount = 0;
         Pattern pattern = Pattern.compile("olivier", Pattern.CASE_INSENSITIVE);
@@ -126,7 +126,7 @@ public class GlobalTest {
         edges = assignment.getAssignment();
         List<Student> waitingList = assignment.getWaitingList();
         boolean isEdgeInAssignment = false;
-        double cost = Double.parseDouble(String.format("%.3f", assignment.getCost()));
+         
 
         for (Arete<Student> edge : edges) {
             if(Tools.edgeTextEquals(edge, wantedAssignment)) {
@@ -136,7 +136,7 @@ public class GlobalTest {
         assertTrue(isEdgeInAssignment);
         assertEquals(edges.size(), 5);
         assertEquals(waitingList, List.of(u5, u2));
-        assertEquals(cost, 7.415);
+        assertEquals(assignment.getCost(), 7.415, DELTA);
 
         assignment.removeForcedAssignment(u1);
         edges = assignment.getAssignment();
@@ -165,14 +165,14 @@ public class GlobalTest {
         assignment.addForbiddenAssignments(u1, t4);
         edges = assignment.getAssignment();
         List<Student> waitingList = assignment.getWaitingList();
-        double cost = Double.parseDouble(String.format("%.3f", assignment.getCost()));
+         
 
         for (Arete<Student> edge : edges) {
             assertFalse(Tools.edgeTextEquals(edge, unwantedAssignment));
         }
         assertEquals(edges.size(), 5);
         assertEquals(waitingList, List.of(u5, u2));
-        assertEquals(cost, 9.242);
+        assertEquals(assignment.getCost(), 9.242, DELTA);
 
         assignment.removeForbiddenAssignment(u1);
         edges = assignment.getAssignment();
@@ -192,7 +192,7 @@ public class GlobalTest {
         Student.setAverageWeighting(2);
         List<Arete<Student>> edges = assignment.getAssignment();
         List<Student> waitingList = assignment.getWaitingList();
-        double cost = (double)(((int)(1000 * assignment.getCost()))/1000.00);
+ 
 
         // assertNotEquals = poids sans pondération de la moyenne
         assertEquals(u1.getWeight(), 1.131, DELTA);
@@ -207,7 +207,7 @@ public class GlobalTest {
 
         assertEquals(edges.size(), 5);
         assertEquals(waitingList, List.of(u5, u3));
-        assertEquals(cost, 12.819);
+        assertEquals(assignment.getCost(), 12.819, DELTA);
     }
 
     @Test
@@ -217,7 +217,7 @@ public class GlobalTest {
         Student.setLevelWeighting(2);
         List<Arete<Student>> edges = assignment.getAssignment();
         List<Student> waitingList = assignment.getWaitingList();
-        double cost = Double.parseDouble(String.format("%.3f", assignment.getCost()));
+         
 
         // assertNotEquals = poids avec pondération de la moyenne uniquement
         assertNotEquals(t1.getWeight(), 1.467, DELTA);
@@ -228,7 +228,7 @@ public class GlobalTest {
 
         assertEquals(edges.size(), 5);
         assertEquals(waitingList, List.of(u5, u2));
-        assertEquals(cost, 11.342);
+        assertEquals(assignment.getCost(), 11.342, DELTA);
     }
 
     @Test
@@ -238,7 +238,7 @@ public class GlobalTest {
         Student.setAbsenceWeighting(2);
         List<Arete<Student>> edges = assignment.getAssignment();
         List<Student> waitingList = assignment.getWaitingList();
-        double cost = Double.parseDouble(String.format("%.3f", assignment.getCost()));
+         
 
         // assertNotEquals = poids sans aucune pondération
         assertNotEquals(u2.getWeight(), 1.055, DELTA);
@@ -253,7 +253,7 @@ public class GlobalTest {
 
         assertEquals(edges.size(), 5);
         assertEquals(waitingList, List.of(u5, u2));
-        assertEquals(cost, 12.471);
+        assertEquals(assignment.getCost(), 12.471, DELTA);
     }
 
     @Test
@@ -263,7 +263,7 @@ public class GlobalTest {
         assignment.removeStudent(t1);
         List<Arete<Student>> edges = assignment.getAssignment();
         List<Student> waitingList = assignment.getWaitingList();
-        double cost = Double.parseDouble(String.format("%.3f", assignment.getCost()));
+         
 
 
         for (Arete<Student> edge : edges) {
@@ -272,7 +272,7 @@ public class GlobalTest {
         assertEquals(edges.size(), 4);
         assertEquals(waitingList.size(), 3);
         assertEquals(waitingList, List.of(u5, u2, u3));
-        assertEquals(cost, 7.178, DELTA);
+        assertEquals(assignment.getCost(), 7.178, DELTA);
     }
 
     @Test
@@ -282,7 +282,7 @@ public class GlobalTest {
         assignment.removeStudent(u6);
         List<Arete<Student>> edges = assignment.getAssignment();
         List<Student> waitingList = assignment.getWaitingList();
-        double cost = Double.parseDouble(String.format("%.3f", assignment.getCost()));
+         
 
         for (Arete<Student> edge : edges) {
             assertNotEquals(edge.getExtremite1(), u6);
@@ -290,6 +290,6 @@ public class GlobalTest {
         assertEquals(edges.size(), 5);
         assertEquals(waitingList.size(), 1);
         assertEquals(waitingList, List.of(u5));
-        assertEquals(cost, 9.457, DELTA);
+        assertEquals(assignment.getCost(), 9.457, DELTA);
     }
 }

@@ -1,4 +1,4 @@
-package graphs.rapport;
+package graphs.affectation;
 
 public class TutorDuplicate extends Tutor {
     private static double weightModifier = 1.5;

@@ -1,4 +1,4 @@
-package graphs.rapport;
+package graphs.affectation;
 
 /**
  * Class that represents a tutored student.
