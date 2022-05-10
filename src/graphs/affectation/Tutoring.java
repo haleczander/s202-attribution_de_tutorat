@@ -6,6 +6,28 @@ import java.util.List;
 public class Tutoring {
     private Teacher teacher;
 
+    private List<Tutor> tutors;
+    private List<Tutored> tutored;
+
+    private Assignment assignement;
+
+
+    public Tutoring(Teacher teacher, List<Tutor> tutors,
+            List<Tutored> tutored) {
+        this.teacher = teacher;
+        this.tutors = tutors;
+        this.tutored = tutored;
+    }
+
+    public Tutoring(Teacher teacher, List<Student> students) {
+        this(teacher);
+        dispatchStudents(students);
+    }
+
+    public Tutoring(Teacher teacher) {
+        this(teacher, new ArrayList<Tutor>(), new ArrayList<Tutored>());
+    }
+
     public Teacher getTeacher() {
         return teacher;
     }
@@ -34,30 +56,8 @@ public class Tutoring {
         return assignement;
     }
 
-
-    private List<Tutor> tutors;
-    private List<Tutored> tutored;
-
-    private Assignment assignement;
-
-    public Tutoring(Teacher teacher, Assignment assignement, List<Tutor> tutors,
-            List<Tutored> tutored) {
-        if (!teacher.resources.contains(resource)) {
-            throw new IllegalArgumentException("La ressource n'est pas dispensée par cet enseignant");
-        }
-        this.teacher = teacher;
-        this.assignement = assignement;
-        this.tutors = tutors;
-        this.tutored = tutored;
-    }
-
-    public Tutoring(Teacher teacher, Assignment assignement, List<Student> students) {
-        this(teacher, assignement);
-        dispatchStudents(students);
-    }
-
-    public Tutoring(Teacher teacher, Assignment assignement) {
-        this(teacher, assignement, new ArrayList<Tutor>(), new ArrayList<Tutored>());
+    public void setAssignement() {
+        this.assignement = new Assignment(tutored, tutors);
     }
 
     private void dispatchStudents(List<Student> students) {
@@ -75,6 +75,12 @@ public class Tutoring {
         } else {
             return this.tutors.add((Tutor) s);
         }
+    }
+
+
+    @Override
+    public String toString() {
+        return "[Enseignant: "+ this.teacher.toString() + ", Assignation: " +  this.assignement + "]";
     }
 
 }

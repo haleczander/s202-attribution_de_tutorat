@@ -339,4 +339,9 @@ public class Assignment {
         System.out.println("\033[4m"+"Cas "+id+" : "+title+"\033[0m");
         System.out.println(this.getTextAssignment());
     }
+
+    @Override
+    public String toString() {
+        return "[Tuteurs: " + this.tutorStudents.size() + ", Tutorés: " + this.tutoredStudents.size() + ", Attente: " + this.waitingList.size() + "]";
+    }
 }

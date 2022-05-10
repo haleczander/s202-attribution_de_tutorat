@@ -18,4 +18,11 @@ public class Departement {
     void addStudent(Resource resource, Student s){
         this.tutorings.get(resource).addStudent(s);
     }
+
+    @Override
+    public String toString() {
+        return "Departement [Département " + name + ", tutorings=" + tutorings + "]";
+    }
+
+    
 }

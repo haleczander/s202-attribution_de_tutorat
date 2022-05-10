@@ -1,7 +1,7 @@
 package graphs.affectation;
 
 import java.util.ArrayList;
-import java.util.List;;
+import java.util.List;
 
 public class Teacher extends Person {
     private List<Resource> resources;
@@ -21,5 +21,10 @@ public class Teacher extends Person {
 
     public boolean addResource(Resource resource) {
         return this.resources.add(resource);
+    }
+
+    @Override
+    public String toString() {
+        return this.name;
     }
 }
