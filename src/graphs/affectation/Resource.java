@@ -1,4 +1,4 @@
-package graphs.alexsauce;
+package graphs.affectation;
 
 public enum Resource {
 

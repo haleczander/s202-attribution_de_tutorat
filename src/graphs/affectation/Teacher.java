@@ -1,9 +1,7 @@
 package graphs.affectation;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import graphs.alexsauce.Resource;
+import java.util.List;;
 
 public class Teacher extends Person {
     private List<Resource> resources;
