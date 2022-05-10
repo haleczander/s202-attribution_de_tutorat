@@ -6,8 +6,7 @@ package graphs.affectation;
  * @author Léopold V.
  * @author Alexandre H.
  */
-public abstract class Student implements Comparable<Student>{
-    private final String name;
+public abstract class Student extends Person implements Comparable<Student>{
     protected double average;
     protected int level;
     protected int absences;
@@ -34,7 +33,7 @@ public abstract class Student implements Comparable<Student>{
      */
     protected Student(final String name, double average, int level, int absences, char motivation)
             throws IllegalArgumentException {
-        this.name = name;
+        super(name);
         if (average < 0 || average > 20) {
             throw new IllegalArgumentException("Average must be between 0 and 20.");
         } else {
