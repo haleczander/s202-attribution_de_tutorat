@@ -1,8 +1,10 @@
 package ihm;
 
-import javax.swing.plaf.metal.MetalPopupMenuSeparatorUI;
+import java.awt.Color;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -11,13 +13,41 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToolBar;
-import javafx.scene.layout.Border;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Box;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class Principale extends Application{
+    //PADDINGS
+    final Insets PADDING_5 = new Insets(5);
+
+    //Styles
+    final String FX = "-fx-";
+    final String BG = FX+"background";
+    final String BGC = BG+"-color";
+    String styleShadowBorder = FX+"effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0.5, 0.0, 0.0)";
+
+    //Palette de couleurs
+    final String CLR_DARK = "#091527";
+    final String CLR_MEDIUM = "#353f54";
+    final String CLR_LIGHT = "#e1f1ff";
+    final String CLR_HIGHLIGHT = "#d9a21b";
+    //
+    Paint PAINT_GC = Paint.valueOf("lightgrey");
+
+    Image profilPhoto = new Image ("file:res/img/jc.jpeg");
+
 
     public static void main(String[] arg0){
         Application.launch(arg0);
@@ -41,42 +71,106 @@ public class Principale extends Application{
         HBox footer = (HBox) initFooter();
         root.setBottom(footer);
 
-
-
-
-        stage.setScene(new Scene(root, 200, 200));
+        stage.setScene(new Scene(root, 600, 450));
         stage.show();
     }
 
     private Node initHeader(){
         HBox header = new HBox();
+        header.setAlignment(Pos.CENTER_LEFT);
+        header.setPadding(PADDING_5);
+        header.setStyle(BGC+":"+CLR_DARK+";");
+
         ComboBox<String> cbMatieres = new ComboBox<>();
 
-        header.getChildren().addAll(cbMatieres);
+
+        HBox profil = new HBox();
+        profil.setAlignment(Pos.CENTER_LEFT);
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        Label profilLogin = new Label("Jean Carle <3");
+        profilLogin.setTextFill(PAINT_GC);
+        // ComboBox<String> cbProfil = new ComboBox<>();
+        // cbProfil.paddingProperty().set(new Insets(0));
+        // cbProfil.setMaxSize(25,25);
+        // cbProfil.setMinSize(25,25);
+        // cbProfil.getItems().addAll("Changer le nom", "Se déconnecter");
+
+        
+        ImageView profilImgView = new ImageView(profilPhoto);
+        profilImgView.setFitHeight(75);
+        profilImgView.setFitWidth(75);
+        profilImgView.setPreserveRatio(true);
+        // profilImgView.setStyle("-fx-border-radius: 10 10 10 10");
+
+        profil.getChildren().addAll(profilLogin, profilImgView);
+
+        
+        header.getChildren().addAll(cbMatieres, spacer, profil);
+
         return header;
     }
 
     private Node initMain(){
         VBox main = new VBox();
+        main.setStyle(BGC+":"+CLR_LIGHT+";");
+
+
         ToolBar tools = initToolBar();
+        // 
+
         HBox sliders = new HBox(slAvg, slLvl, slAbs);
-        HBox actions = new HBox(sliders, tools);
-        HBox lists = new HBox(tutors, tutored);
+        sliders.setAlignment(Pos.CENTER_LEFT);
+        for (Node n : sliders.getChildren()) {
+            ((Slider)n).setMaxWidth(75);
+
+            ((Slider)n).setMin(0);
+            ((Slider)n).setMax(4);
+            ((Slider)n).setValue(1);
+            ((Slider)n).setValue(1);
+            ((Slider)n).setMajorTickUnit(1);
+            ((Slider)n).setShowTickLabels(true);
+            ((Slider)n).valueProperty().addListener((obs, oldval, newVal) -> ((Slider)n).setValue( Math.ceil((double)newVal*2) / 2.0d));
+            // ((Slider)n).setShowTickMarks(true);
+        }
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+
+        HBox actions = new HBox(sliders, tools, spacer);
+        actions.setPadding(PADDING_5);
+        actions.getStyleClass().addAll(tools.getStyleClass());
+        actions.setStyle(BGC+":"+CLR_MEDIUM+";");
+        tools.getStyleClass().clear();
+
+
+        HBox lists = new HBox(tutors, spacer, tutored);
+        lists.setPadding(PADDING_5);
 
         main.getChildren().addAll(actions, lists);
         return main;
     }
+
+
+
     private Node initFooter(){
         HBox footer = new HBox();
+        footer.setPadding(PADDING_5);
         footer.getChildren().add(new Label("Créé et entretenu avec une passion pour Jean Carle !"));
         return footer;
     }
 
+
+
+
     private ToolBar initToolBar(){
         ToolBar tb = new ToolBar();
-        Button btReset = new Button("Reset");
-        Button btShuffle = new Button("Affectation aléatoire");
-        Button btOrder = new Button("Tri : Alphabétique");
+        Button btReset = new Button("↺");
+        Button btShuffle = new Button("🔀");
+        Button btOrder = new Button("↓");
         Button btAffect = new Button("Affecter !");
 
         tb.getItems().addAll(btReset, btShuffle, btOrder, btAffect);
