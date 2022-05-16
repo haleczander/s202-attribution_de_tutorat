@@ -5,14 +5,14 @@ import java.util.Map;
 
 public class Departement {
     String name;
-    Map<Resource, Tutoring> tutorings= new HashMap<>();
+    Map<Resource, Assignment> tutorings= new HashMap<>();
 
     public Departement(String name){
         this.name = name;
     }
     
-    void addTutoring(Resource resource, Tutoring tutoring){
-        tutorings.put(resource, tutoring);
+    void addTutoring(Resource resource, Assignment assignment){
+        tutorings.put(resource, assignment);
     }
 
     void addStudent(Resource resource, Student s){

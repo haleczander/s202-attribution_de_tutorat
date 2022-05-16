@@ -81,7 +81,7 @@ public abstract class Student extends Person implements Comparable<Student>{
         result = prime * result + (int) (temp ^ (temp >>> 32));
         result = prime * result + level;
         result = prime * result + motivation;
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        result = prime * result + ((NAME == null) ? 0 : NAME.hashCode());
         return result;
     }
 
@@ -109,11 +109,11 @@ public abstract class Student extends Person implements Comparable<Student>{
         if (motivation != other.motivation) {
             return false;
         }
-        if (name == null) {
-            if (other.name != null) {
+        if (NAME == null) {
+            if (other.NAME != null) {
                 return false;
             }
-        } else if (!name.equals(other.name)) {
+        } else if (!NAME.equals(other.NAME)) {
             return false;
         }
         return true;
@@ -124,7 +124,7 @@ public abstract class Student extends Person implements Comparable<Student>{
         if (shortString) {
             return this.getName();
         } else {
-            return "Student [nom=" + name + ", moyenne=" + average + ", niveau=" + level + "]";
+            return "Student [nom=" + NAME + ", moyenne=" + average + ", niveau=" + level + "]";
         }
     }
 
@@ -134,7 +134,7 @@ public abstract class Student extends Person implements Comparable<Student>{
      * @return the student's name.
      */
     public String getName() {
-        return name;
+        return NAME;
     }
 
     /**

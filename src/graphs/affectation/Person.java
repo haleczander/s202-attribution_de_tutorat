@@ -1,9 +1,9 @@
 package graphs.affectation;
 
 public abstract class Person {
-    protected final String name;
+    protected final String NAME;
 
     protected Person(String name) {
-        this.name = name;
+        this.NAME = name;
     }
 }

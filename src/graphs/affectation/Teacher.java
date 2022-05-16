@@ -25,6 +25,6 @@ public class Teacher extends Person {
 
     @Override
     public String toString() {
-        return this.name;
+        return this.NAME;
     }
 }

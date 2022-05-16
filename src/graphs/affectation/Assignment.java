@@ -22,20 +22,52 @@ import fr.ulille.but.sae2_02.graphes.GrapheNonOrienteValue;
  * @see fr.ulille.but.sae2_02.graphes.CalculAffectation
  */
 public class Assignment {
+    //AJOUTS d'ALEX
+    private Teacher teacher;
+
+    /*Constructeurs :
+        ?prof student
+        ?prof tutored tutor
+        student
+        tutor tutored
+        ?prof
+    */
+    public Assignment(ArrayList<Student> students){
+        dispatchStudents(students);
+    }
+
+    private void dispatchStudents(List<Student> students) {
+        for (Student s : students) {
+            addStudent(s);
+        }
+    }
+
+    public boolean addStudent(Student s) {
+        if (this.tutored.contains(s) || this.tutors.contains(s)) {
+            return false;
+        }
+        if (s.getLevel() == 1) {
+            return this.tutored.add((Tutored) s);
+        } else {
+            return this.tutors.add((Tutor) s);
+        }
+    }
+
+
     /**
      * a list of tutored students to process the assignment with.
      */
-    private List<Tutored> tutoredStudents;
+    private List<Tutored> tutored;
 
     /**
      * a list of tutor students to process the assignment with.
      */
-    private List<Tutor> tutorStudents;
+    private List<Tutor> tutors;
 
     /**
      * whether the tutors will be split if needed or not.
      */
-    private boolean polyTutor;
+    private boolean polyTutor = false;
 
     /**
      * the waiting list in case there are too many students.
@@ -56,7 +88,7 @@ public class Assignment {
 
 
     private Assignment() {
-        this.polyTutor = true;
+        // this.polyTutor = true; // De base à false dans la déclaration des attributs
         this.forcedAssignments = new HashMap<>();
         this.forbiddenAssignments = new HashMap<>();
         this.waitingList = new ArrayList<>();
@@ -72,8 +104,8 @@ public class Assignment {
      */
     public Assignment(List<Tutored> tutored, List<Tutor> tutors) {
         this();
-        this.tutoredStudents = tutored;
-        this.tutorStudents = tutors;
+        this.tutored = tutored;
+        this.tutors = tutors;
     }
 
     /**
@@ -128,10 +160,10 @@ public class Assignment {
         this.forbiddenAssignments.remove(tutored);
     }
 
-    public void removeStudent(Tutor student) {this.tutorStudents.remove(student);}
-    public void removeStudent(Tutored student) {this.tutoredStudents.remove(student);}
-    public void addStudent(Tutor student) {this.tutorStudents.add(student);}
-    public void addStudent(Tutored student) {this.tutoredStudents.add(student);}
+    public void removeStudent(Tutor student) {this.tutors.remove(student);}
+    public void removeStudent(Tutored student) {this.tutored.remove(student);}
+    public void addStudent(Tutor student) {this.tutors.add(student);}
+    public void addStudent(Tutored student) {this.tutored.add(student);}
 
     /**
      * Sets whether or not tutors should be split if needed. Default value is true.
@@ -159,10 +191,10 @@ public class Assignment {
         computeStudentsWeight();
 
         List<Tutored> duplicateTutored = new ArrayList<>();
-        duplicateTutored.addAll(this.tutoredStudents);
+        duplicateTutored.addAll(this.tutored);
 
         List<Tutor> duplicateTutor = new ArrayList<>();
-        duplicateTutor.addAll(this.tutorStudents);
+        duplicateTutor.addAll(this.tutors);
         
 
         listArrange(duplicateTutored, duplicateTutor);
@@ -253,8 +285,8 @@ public class Assignment {
     }
 
     private void computeStudentsWeight() {
-        computeStudentWeight(this.tutoredStudents);
-        computeStudentWeight(this.tutorStudents);
+        computeStudentWeight(this.tutored);
+        computeStudentWeight(this.tutors);
     }
 
     private void computeStudentWeight(List<? extends Student> list){
@@ -342,6 +374,6 @@ public class Assignment {
 
     @Override
     public String toString() {
-        return "[Tuteurs: " + this.tutorStudents.size() + ", Tutorés: " + this.tutoredStudents.size() + ", Attente: " + this.waitingList.size() + "]";
+        return "[Tuteurs: " + this.tutors.size() + ", Tutorés: " + this.tutored.size() + ", Attente: " + this.waitingList.size() + "]";
     }
 }
