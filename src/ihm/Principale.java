@@ -1,7 +1,5 @@
 package ihm;
 
-import java.awt.Color;
-
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -15,17 +13,12 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Box;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class Principale extends Application{
@@ -46,7 +39,7 @@ public class Principale extends Application{
     //
     Paint PAINT_GC = Paint.valueOf("lightgrey");
 
-    Image profilPhoto = new Image ("file:res/img/jc.jpeg");
+    Image profilPhoto = new Image ("file:res/img/jc2.jpeg");
 
 
     public static void main(String[] arg0){
@@ -89,23 +82,26 @@ public class Principale extends Application{
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
-
+        
         Label profilLogin = new Label("Jean Carle <3");
-        profilLogin.setTextFill(PAINT_GC);
+
+        ComboBox<Label> cbProfil = new ComboBox<>();
+        Label profilEdit = new Label("Paramètres");
+        Label profilDisconnect = new Label("Se déconnecter ");
+        cbProfil.getItems().addAll(profilEdit, profilDisconnect);
+        // profilLogin.setTextFill(PAINT_GC);
         // ComboBox<String> cbProfil = new ComboBox<>();
-        // cbProfil.paddingProperty().set(new Insets(0));
-        // cbProfil.setMaxSize(25,25);
-        // cbProfil.setMinSize(25,25);
-        // cbProfil.getItems().addAll("Changer le nom", "Se déconnecter");
+        cbProfil.paddingProperty().set(new Insets(0));
+        cbProfil.setMaxSize(25,25);
+        cbProfil.setMinSize(25,25);
 
         
         ImageView profilImgView = new ImageView(profilPhoto);
         profilImgView.setFitHeight(75);
         profilImgView.setFitWidth(75);
         profilImgView.setPreserveRatio(true);
-        // profilImgView.setStyle("-fx-border-radius: 10 10 10 10");
 
-        profil.getChildren().addAll(profilLogin, profilImgView);
+        profil.getChildren().addAll(cbProfil, profilLogin, profilImgView);
 
         
         header.getChildren().addAll(cbMatieres, spacer, profil);
@@ -117,6 +113,13 @@ public class Principale extends Application{
         VBox main = new VBox();
         main.setStyle(BGC+":"+CLR_LIGHT+";");
 
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        Region spacerL = new Region();
+        HBox.setHgrow(spacerL, Priority.ALWAYS);
+        Region spacerR = new Region();
+        HBox.setHgrow(spacerR, Priority.ALWAYS);
+        spacer.setMaxWidth(100);
 
         ToolBar tools = initToolBar();
         // 
@@ -136,18 +139,15 @@ public class Principale extends Application{
             // ((Slider)n).setShowTickMarks(true);
         }
 
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
 
-
-        HBox actions = new HBox(sliders, tools, spacer);
+        HBox actions = new HBox(spacerL, sliders, tools, spacerR);
         actions.setPadding(PADDING_5);
         actions.getStyleClass().addAll(tools.getStyleClass());
         actions.setStyle(BGC+":"+CLR_MEDIUM+";");
         tools.getStyleClass().clear();
 
 
-        HBox lists = new HBox(tutors, spacer, tutored);
+        HBox lists = new HBox(spacerL, tutors, spacer, tutored, spacerR);
         lists.setPadding(PADDING_5);
 
         main.getChildren().addAll(actions, lists);
@@ -168,12 +168,20 @@ public class Principale extends Application{
 
     private ToolBar initToolBar(){
         ToolBar tb = new ToolBar();
+        HBox.setHgrow(tb, Priority.ALWAYS);
         Button btReset = new Button("↺");
         Button btShuffle = new Button("🔀");
         Button btOrder = new Button("↓");
         Button btAffect = new Button("Affecter !");
+        Button btRemoveStudent = new Button("‒");
+        Button btAddStudent = new Button("+");
 
-        tb.getItems().addAll(btReset, btShuffle, btOrder, btAffect);
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+
+
+        tb.getItems().addAll(btReset, btShuffle, btOrder, btAffect, spacer, btAddStudent, btRemoveStudent);
         return tb;
     }
 
