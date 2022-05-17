@@ -1,6 +1,10 @@
 package graphs.affectation;
 
-public class UseDepartement {
+public final class UseDepartement {
+    private UseDepartement() {
+        throw new UnsupportedOperationException("Utility class and cannot be instantiated");
+    }
+
     public static void main(String[] args) {
         Departement dpt = new Departement("INFO");
 
@@ -21,9 +25,6 @@ public class UseDepartement {
         Tutored u5 = new Tutored("Lucas", 17.3, 5, 'C');
         Tutored u6 = new Tutored("Alexandria", 12.5, 0, 'A');
         Tutored u7 = new Tutored("Anouk", 10.5, 1, 'B');
-
-        dpt.addTutoring(Resource.R101, tutorat);
-        dpt.addTutoring(Resource.R102, tutorat2);
 
         dpt.addStudent(Resource.R101, t1);
         dpt.addStudent(Resource.R101, t3);

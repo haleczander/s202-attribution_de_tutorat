@@ -22,37 +22,6 @@ import fr.ulille.but.sae2_02.graphes.GrapheNonOrienteValue;
  * @see fr.ulille.but.sae2_02.graphes.CalculAffectation
  */
 public class Assignment {
-    //AJOUTS d'ALEX
-    private Teacher teacher;
-
-    /*Constructeurs :
-        ?prof student
-        ?prof tutored tutor
-        student
-        tutor tutored
-        ?prof
-    */
-    public Assignment(ArrayList<Student> students){
-        dispatchStudents(students);
-    }
-
-    private void dispatchStudents(List<Student> students) {
-        for (Student s : students) {
-            addStudent(s);
-        }
-    }
-
-    public boolean addStudent(Student s) {
-        if (this.tutored.contains(s) || this.tutors.contains(s)) {
-            return false;
-        }
-        if (s.getLevel() == 1) {
-            return this.tutored.add((Tutored) s);
-        } else {
-            return this.tutors.add((Tutor) s);
-        }
-    }
-
 
     /**
      * a list of tutored students to process the assignment with.
@@ -67,7 +36,7 @@ public class Assignment {
     /**
      * whether the tutors will be split if needed or not.
      */
-    private boolean polyTutor = false;
+    private boolean polyTutor;
 
     /**
      * the waiting list in case there are too many students.
@@ -84,21 +53,29 @@ public class Assignment {
      */
     private Map<Tutored, Tutor> forbiddenAssignments;
 
+    /**
+     * cost of the assignment.
+     */
     private double assignmentCost;
 
+    /**
+     * Teacher in charge of the assignment.
+     */
+    private Teacher teacher;
 
     private Assignment() {
-        // this.polyTutor = true; // De base à false dans la déclaration des attributs
+        this.polyTutor = true;
         this.forcedAssignments = new HashMap<>();
         this.forbiddenAssignments = new HashMap<>();
         this.waitingList = new ArrayList<>();
         this.assignmentCost = 0;
+        this.teacher = null;
     }
 
     /**
-     * Instantiation of an assignment.
+     * Constructs an assignment with supplied tutored and tutors lists.
      * 
-     * @param tutored List of tutored students to have be taken in charge of. (?)
+     * @param tutored List of tutored students that will be taken in charge.
      * @param tutors  List of tutor students that will take in charge tutored
      *                students.
      */
@@ -106,6 +83,53 @@ public class Assignment {
         this();
         this.tutored = tutored;
         this.tutors = tutors;
+    }
+
+    /**
+     * Constructs an assignment with supplied students list. Student will be
+     * dispatched automatically.
+     * 
+     * @param students List of students to dispatch.
+     */
+    public Assignment(List<Student> students) {
+        this();
+        dispatchStudents(students);
+    }
+
+    /**
+     * Constructs an assignment with supplied students list and teacher. Students
+     * will be dispatched automatically.
+     * 
+     * @param students List of students to dispatch.
+     * @param teacher  Teacher overseeing the tutoring.
+     */
+    public Assignment(List<Student> students, Teacher teacher) {
+        this(students);
+        this.teacher = teacher;
+    }
+
+    /**
+     * Constructs an assignment with supplied lists of tutored and tutors and
+     * teacher.
+     * 
+     * @param tutored List of tutored students that will be taken in charge.
+     * @param tutors  List of tutor students that will take in charge tutored
+     *                students.
+     * @param teacher Teacher overseeing the tutoring.
+     */
+    public Assignment(List<Tutored> tutored, List<Tutor> tutors, Teacher teacher) {
+        this(tutored, tutors);
+        this.teacher = teacher;
+    }
+
+    /**
+     * Constructs an assignment with a teacher.
+     * 
+     * @param teacher Teacher overseeing the tutoring.
+     */
+    public Assignment(Teacher teacher) {
+        this();
+        this.teacher = teacher;
     }
 
     /**
@@ -117,7 +141,9 @@ public class Assignment {
      * @throws IllegalArgumentException if this duo has already been put in the map.
      */
     public void addForcedAssignments(Tutored tutored, Tutor tutor) {
-        if (this.forcedAssignments.containsKey(tutored)){ throw new IllegalArgumentException("This forced assignment already exists.");}
+        if (this.forcedAssignments.containsKey(tutored)) {
+            throw new IllegalArgumentException("This forced assignment already exists.");
+        }
         this.forcedAssignments.put(tutored, tutor);
     }
 
@@ -130,7 +156,9 @@ public class Assignment {
      * @throws IllegalArgumentException if this duo has already been put in the map.
      */
     public void addForbiddenAssignments(Tutored tutored, Tutor tutor) {
-        if (this.forbiddenAssignments.containsKey(tutored)){ throw new IllegalArgumentException("This forbidden assignment already exists.");}
+        if (this.forbiddenAssignments.containsKey(tutored)) {
+            throw new IllegalArgumentException("This forbidden assignment already exists.");
+        }
         this.forbiddenAssignments.put(tutored, tutor);
     }
 
@@ -143,7 +171,9 @@ public class Assignment {
      *                                  assignment with anyone.
      */
     public void removeForcedAssignment(Tutored tutored) {
-        if (!this.forcedAssignments.containsKey(tutored)){throw new IllegalArgumentException("This forced assignment does not exist.");}
+        if (!this.forcedAssignments.containsKey(tutored)) {
+            throw new IllegalArgumentException("This forced assignment does not exist.");
+        }
         this.forcedAssignments.remove(tutored);
     }
 
@@ -156,14 +186,19 @@ public class Assignment {
      *                                  assignment with anyone.
      */
     public void removeForbiddenAssignment(Tutored tutored) {
-        if (!this.forbiddenAssignments.containsKey(tutored)){throw new IllegalArgumentException("This forbidden assignment does not exist.");}
+        if (!this.forbiddenAssignments.containsKey(tutored)) {
+            throw new IllegalArgumentException("This forbidden assignment does not exist.");
+        }
         this.forbiddenAssignments.remove(tutored);
     }
 
-    public void removeStudent(Tutor student) {this.tutors.remove(student);}
-    public void removeStudent(Tutored student) {this.tutored.remove(student);}
-    public void addStudent(Tutor student) {this.tutors.add(student);}
-    public void addStudent(Tutored student) {this.tutored.add(student);}
+    public void removeStudent(Tutor student) {
+        this.tutors.remove(student);
+    }
+
+    public void removeStudent(Tutored student) {
+        this.tutored.remove(student);
+    }
 
     /**
      * Sets whether or not tutors should be split if needed. Default value is true.
@@ -173,13 +208,45 @@ public class Assignment {
     public void setPolyTutor(boolean polyTutor) {
         this.polyTutor = polyTutor;
     }
+
+    /**
+     * Toggles polytutor.
+     */
     public void togglePolyTutor() {
         this.polyTutor = !this.polyTutor;
     }
+
+    /**
+     * 
+     * 
+     * @return
+     */
     public boolean isPolyTutorOn() {
         return this.polyTutor;
     }
 
+    private void dispatchStudents(List<Student> students) {
+        for (Student s : students) {
+            addStudent(s);
+        }
+    }
+
+    /**
+     * Adds a student in the correct list.
+     * 
+     * @param student Student to add to the assignment.
+     * @return true if student was added, false otherwise.
+     */
+    public boolean addStudent(Student student) {
+        if (this.tutored.contains(student) || this.tutors.contains(student)) {
+            return false;
+        }
+        if (student.getLevel() == 1) {
+            return this.tutored.add((Tutored) student);
+        } else {
+            return this.tutors.add((Tutor) student);
+        }
+    }
 
     /**
      * Creates an assignment from 2 lists of students of the object.
@@ -195,13 +262,13 @@ public class Assignment {
 
         List<Tutor> duplicateTutor = new ArrayList<>();
         duplicateTutor.addAll(this.tutors);
-        
 
         listArrange(duplicateTutored, duplicateTutor);
 
         GrapheNonOrienteValue<Student> graph = graphSetup(duplicateTutored, duplicateTutor);
 
-        CalculAffectation<Student> calcul = new CalculAffectation<>(graph, Tools.getStudentList(duplicateTutored), Tools.getStudentList(duplicateTutor));
+        CalculAffectation<Student> calcul = new CalculAffectation<>(graph, Tools.getStudentList(duplicateTutored),
+                Tools.getStudentList(duplicateTutor));
 
         this.assignmentCost = calcul.getCout();
 
@@ -216,7 +283,7 @@ public class Assignment {
      * 
      * @see Tutored#getWeight(double, double)
      * @see Tutor#getWeight(double, double)
-    //  * @see Tools#areStudentsInMap(Map, Tutored, Tutor)
+     * @see Tools#areStudentsInMap(Map, Tutored, Tutor)
      */
     private GrapheNonOrienteValue<Student> graphSetup(List<Tutored> duplicateTutored, List<Tutor> duplicateTutor) {
         GrapheNonOrienteValue<Student> graph = new GrapheNonOrienteValue<>();
@@ -228,9 +295,10 @@ public class Assignment {
 
         for (Tutored tutored : duplicateTutored) {
             for (Tutor tutor : duplicateTutor) {
-                if (this.forcedAssignments.containsKey(tutored) && this.forcedAssignments.get(tutored)==tutor){
+                if (this.forcedAssignments.containsKey(tutored) && this.forcedAssignments.get(tutored) == tutor) {
                     weight = -1000;
-                } else if (this.forbiddenAssignments.containsKey(tutored) && this.forbiddenAssignments.get(tutored)==tutor) {
+                } else if (this.forbiddenAssignments.containsKey(tutored)
+                        && this.forbiddenAssignments.get(tutored) == tutor) {
                     weight = 1000;
                 } else {
                     weight = tutored.getWeight() + tutor.getWeight();
@@ -262,11 +330,11 @@ public class Assignment {
      * @see Tools#waitingListBuilder(List, int)
      */
     private void listArrange(List<Tutored> tutored, List<Tutor> tutor) {
-        int diff =  tutored.size() - tutor.size();
+        int diff = tutored.size() - tutor.size();
 
         if (polyTutor) {
-           // tutor = Tools.tutorsSplit(tutor, diff);
-           tutor = Tools.tutorsSplit2(tutor, diff);
+            // tutor = Tools.tutorsSplit(tutor, diff);
+            tutor = Tools.tutorsSplit2(tutor, diff);
         }
 
         diff = tutored.size() - tutor.size();
@@ -289,10 +357,12 @@ public class Assignment {
         computeStudentWeight(this.tutors);
     }
 
-    private void computeStudentWeight(List<? extends Student> list){
+    private void computeStudentWeight(List<? extends Student> list) {
         double avgAvg = Tools.computeAverage(list);
         double absAvg = Tools.computeAbsenceAverage(list);
-        for (Student s : list) { s.setWeight(avgAvg, absAvg);}
+        for (Student s : list) {
+            s.setWeight(avgAvg, absAvg);
+        }
     }
 
     /**
@@ -306,13 +376,13 @@ public class Assignment {
     public String getTextAssignment(boolean getGraph) {
         StringBuilder string = new StringBuilder();
         // if (getGraph) {
-        //     string.append(graphSetup().toString() + "\n\n");
+        // string.append(graphSetup().toString() + "\n\n");
         // }
         string.append("Arêtes:\t\t " + this.getAssignment().toString().replaceAll("Arete", "") + "\n");
         if (!waitingList.isEmpty()) {
-            string.append("En attente:\t "+ this.waitingList+"\n");
+            string.append("En attente:\t " + this.waitingList + "\n");
         }
-        string.append("Coût total:\t "+ (double)(((int)(1000*this.getCost()))/1000.00) +"\n\n");
+        string.append("Coût total:\t " + (double) (((int) (1000 * this.getCost())) / 1000.00) + "\n\n");
         return string.toString();
     }
 
@@ -333,7 +403,7 @@ public class Assignment {
      * @return a copy of the assignment.
      */
     public List<Arete<Student>> getAssignment() {
-        
+
         return List.copyOf(this.assignment().getAffectation());
     }
 
@@ -366,14 +436,14 @@ public class Assignment {
         return this.assignmentCost % 1000 + (this.assignmentCost % 1000 < 0 ? 1000 : 0);
     }
 
-
-    public void printScenario(String id, String title){
-        System.out.println("\033[4m"+"Cas "+id+" : "+title+"\033[0m");
+    public void printScenario(String id, String title) {
+        System.out.println("\033[4m" + "Cas " + id + " : " + title + "\033[0m");
         System.out.println(this.getTextAssignment());
     }
 
     @Override
     public String toString() {
-        return "[Tuteurs: " + this.tutors.size() + ", Tutorés: " + this.tutored.size() + ", Attente: " + this.waitingList.size() + "]";
+        return "[Tuteurs: " + this.tutors.size() + ", Tutorés: " + this.tutored.size() + ", Attente: "
+                + this.waitingList.size() + "]";
     }
 }
