@@ -1,17 +1,39 @@
 package graphs.affectation;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.List;
+
 public final class UseDepartement {
     private UseDepartement() {
         throw new UnsupportedOperationException("Utility class and cannot be instantiated");
     }
 
+    static List<Student> listFromCSV(String path){
+        List<Student> students = new ArrayList<>();
+        try(BufferedReader br = new BufferedReader(new FileReader(new File(path)))){
+            while (br.ready()){
+
+            }
+        }catch (Exception e){
+            System.err.println("WOULOU pas bien : "+e.getMessage());
+        }
+
+        return students;        
+    }
+
     public static void main(String[] args) {
         Departement dpt = new Departement("INFO");
 
-        Tutoring tutorat = new Tutoring(new Teacher("Jean Carle"));
-        Tutoring tutorat2 = new Tutoring(new Teacher("Yann Secq"));
+        Teacher t1  =new Teacher("Jean Carle");
+        Teacher t2 = new Teacher("Yann Secq");
 
-        Tutor t1 = new Tutor("Vincent", 9.3, 2, 0, 'A');
+        List<Student> students = UseDepartement.listFromCSV("res/data/students.csv");
+        dpt.students.addAll(students);
+
+/*         Tutor t1 = new Tutor("Vincent", 9.3, 2, 0, 'A');
         Tutor t2 = new Tutor("Jacqueline", 13.2, 2, 1, 'B');
         Tutor t3 = new Tutor("Pénélope", 13.2, 2, 3, 'A');
         Tutor t4 = new Tutor("Édouard", 16.2, 3, 0, 'C', 1);
@@ -24,8 +46,8 @@ public final class UseDepartement {
         Tutored u4 = new Tutored("Hugues", 0.2, 2, 'B');
         Tutored u5 = new Tutored("Lucas", 17.3, 5, 'C');
         Tutored u6 = new Tutored("Alexandria", 12.5, 0, 'A');
-        Tutored u7 = new Tutored("Anouk", 10.5, 1, 'B');
-
+        Tutored u7 = new Tutored("Anouk", 10.5, 1, 'B'); */
+/* 
         dpt.addStudent(Resource.R101, t1);
         dpt.addStudent(Resource.R101, t3);
         dpt.addStudent(Resource.R101, t4);
@@ -33,7 +55,7 @@ public final class UseDepartement {
         dpt.addStudent(Resource.R101, u1);
         dpt.addStudent(Resource.R101, u3);
         dpt.addStudent(Resource.R101, u5);
-        dpt.addStudent(Resource.R101, u7);
+        dpt.addStudent(Resource.R101, u7); */
 
 
         System.out.println(dpt.toString());

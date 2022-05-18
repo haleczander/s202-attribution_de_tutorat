@@ -1,10 +1,12 @@
 package graphs.affectation;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Departement {
     String name;
+    List<Student> students;
     Map<Resource, Assignment> tutorings= new HashMap<>();
 
     public Departement(String name){

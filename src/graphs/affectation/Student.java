@@ -81,39 +81,36 @@ public abstract class Student extends Person implements Comparable<Student>{
         result = prime * result + (int) (temp ^ (temp >>> 32));
         result = prime * result + level;
         result = prime * result + motivation;
-        result = prime * result + ((NAME == null) ? 0 : NAME.hashCode());
+        temp = Double.doubleToLongBits(weight);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
         return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
+        if (this == obj){
             return true;
         }
-        if (obj == null) {
+        if (obj == null){
             return false;
         }
-        if (getClass() != obj.getClass()) {
+        if (getClass() != obj.getClass()){
             return false;
         }
         Student other = (Student) obj;
-        if (absences != other.absences) {
+        if (absences != other.absences){
             return false;
         }
-        if (Double.doubleToLongBits(average) != Double.doubleToLongBits(other.average)) {
+        if (Double.doubleToLongBits(average) != Double.doubleToLongBits(other.average)){
             return false;
         }
-        if (level != other.level) {
+        if (level != other.level){
             return false;
         }
-        if (motivation != other.motivation) {
+        if (motivation != other.motivation){
             return false;
         }
-        if (NAME == null) {
-            if (other.NAME != null) {
-                return false;
-            }
-        } else if (!NAME.equals(other.NAME)) {
+        if (Double.doubleToLongBits(weight) != Double.doubleToLongBits(other.weight)){
             return false;
         }
         return true;
@@ -124,7 +121,7 @@ public abstract class Student extends Person implements Comparable<Student>{
         if (shortString) {
             return this.getName();
         } else {
-            return "Student [nom=" + NAME + ", moyenne=" + average + ", niveau=" + level + "]";
+            return "Student [nom=" + FORENAME + " " + SURNAME + ", moyenne=" + average + ", niveau=" + level + "]";
         }
     }
 
@@ -134,7 +131,7 @@ public abstract class Student extends Person implements Comparable<Student>{
      * @return the student's name.
      */
     public String getName() {
-        return NAME;
+        return FORENAME + " " + SURNAME;
     }
 
     /**
