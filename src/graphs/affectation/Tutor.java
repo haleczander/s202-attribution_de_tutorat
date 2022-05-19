@@ -75,27 +75,47 @@ public class Tutor extends Student {
 
     @Override
     public void setWeight(double averageAvg, double absencesAvg) {
-        this.weight =  (
-            (averageAvg / this.average) * averageWeighting                              //poids de la moyenne
-            + (double)(3.0 / this.level) * levelWeighting                               //poids du niveau
-            + Math.sqrt((1 + this.absences) / (1 + absencesAvg)) * absenceWeighting     //poids des absences
-            ) / 3
-            * Tools.motivationValue(this.motivation);                                   // motivation
+        this.weight = ((averageAvg / this.average) * averageWeighting // poids de la moyenne
+                + (double) (3.0 / this.level) * levelWeighting // poids du niveau
+                + Math.sqrt((1 + this.absences) / (1 + absencesAvg)) * absenceWeighting // poids des absences
+        ) / 3
+                * Tools.motivationValue(this.motivation); // motivation
     }
 
-    public double getWeight(){
+    
+    public double getWeight() {
         return this.weight;
     }
 
+    /**
+     * Returns a copy of a tutor, using the same Tutor class.
+     * 
+     * @param toAppend character appended to the name of the new tutor to differenciate them.
+     * @return a new tutor.
+     * 
+     * @see #duplicate()
+     * @see TutorDuplicate
+     */
     public Tutor copyOf(char toAppend) {
         return new Tutor(this.getName() + "(" + toAppend + ")", average, level, absences, motivation, 1);
     }
 
-    public boolean isDuplicate(){
+    /**
+     * Returns {@code true} if the tutor is a duplicate of another (which is never the case).
+     * 
+     * @return false.
+     */
+    public boolean isDuplicate() {
         return false;
     }
 
-    protected TutorDuplicate duplicate(){
+    /**
+     * Returns a duplicate of the tutor using the TutorDuplicate class.
+     * 
+     * @return the duplicate of the tutor.
+     * @see TutorDuplicate
+     */
+    protected TutorDuplicate duplicate() {
         return new TutorDuplicate(this);
     }
 }

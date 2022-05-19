@@ -35,7 +35,7 @@ public final class Tools {
         List<Student> students = new ArrayList<>();
         students.addAll(list);
         // for (Student student : list) {
-        //     students.add(student);
+        // students.add(student);
         // }
         return students;
     }
@@ -85,15 +85,29 @@ public final class Tools {
         return list;
     }
 
-    public static List<Tutor> tutorsSplit2(List<Tutor> list, int diff){
+    /**
+     * Alexandre's version.
+     * 
+     * @param list
+     * @param diff
+     * @return list of tutors
+     * 
+     * @see #tutorsSplit(List, int)
+     * @see Tutored#compareTo(Student)
+     * @see Tutor#compareTo(Student)
+     * @see Tutor#duplicate()
+     */
+    public static List<Tutor> tutorsSplit2(List<Tutor> list, int diff) {
         list.sort((s1, s2) -> s1.compareTo(s2));
         List<Tutor> toAdd = new ArrayList<>();
         for (Tutor t : list) {
-            if (t.getNbofTutored()>1){
+            if (t.getNbofTutored() > 1) {
                 toAdd.add(t.duplicate());
                 diff--;
             }
-            if (diff == 0) { break;}
+            if (diff == 0) {
+                break;
+            }
         }
         list.addAll(toAdd);
         return list;
@@ -129,7 +143,6 @@ public final class Tools {
         return waitingList;
     }
 
-
     /**
      * Static method that returns a numerical value of a character representing the
      * motivation of a student.
@@ -140,8 +153,10 @@ public final class Tools {
      *                                  C.
      */
     public static double motivationValue(char motivation) throws IllegalArgumentException {
-        if (motivation<'A' && motivation>'C') {throw new IllegalArgumentException("The motivation character is not valid (A, B or C).");}
-        return 1 + (motivation - 'B')*0.1;
+        if (motivation < 'A' && motivation > 'C') {
+            throw new IllegalArgumentException("The motivation character is not valid (A, B or C).");
+        }
+        return 1 + (motivation - 'B') * 0.1;
     }
 
     /**
@@ -152,7 +167,9 @@ public final class Tools {
      */
     public static double computeAverage(List<? extends Student> list) {
         double sum = 0;
-        for (Student student : list) {sum += student.getAverage();}
+        for (Student student : list) {
+            sum += student.getAverage();
+        }
         return sum / list.size();
     }
 
@@ -164,10 +181,20 @@ public final class Tools {
      */
     public static double computeAbsenceAverage(List<? extends Student> list) {
         double sum = 0;
-        for (Student student : list) {sum += student.getAbsences();}
+        for (Student student : list) {
+            sum += student.getAbsences();
+        }
         return sum / list.size();
     }
 
+    /**
+     * Tests if the toString method of 2 edges return the same text. Used as an
+     * {@code equals} method to test edges equality.
+     * 
+     * @param edge1 first edge.
+     * @param edge2 second edge.
+     * @return true if text is equals, false otherwise.
+     */
     public static boolean edgeTextEquals(Arete<Student> edge1, Arete<Student> edge2) {
         return edge1.toString().equals(edge2.toString());
     }

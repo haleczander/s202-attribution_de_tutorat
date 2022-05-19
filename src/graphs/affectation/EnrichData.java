@@ -7,8 +7,12 @@ import java.util.Random;
 
 import fr.ulille.but.sae2_02.donnees.DonneesPourTester;
 
-public class EnrichData {
-    static String [][] enrichData(String[][] src){
+public final class EnrichData {
+    private EnrichData() {
+        throw new UnsupportedOperationException("Utility class and cannot be instantiated");
+    }
+
+    static String[][] enrichData(String[][] src) {
         Random rng = new Random();
         String[][] dst = new String[src.length][12];
         for (int i = 0; i < dst.length; i++) {
@@ -18,31 +22,32 @@ public class EnrichData {
             dst[i][0] = src[i][0];
             dst[i][1] = src[i][1];
             dst[i][2] = src[i][3];
-            dst[i][3] = ""+rng.nextInt(12);
-            dst[i][4] = ""+ (char)('A'+rng.nextInt(3));
+            dst[i][3] = "" + rng.nextInt(12);
+            dst[i][4] = "" + (char) ('A' + rng.nextInt(3));
             dst[i][5] = "3".equals(dst[i][3]) && rng.nextDouble() > 0.7 ? "1" : "";
             for (int j = 6; j < 12; j++) {
-                dst[i][j] = ""+((int)(rng.nextDouble()*20*100))/100;
+                dst[i][j] = "" + ((int) (rng.nextDouble() * 20 * 100)) / 100;
             }
         }
         return dst;
     }
 
-    static void exportToCSV(String[][] data){
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(new File("res/data/students.csv")))){
+    static void exportToCSV(String[][] data) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(new File("res/data/students.csv")))) {
             for (String[] strings : data) {
-                for (int i = 0 ; i < strings.length ; i++) {
+                for (int i = 0; i < strings.length; i++) {
                     bw.append(strings[i]);
-                    if (i<strings.length-1) { 
+                    if (i < strings.length - 1) {
                         bw.append(";");
                     }
                 }
                 bw.append("\n");
             }
         } catch (Exception e) {
-            System.err.println("pocontent : "+e.getMessage());
+            System.err.println("pocontent : " + e.getMessage());
         }
     }
+
     public static void main(String[] args) {
         String[][] src = DonneesPourTester.studentData;
         String[][] dst = enrichData(src);

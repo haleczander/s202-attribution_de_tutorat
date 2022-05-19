@@ -6,7 +6,7 @@ package graphs.affectation;
  * @author Léopold V.
  * @author Alexandre H.
  */
-public abstract class Student extends Person implements Comparable<Student>{
+public abstract class Student extends Person implements Comparable<Student> {
     protected double average;
     protected int level;
     protected int absences;
@@ -59,7 +59,7 @@ public abstract class Student extends Person implements Comparable<Student>{
      * @return -1, 1 or 0 depending on the comparison.
      */
     public int compareTo(Student student) {
-        return (int) (100*(this.weight-student.getWeight()));
+        return (int) (100 * (this.weight - student.getWeight()));
     }
 
     /**
@@ -88,29 +88,29 @@ public abstract class Student extends Person implements Comparable<Student>{
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj){
+        if (this == obj) {
             return true;
         }
-        if (obj == null){
+        if (obj == null) {
             return false;
         }
-        if (getClass() != obj.getClass()){
+        if (getClass() != obj.getClass()) {
             return false;
         }
         Student other = (Student) obj;
-        if (absences != other.absences){
+        if (absences != other.absences) {
             return false;
         }
-        if (Double.doubleToLongBits(average) != Double.doubleToLongBits(other.average)){
+        if (Double.doubleToLongBits(average) != Double.doubleToLongBits(other.average)) {
             return false;
         }
-        if (level != other.level){
+        if (level != other.level) {
             return false;
         }
-        if (motivation != other.motivation){
+        if (motivation != other.motivation) {
             return false;
         }
-        if (Double.doubleToLongBits(weight) != Double.doubleToLongBits(other.weight)){
+        if (Double.doubleToLongBits(weight) != Double.doubleToLongBits(other.weight)) {
             return false;
         }
         return true;
@@ -170,6 +170,11 @@ public abstract class Student extends Person implements Comparable<Student>{
         return motivation;
     }
 
+    /**
+     * Gets the student's weight.
+     * 
+     * @return the weight of the student.
+     */
     public double getWeight() {
         return weight;
     }

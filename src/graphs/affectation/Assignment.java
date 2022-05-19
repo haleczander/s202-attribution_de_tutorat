@@ -217,14 +217,20 @@ public class Assignment {
     }
 
     /**
+     * Returns {@code true} if the polytutor is activated on this assignment, false
+     * otherwise.
      * 
-     * 
-     * @return
+     * @return {@code true} if polytutor is on.
      */
     public boolean isPolyTutorOn() {
         return this.polyTutor;
     }
 
+    /**
+     * Dispatches all students in the correct list : tutored or tutors.
+     * 
+     * @param students a list of all students to dispatch.
+     */
     private void dispatchStudents(List<Student> students) {
         for (Student s : students) {
             addStudent(s);
@@ -250,8 +256,16 @@ public class Assignment {
 
     /**
      * Creates an assignment from 2 lists of students of the object.
+     * Steps of the method :
+     * 1. computes the weight of all students.
+     * 2. duplicates the lists of students to work with them.
+     * 3. arrages the lists of students
+     * 4. builds a graph from both new lists.
+     * 5. compute the assignment, saves the cost of it, then returns the assignment.
      * 
-     * @return the resulting assignment;
+     * @return the resulting assignment
+     * 
+     * @see #listArrange
      */
     private CalculAffectation<Student> assignment() {
         this.waitingList.clear();
@@ -276,14 +290,13 @@ public class Assignment {
     }
 
     /**
-     * Method that returns a undirected weighted graph (bipartite graphs) from 2
-     * lists of students of the object.
+     * Returns an undirected weighted graph (bipartite graph) from 2 lists of
+     * students.
      * 
      * @return the resulting graph.
      * 
      * @see Tutored#getWeight(double, double)
      * @see Tutor#getWeight(double, double)
-     * @see Tools#areStudentsInMap(Map, Tutored, Tutor)
      */
     private GrapheNonOrienteValue<Student> graphSetup(List<Tutored> duplicateTutored, List<Tutor> duplicateTutor) {
         GrapheNonOrienteValue<Student> graph = new GrapheNonOrienteValue<>();
@@ -311,9 +324,9 @@ public class Assignment {
     }
 
     /**
-     * Adds all students that are in the list given as edges in a graph.
+     * Adds all students that are in the list given as nodes in a given graph.
      * 
-     * @param graph graph to add edges to.
+     * @param graph graph to add nodes to.
      * @param list  students to add to the graph.
      */
     private void addVertices(GrapheNonOrienteValue<Student> graph, List<? extends Student> list) {
@@ -357,6 +370,16 @@ public class Assignment {
         computeStudentWeight(this.tutors);
     }
 
+    /**
+     * Calculates the average of all students in a given list, then sets the weight
+     * to all students in the list.
+     * 
+     * @param list list of students.
+     * 
+     * @see Tools#computeAverage(List)
+     * @see Tools#computeAbsenceAverage(List)
+     * @see Student#setWeight(double, double)
+     */
     private void computeStudentWeight(List<? extends Student> list) {
         double avgAvg = Tools.computeAverage(list);
         double absAvg = Tools.computeAbsenceAverage(list);
@@ -373,11 +396,8 @@ public class Assignment {
      *                 true.
      * @return the assignment as text.
      */
-    public String getTextAssignment(boolean getGraph) {
+    public String getTextAssignment() {
         StringBuilder string = new StringBuilder();
-        // if (getGraph) {
-        // string.append(graphSetup().toString() + "\n\n");
-        // }
         string.append("Arêtes:\t\t " + this.getAssignment().toString().replaceAll("Arete", "") + "\n");
         if (!waitingList.isEmpty()) {
             string.append("En attente:\t " + this.waitingList + "\n");
@@ -387,23 +407,12 @@ public class Assignment {
     }
 
     /**
-     * Method that returns a textual representation of the assignment. Includes a
-     * waiting list if there is one. Does not include a graph.
-     * 
-     * @return the assignment as text.
-     */
-    public String getTextAssignment() {
-        return getTextAssignment(false);
-    }
-
-    /**
      * Method that gives acces to an <strong>immutable</strong> copy of a list of
      * edges of students that represent an assignment.
      * 
      * @return a copy of the assignment.
      */
     public List<Arete<Student>> getAssignment() {
-
         return List.copyOf(this.assignment().getAffectation());
     }
 

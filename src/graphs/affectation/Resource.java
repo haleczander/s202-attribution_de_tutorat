@@ -11,9 +11,11 @@ public enum Resource {
 
     private String label;
 
-    private Resource(String label){
-        this.label=label;
+    Resource(String label) {
+        this.label = label;
     }
 
-    
+    public String getLabel() {
+        return label;
+    }
 }
