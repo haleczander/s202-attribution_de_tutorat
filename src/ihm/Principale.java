@@ -64,7 +64,7 @@ public class Principale extends Application{
         HBox footer = (HBox) initFooter();
         root.setBottom(footer);
 
-        stage.setScene(new Scene(root, 800, 500));
+        stage.setScene(new Scene(root, 800, 450));
         stage.show();
     }
 
