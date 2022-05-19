@@ -22,7 +22,7 @@ public class EnrichData {
             dst[i][4] = ""+ (char)('A'+rng.nextInt(3));
             dst[i][5] = "3".equals(dst[i][3]) && rng.nextDouble() > 0.7 ? "1" : "";
             for (int j = 6; j < 12; j++) {
-                dst[i][j] = ""+((int)(rng.nextDouble()*20*100))/100;
+                dst[i][j] = ( rng.nextDouble()> 0.5) ? ""+((int)(rng.nextDouble()*20*100))/100 : "";
             }
         }
         return dst;
