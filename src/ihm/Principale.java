@@ -26,16 +26,16 @@ public class Principale extends Application{
     final Insets PADDING_5 = new Insets(5);
 
     //Styles
-    final String FX = "-fx-";
+    final static String FX = "-fx-";
     final String BG = FX+"background";
     final String BGC = BG+"-color";
     String styleShadowBorder = FX+"effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0.5, 0.0, 0.0)";
 
     //Palette de couleurs
-    final String CLR_DARK = "#091527";
-    final String CLR_MEDIUM = "#353f54";
-    final String CLR_LIGHT = "#e1f1ff";
-    final String CLR_HIGHLIGHT = "#d9a21b";
+    final static String CLR_DARK = "#091527";
+    final static String CLR_MEDIUM = "#353f54";
+    final static String CLR_LIGHT = "#e1f1ff";
+    final static String CLR_HIGHLIGHT = "#d9a21b";
     //
     Paint PAINT_GC = Paint.valueOf("lightgrey");
 
@@ -54,6 +54,7 @@ public class Principale extends Application{
     Slider slAbs = new Slider();
     Slider slLvl = new Slider();
 
+    @Override
     public void start(Stage stage) throws Exception {
         BorderPane root = new BorderPane();
 

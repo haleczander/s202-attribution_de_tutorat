@@ -1,0 +1,10 @@
+{
+    "average": {
+        "minAvg": 0,
+        "maxAvg": 12
+    },
+    "absence": {
+        "minAbs": 0,
+        "maxAbs": 5
+    }
+}

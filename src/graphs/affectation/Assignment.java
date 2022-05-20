@@ -308,10 +308,10 @@ public class Assignment {
 
         for (Tutored tutored : duplicateTutored) {
             for (Tutor tutor : duplicateTutor) {
-                if (this.forcedAssignments.containsKey(tutored) && this.forcedAssignments.get(tutored) == tutor) {
+                if (this.forcedAssignments.containsKey(tutored) && this.forcedAssignments.get(tutored).equals(tutor)) {
                     weight = -1000;
                 } else if (this.forbiddenAssignments.containsKey(tutored)
-                        && this.forbiddenAssignments.get(tutored) == tutor) {
+                        && this.forbiddenAssignments.get(tutored).equals(tutor)) {
                     weight = 1000;
                 } else {
                     weight = tutored.getWeight() + tutor.getWeight();

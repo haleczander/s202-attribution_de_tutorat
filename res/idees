@@ -83,3 +83,8 @@ C = *1.2
 
 commande de javadoc pour que j'arrête de l'oublier :
 javadoc -private -d "./javadoc" -sourcepath "./src" -subpackages graphs.rapport -classpath "./lib/*"
+
+-> mettre les forbidden assignments / forced assignments sans la même map
+Map<Arete<Student>, Boolean>, 1 = ils dont être affectés, 0 = ils ne doivent pas l'être.
+Avantage de réduire le nombre d'attributs ET AUSSI de pouvoir mettre plusieurs étudiants dans le truc
+Mais ça risque de compliquer un petit peu les méthodes mais pas tellement.

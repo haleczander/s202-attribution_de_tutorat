@@ -58,6 +58,7 @@ public abstract class Student extends Person implements Comparable<Student> {
      * @param student the student to compare to.
      * @return -1, 1 or 0 depending on the comparison.
      */
+    @Override
     public int compareTo(Student student) {
         return (int) (100 * (this.weight - student.getWeight()));
     }
@@ -110,10 +111,7 @@ public abstract class Student extends Person implements Comparable<Student> {
         if (motivation != other.motivation) {
             return false;
         }
-        if (Double.doubleToLongBits(weight) != Double.doubleToLongBits(other.weight)) {
-            return false;
-        }
-        return true;
+        return Double.doubleToLongBits(weight) != Double.doubleToLongBits(other.weight);
     }
 
     @Override
@@ -183,7 +181,7 @@ public abstract class Student extends Person implements Comparable<Student> {
      * Sets the weighting of the average of students for weight computing. Default
      * value is 1.
      * 
-     * @param levelWeighting new weighting.
+     * @param levelWeighting new weighting of students level.
      */
     public static void setLevelWeighting(double levelWeighting) {
         Student.levelWeighting = levelWeighting;
@@ -193,7 +191,7 @@ public abstract class Student extends Person implements Comparable<Student> {
      * Sets the weighting of the level of students for weight computing. Default
      * value is 1.
      * 
-     * @param averageWeighting
+     * @param averageWeighting new weighting of students average.
      */
     public static void setAverageWeighting(double averageWeighting) {
         Student.averageWeighting = averageWeighting;
@@ -203,12 +201,17 @@ public abstract class Student extends Person implements Comparable<Student> {
      * Sets the weighting of the level of students for weight computing. Default
      * value is 1.
      * 
-     * @param absenceWeighting
+     * @param absenceWeighting new weighting of students absence.
      */
     public static void setAbsenceWeighting(double absenceWeighting) {
         Student.absenceWeighting = absenceWeighting;
     }
 
+    /**
+     * Manually sets a weight for the student. Used when duplicating students.
+     * 
+     * @param weight new weight of the student.
+     */
     public void setWeight(double weight) {
         this.weight = weight;
     }
