@@ -265,9 +265,9 @@ public class Assignment {
      * 
      * @return the resulting assignment
      * 
-     * @see #listArrange
+     * @see #listArrangeTutor std1 = new Tutor("A", 12.1, 2, 3, 'A');
      */
-    private CalculAffectation<Student> assignment() {
+     private CalculAffectation<Student> assignment() {
         this.waitingList.clear();
         computeStudentsWeight();
 
