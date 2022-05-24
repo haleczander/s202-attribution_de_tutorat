@@ -17,7 +17,7 @@ import fr.ulille.but.sae2_02.graphes.CalculAffectation;
 
 public class Test {
     public static void main(String[] args) {
-        //assignation tuteur / tutoré (cas ou moins de tuteur)
+        //Assignation tuteur / tutoré (cas ou moins de tuteur)
     	
 //        Tutor tutor1 = new Tutor("A", 12.1, 2, 3, 'A');
 //        Tutor tutor2 = new Tutor("Jean", 13, 2, 3, 'C');
@@ -55,7 +55,7 @@ public class Test {
     	
     	
     	
-    	//cas ou le polytutorat accepté
+    	//Cas ou le polytutorat accepté
     	
 //    	Tutor tutor1 = new Tutor("A", 12.1, 2, 3, 'A');
 //        Tutor tutor2 = new Tutor("Jean", 13, 2, 3, 'C');
@@ -94,7 +94,7 @@ public class Test {
     	
     	
     	
-    	//cas + tuteur que tutoré
+    	//Cas + tuteur que tutoré
     	
 //    	Tutor tutor1 = new Tutor("A", 12.1, 2, 3, 'A');
 //        Tutor tutor2 = new Tutor("Jean", 13, 2, 3, 'C');
@@ -138,6 +138,45 @@ public class Test {
     	
     	
     	//Affectation nombre tuteur et tutoré égal (sans polytutor)
+//    	Tutor tutor1 = new Tutor("A", 12.1, 2, 3, 'A');
+//        Tutor tutor2 = new Tutor("Jean", 13, 2, 3, 'C');
+//        Tutor tutor3 = new Tutor("Pierre", 18, 3, 0, 'A');
+//        Tutor tutor4 = new Tutor("Michel", 14, 3, 1, 'A');
+//        
+//        Tutored tutored1 = new Tutored("Axel", 5, 2, 'C');
+//        Tutored tutored2 = new Tutored("Tim", 15, 2, 'C');
+//        Tutored tutored3 = new Tutored("Harry", 3, 2, 'C');
+//        Tutored tutored4 = new Tutored("Paul", 12, 2, 'C');
+//        
+//        List<Tutor> tuteur = new ArrayList<Tutor>();
+//        List<Tutored> tutoré = new ArrayList<Tutored>();
+//        
+//        tuteur.add(tutor1);
+//        tuteur.add(tutor2);
+//        tuteur.add(tutor3);
+//        tuteur.add(tutor4);
+//        
+//        tutoré.add(tutored1);
+//        tutoré.add(tutored2);
+//        tutoré.add(tutored3);
+//        tutoré.add(tutored4);
+//        
+//        
+//        Departement dep = new Departement("Test");
+//        Assignment mat1 = new Assignment(tutoré, tuteur);
+//        mat1.setPolyTutor(false);
+//        dep.addTutoring(Resource.R101, mat1);
+//        
+//        System.out.println(dep + "\n" + "\n");
+//        
+//        System.out.println(mat1.getTextAssignment());
+//        
+//        System.out.println(mat1.getAssignment());
+    	
+    	
+    	
+    	
+    	//Affectation nombre tuteur = nombre tutoré avec polytutorat autorisé
     	Tutor tutor1 = new Tutor("A", 12.1, 2, 3, 'A');
         Tutor tutor2 = new Tutor("Jean", 13, 2, 3, 'C');
         Tutor tutor3 = new Tutor("Pierre", 18, 3, 0, 'A');
@@ -164,7 +203,8 @@ public class Test {
         
         Departement dep = new Departement("Test");
         Assignment mat1 = new Assignment(tutoré, tuteur);
-        mat1.setPolyTutor(false);
+        mat1.togglePolyTutor();
+        mat1.setPolyTutor(true);
         dep.addTutoring(Resource.R101, mat1);
         
         System.out.println(dep + "\n" + "\n");
@@ -172,6 +212,7 @@ public class Test {
         System.out.println(mat1.getTextAssignment());
         
         System.out.println(mat1.getAssignment());
+    	
     	
     }
 }
