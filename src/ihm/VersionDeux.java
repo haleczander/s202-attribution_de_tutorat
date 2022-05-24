@@ -8,11 +8,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.Slider;
+import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -23,6 +25,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+import javafx.scene.layout.Region;
 
 public class VersionDeux extends Application{
     //Glob
@@ -39,6 +42,9 @@ public class VersionDeux extends Application{
     Slider slAbs = new Slider(slMin, slMax, 1);
     Slider slMot = new Slider(slMin, slMax, 1);
 
+    ListView<String> tutors = new ListView<>();
+    ListView<String> tutored = new ListView<>();
+
     //Padding
     Insets PAD_MIN = new Insets(5);
 
@@ -46,7 +52,7 @@ public class VersionDeux extends Application{
     @Override
     public void start(Stage stage) throws Exception {        
         BorderPane root = new BorderPane();
-        Scene scene = new Scene(root, 800, 500);
+        Scene scene = new Scene(root, 850, 600);
 
         MenuBar menu = initMenu();
         root.setTop(menu);
@@ -68,23 +74,67 @@ public class VersionDeux extends Application{
 
         HBox header = initHeader();        
 
-        HBox options = initOptions();
+        ToolBar options = initOptions();
 
-        HBox listes = new HBox();
+        HBox listes = initListes();
 
         main.getChildren().addAll(header, options, listes);
 
         return main;
     }
 
+    HBox initListes(){
+        HBox listes = new HBox();
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        spacer.setMaxWidth(150);
+
+        listes.getChildren().addAll(tutored, spacer, tutors);
+        listes.setAlignment(Pos.CENTER);
+
+        listes.setPadding(PAD_MIN);
+        return listes;
+    }
+
     void setSlValue(Slider s, Number newVal){
         {((Slider)s).setValue( Math.ceil((double)newVal*2) / 2.0d);}
     }
     
-    HBox initOptions(){
-        HBox options = new HBox();
-        options.setAlignment(Pos.CENTER);
+    ToolBar initOptions(){
+        ToolBar options = new ToolBar();
 
+        BorderedTitle borderCoefs = new BorderedTitle("Coefficients", initToolCoefs());
+        BorderedTitle borderAffec = new BorderedTitle("Affectation", initToolAffect());
+        BorderedTitle borderList = new BorderedTitle("Listes", initToolListes());
+
+
+        options.getItems().addAll(borderCoefs, borderAffec, borderList);
+        return options;
+    }
+
+    ToolBar initToolAffect(){
+        ToolBar tb = new ToolBar();
+        HBox.setHgrow(tb, Priority.ALWAYS);
+        Button btAffect = new Button("Affecter !");
+        Button btShuffle = new Button("🔀");
+        tb.getStyleClass().clear();
+        tb.getItems().addAll(btAffect, btShuffle);
+        return tb;
+    }
+
+    HBox initToolListes(){
+        HBox tb = new HBox();
+        HBox.setHgrow(tb, Priority.ALWAYS);
+        Label lbOrdre = new Label("Tri des noms :");
+        Button btOrder = new Button("↓");
+        Button btRemoveStudent = new Button("‒");
+        Button btAddStudent = new Button("+");
+
+        tb.getChildren().addAll(lbOrdre, btOrder, new Label("\t"),btAddStudent, btRemoveStudent);
+        return tb;
+    }
+
+    HBox initToolCoefs(){
         HBox coefs = new HBox();
         Slider[] sliders = {slAvg, slAbs, slMot};
         for (Slider s : sliders) {
@@ -103,10 +153,7 @@ public class VersionDeux extends Application{
         Button resetCoef = new Button("↺");
 
         coefs.getChildren().addAll(labelAvg, slAvg, labelAbs, slAbs, labelMot, slMot, resetCoef);
-
-
-        options.getChildren().addAll(coefs);
-        return options;
+        return coefs;
     }
 
     HBox initHeader(){
