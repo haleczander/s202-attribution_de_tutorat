@@ -8,6 +8,7 @@ import java.util.Map;
 import fr.ulille.but.sae2_02.graphes.Arete;
 import fr.ulille.but.sae2_02.graphes.CalculAffectation;
 import fr.ulille.but.sae2_02.graphes.GrapheNonOrienteValue;
+import oop.Teacher;
 
 /**
  * Class that represents an assignment of two groups of students : one is
@@ -267,7 +268,7 @@ public class Assignment {
      * 
      * @see #listArrangeTutor std1 = new Tutor("A", 12.1, 2, 3, 'A');
      */
-     private CalculAffectation<Student> assignment() {
+    private CalculAffectation<Student> assignment() {
         this.waitingList.clear();
         computeStudentsWeight();
 
@@ -346,7 +347,6 @@ public class Assignment {
         int diff = tutored.size() - tutor.size();
 
         if (polyTutor) {
-            // tutor = Tools.tutorsSplit(tutor, diff);
             tutor = Tools.tutorsSplit2(tutor, diff);
         }
 

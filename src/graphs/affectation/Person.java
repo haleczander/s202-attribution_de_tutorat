@@ -8,7 +8,7 @@ public abstract class Person {
      * Constructs a Person from a forename and a surname.
      * 
      * @param forename forename of the student.
-     * @param surname surname of the student.
+     * @param surname  surname of the student.
      */
     protected Person(String forename, String surname) {
         this.FORENAME = forename;
@@ -16,12 +16,14 @@ public abstract class Person {
     }
 
     /**
-     * Constructs a Person from a full name (forename and surname separated by a space).
+     * Constructs a Person from a full name (forename and surname separated by a
+     * space).
      * 
      * @param name full name in the form : "forename surname".
      */
-    public Person(String name) {
-        // je retire le chainage temporairement ça fait tout niquer si on a pas d'espaces.
+    protected Person(String name) {
+        // je retire le chainage temporairement ça fait tout niquer si on a pas
+        // d'espaces.
         String fname;
         String sname;
         try {

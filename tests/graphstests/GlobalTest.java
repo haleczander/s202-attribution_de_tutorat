@@ -1,4 +1,4 @@
-package graphs.useaffectation;
+package graphstests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -19,6 +19,7 @@ import graphs.affectation.Student;
 import graphs.affectation.Tools;
 import graphs.affectation.Tutor;
 import graphs.affectation.Tutored;
+import graphs.useaffectation.Scenario;
 
 /**
  * Tests unitaire des différents scénarios imaginés.
@@ -27,7 +28,7 @@ import graphs.affectation.Tutored;
  * @see Scenario
  */
 public class GlobalTest {
-    public Tutored 
+    private Tutored 
             u1,
             u2,
             u3,
@@ -35,16 +36,14 @@ public class GlobalTest {
             u5,
             u6,
             u7;
-    public Tutor 
+    private Tutor 
             t1,
             t2,
             t3,
             t4,
             t5;
-    public Assignment assignment;
-    public List<Tutored> tutoredList;
-    public List<Tutor> tutorList;
-    public static final double DELTA = 0.002;
+    private Assignment assignment;
+    private static final double DELTA = 0.002;
 
     @BeforeEach
     public void initialize() {
@@ -66,9 +65,9 @@ public class GlobalTest {
         Student.setAverageWeighting(1);
         Student.setLevelWeighting(1);
 
-        tutoredList = new ArrayList<>();
+        List<Tutored> tutoredList = new ArrayList<>();
         tutoredList.addAll(List.of(u1, u2, u3, u4, u5, u6, u7));
-        tutorList = new ArrayList<>();
+        List<Tutor> tutorList = new ArrayList<>();
         tutorList.addAll(List.of(t1, t2, t3, t4, t5));
         assignment = new Assignment(tutoredList, tutorList);
     }
@@ -162,7 +161,7 @@ public class GlobalTest {
                 isEdgeInAssignment = true;
             }
         }
-        // assertTrue(isEdgeInAssignment);
+        assertFalse(isEdgeInAssignment);
 
         assignment.addForbiddenAssignments(u1, t4);
         edges = assignment.getAssignment();
@@ -184,7 +183,7 @@ public class GlobalTest {
                 isEdgeInAssignment = true;
             }
         }
-        // assertTrue(isEdgeInAssignment);
+        assertFalse(isEdgeInAssignment);
     }
 
     @Test

@@ -1,4 +1,4 @@
-package graphs.affectation;
+package oop;
 
 public enum Resource {
 

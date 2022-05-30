@@ -11,7 +11,7 @@ public abstract class Student extends Person implements Comparable<Student> {
     protected int level;
     protected int absences;
     protected char motivation;
-    public double weight;
+    protected double weight;
 
     protected static boolean shortString = true;
     protected static double averageWeighting = 1;

@@ -1,12 +1,13 @@
-package graphs.affectation;
+
 
 import java.util.ArrayList;
-
 import java.util.List;
 
-import org.junit.experimental.theories.internal.Assignments;
-
-import fr.ulille.but.sae2_02.graphes.CalculAffectation;
+import graphs.affectation.Assignment;
+import graphs.affectation.Tutor;
+import graphs.affectation.Tutored;
+import oop.Departement;
+import oop.Resource;
 
 /**
  * Test Class
@@ -187,22 +188,22 @@ public class Test {
         Tutored tutored3 = new Tutored("Harry", 3, 2, 'C');
         Tutored tutored4 = new Tutored("Paul", 12, 2, 'C');
         
-        List<Tutor> tuteur = new ArrayList<Tutor>();
-        List<Tutored> tutoré = new ArrayList<Tutored>();
+        List<Tutor> tuteur = new ArrayList<>();
+        List<Tutored> tutore = new ArrayList<>();
         
         tuteur.add(tutor1);
         tuteur.add(tutor2);
         tuteur.add(tutor3);
         tuteur.add(tutor4);
         
-        tutoré.add(tutored1);
-        tutoré.add(tutored2);
-        tutoré.add(tutored3);
-        tutoré.add(tutored4);
+        tutore.add(tutored1);
+        tutore.add(tutored2);
+        tutore.add(tutored3);
+        tutore.add(tutored4);
         
         
         Departement dep = new Departement("Test");
-        Assignment mat1 = new Assignment(tutoré, tuteur);
+        Assignment mat1 = new Assignment(tutore, tuteur);
         mat1.togglePolyTutor();
         mat1.setPolyTutor(true);
         dep.addTutoring(Resource.R101, mat1);

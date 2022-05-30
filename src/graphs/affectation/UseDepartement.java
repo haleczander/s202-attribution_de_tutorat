@@ -6,6 +6,9 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import oop.Departement;
+import oop.Teacher;
+
 public final class UseDepartement {
     private UseDepartement() {
         throw new UnsupportedOperationException("Utility class and cannot be instantiated");
@@ -27,11 +30,11 @@ public final class UseDepartement {
     public static void main(String[] args) {
         Departement dpt = new Departement("INFO");
 
-        Teacher t1  =new Teacher("Jean Carle");
+        Teacher t1 = new Teacher("Jean Carle");
         Teacher t2 = new Teacher("Yann Secq");
 
         List<Student> students = UseDepartement.listFromCSV("res/data/students.csv");
-        dpt.students.addAll(students);
+        dpt.getStudents().addAll(students);
 
 /*         Tutor t1 = new Tutor("Vincent", 9.3, 2, 0, 'A');
         Tutor t2 = new Tutor("Jacqueline", 13.2, 2, 1, 'B');

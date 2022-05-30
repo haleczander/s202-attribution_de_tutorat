@@ -1,7 +1,9 @@
-package graphs.affectation;
+package oop;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import graphs.affectation.Person;
 
 public class Teacher extends Person {
     private List<Resource> resources;

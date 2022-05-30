@@ -1,4 +1,4 @@
-package graphs.affectation;
+package oop;
 
 import java.io.BufferedWriter;
 import java.io.File;
