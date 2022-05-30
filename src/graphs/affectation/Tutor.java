@@ -24,18 +24,34 @@ public class Tutor extends Student {
      * @throws IllegalArgumentException if level is not between 2 and 3.
      * @throws IllegalArgumentException if motivation is not A, B or C.
      */
+
+    protected static int defaultLevel = 2;
+    protected static int defaultNbOfTutored = 1;
+    protected static int defaultNbOfTutoredThirdLevel = 2;
+
     public Tutor(String name, double average, int level, int absences, char motivation, int nbofTutored)
             throws IllegalArgumentException {
         super(name, average, level, absences, motivation);
-        if (level == 1) {
-            throw new IllegalArgumentException("Tutor students cannot have a level of 1.");
-        } else if (level == 3) {
-            this.nbofTutored = nbofTutored;
-        } else {
-            this.nbofTutored = 1;
-        }
+        setNbOfTutored(level, nbofTutored);
     }
 
+    private void setNbOfTutored(int level, int nbofTutored) throws IllegalArgumentException{
+
+        if (level != 2 && level != 3) {
+            this.level = Tutor.defaultLevel;
+            this.nbofTutored = Tutor.defaultNbOfTutored;
+            throw new IllegalArgumentException("Tutor students must be of level 2 or 3, number of tutorees set to default (" +Tutor.defaultNbOfTutored+").");
+        } else if (level ==2 && nbofTutored ==2){
+            this.nbofTutored = Tutor.defaultNbOfTutored;
+            throw new IllegalArgumentException("Too much tutorees for  a level 2, number of tutorees set to default (" +Tutor.defaultNbOfTutored+").");
+        }        
+        else if (nbofTutored ==0){
+            this.nbofTutored = getDefaultNbOfTutored(level);
+        }
+        else{
+            this.nbofTutored = nbofTutored;
+        }
+    }
     /**
      * Instatiate a tutor with a default number of tutor to take in charge (1 if
      * level is 2, 2 if level is 3.)
@@ -52,7 +68,14 @@ public class Tutor extends Student {
      */
     public Tutor(String name, double average, int level, int absences, char motivation)
             throws IllegalArgumentException {
-        this(name, average, level, absences, motivation, 2);
+        this(name, average, level, absences, motivation, 0);
+    }
+
+    private int getDefaultNbOfTutored(int level){
+        if (level == 3) {
+            return Tutor.defaultNbOfTutoredThirdLevel;
+        }
+        return Tutor.defaultNbOfTutored;
     }
 
     @Override
