@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import fr.ulille.but.sae2_02.graphes.Arete;
 import fr.ulille.but.sae2_02.graphes.CalculAffectation;
@@ -95,7 +96,7 @@ public class Assignment {
      * 
      * @param students List of students to dispatch.
      */
-    public Assignment(List<Student> students) {
+    public Assignment(Set<Student> students) {
         this();
         dispatchStudents(students);
     }
@@ -107,7 +108,7 @@ public class Assignment {
      * @param students List of students to dispatch.
      * @param teacher  Teacher overseeing the tutoring.
      */
-    public Assignment(List<Student> students, Teacher teacher) {
+    public Assignment(Set<Student> students, Teacher teacher) {
         this(students);
         this.teacher = teacher;
     }
@@ -235,7 +236,7 @@ public class Assignment {
      * 
      * @param students a list of all students to dispatch.
      */
-    private void dispatchStudents(List<Student> students) {
+    private void dispatchStudents(Set<Student> students) {
         for (Student s : students) {
             addStudent(s);
         }
