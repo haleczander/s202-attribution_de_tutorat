@@ -15,6 +15,9 @@ public abstract class Person {
         this.SURNAME = surname;
     }
 
+    abstract boolean isTeacher();
+    abstract boolean isStudent();
+
     /**
      * Constructs a Person from a full name (forename and surname separated by a
      * space).

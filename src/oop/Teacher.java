@@ -69,4 +69,14 @@ public class Teacher extends Person {
     public String toString() {
         return this.FORENAME + " " + this.SURNAME;
     }
+
+    @Override
+    boolean isTeacher() {
+        return true;
+    }
+
+    @Override
+    boolean isStudent() {
+        return false;
+    }
 }

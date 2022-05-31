@@ -1,4 +1,4 @@
-package graphs.useaffectation;
+package graphs.useAffectation;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,5 +1,8 @@
 package oop;
 
+import java.util.EnumMap;
+import java.util.Map;
+
 /**
  * Abstract class that represents a student.
  * 
@@ -12,6 +15,7 @@ public abstract class Student extends Person implements Comparable<Student> {
     protected int absences;
     protected char motivation;
     protected double weight;
+    protected Map<Resource, Double> grades = new EnumMap<>(Resource.class);
 
     protected static boolean shortString = true;
     protected static double averageWeighting = 1;
@@ -23,7 +27,9 @@ public abstract class Student extends Person implements Comparable<Student> {
     protected static int defaultLevel = 1;
     protected static int defaultAbsences = 0;
 
-    
+    public Map<Resource,Double> getGrades(){
+        return this.grades;
+    }
 
 
     public static double getDefaultAverage() {
@@ -273,5 +279,15 @@ public abstract class Student extends Person implements Comparable<Student> {
      */
     public void setWeight(double weight) {
         this.weight = weight;
+    }
+
+    @Override
+    boolean isTeacher() {
+        return false;
+    }
+
+    @Override
+    boolean isStudent() {
+        return true;
     }
 }

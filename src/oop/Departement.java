@@ -1,9 +1,7 @@
 package oop;
 
-import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -12,17 +10,32 @@ import graphs.affectation.Assignment;
 public class Departement {
     private String name;
     private Set<Student> students;
+    private Set<Teacher> teachers;
     private Map<Resource, Assignment> tutorings = new EnumMap<>(Resource.class);
     // j'ai modifié parce que EnumMap est bien pour travailler avec les enums
     // -> lire la doc (c'est presque la même chose)
 
-    public Departement(String name) {
-        this(name, new HashSet<Student>());
+
+    public Teacher getTeacher(Resource resource) {
+        return tutorings.get(resource).getTeacher();
     }
 
-    public Departement(String name, Set<Student> students){
+    public void setTeacher(Resource resource, Teacher teacher) {
+        if (!teachers.contains(teacher)){
+            teachers.add(teacher);
+        }
+        tutorings.get(resource).setTeacher(teacher);
+    }
+
+
+    public Departement(String name) {
+        this(name, new HashSet<Student>(), new HashSet<Teacher>());
+    }
+
+    public Departement(String name, Set<Student> students, Set<Teacher> teachers){
         this.name = name;
         this.students = students;
+        this.teachers = teachers;
     }
 
     public void addStudent(Student student){
@@ -33,15 +46,45 @@ public class Departement {
         this.students.addAll(students);
     }
 
+    public void addTeacher(Teacher teacher){
+        this.teachers.add(teacher);
+    }
+
+    public void addTeacher(Set<Teacher> teachers){
+        this.teachers.addAll(teachers);
+    }
+
+    public void add(Person person) throws IllegalArgumentException{
+        if (person.isTeacher()) {
+            addTeacher((Teacher)person);
+        }
+        else if (person.isStudent()){
+            addStudent((Student)person);
+        }
+        else {
+            throw new IllegalArgumentException();
+        }
+    }
+
     public void addTutoring(Resource resource) {
         tutorings.put(resource, new Assignment(students));
     }
 
-    public void initTutoring()
-
-    public void addTutoringStudent(Resource resource, Student s) {
-        this.tutorings.get(resource).addStudent(s);
+    public void registerStudents(Resource resource){
+        for (Student student : students) {
+            if (student.grades.containsKey(resource)){
+                tutorings.get(resource).addStudent(student);
+            }
+        }
     }
+
+    public void registerStudent(Resource resource, Student student){
+        tutorings.get(resource).addStudent(student);
+    }
+    public void registerStudent(Resource resource, Set<Student> students){
+        tutorings.get(resource).addStudent(students);
+    }
+
 
     @Override
     public String toString() {
@@ -52,7 +95,7 @@ public class Departement {
         return name;
     }
 
-    public List<Student> getStudents() {
+    public Set<Student> getStudents() {
         return students;
     }
 }
