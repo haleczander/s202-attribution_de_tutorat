@@ -18,12 +18,6 @@ public abstract class Student extends Person implements Comparable<Student> {
     protected static double levelWeighting = 1;
     protected static double absenceWeighting = 1;
 
-    protected static double defaultAverage = 15;
-    protected static char defaultMotivation = 'B';
-    protected static int defaultLevel = 1;
-    protected static int defaultAbsences = 0;
-
-
     /**
      * Instantiate a student.
      * 
@@ -37,50 +31,25 @@ public abstract class Student extends Person implements Comparable<Student> {
      * @throws IllegalArgumentException if level is not between 1 and 3.
      * @throws IllegalArgumentException if motivation is not A, B or C.
      */
-
-    private void setAverage(double average) throws IllegalArgumentException{
+    protected Student(final String name, double average, int level, int absences, char motivation)
+            throws IllegalArgumentException {
+        super(name);
         if (average < 0 || average > 20) {
-            this.average = Student.defaultAverage;
             throw new IllegalArgumentException("Average must be between 0 and 20.");
         } else {
             this.average = average;
         }
-    }   
-
-    private void setLevel(int level) throws IllegalArgumentException{
         if (level < 1 || level > 3) {
-            this.level = Student.defaultLevel;
             throw new IllegalArgumentException("Level must be between 1 and 3.");
         } else {
             this.level = level;
         }
-    }
-
-    private void setAbsences(int absences) throws IllegalArgumentException{
-        if (absences >= 0){
-            this.absences = absences;
-        }
-        else{
-            this.absences = Student.defaultAbsences;
-            throw new IllegalArgumentException("Nombre d'absences négatif");
-        }
-    }
-
-    private void setMotivation(char motivation) throws IllegalArgumentException{
+        this.absences = absences;
         if (motivation != 'A' && motivation != 'B' && motivation != 'C') {
             throw new IllegalArgumentException("Motivation must be A, B or C");
         } else {
             this.motivation = motivation;
         }
-    }
-
-    protected Student(final String name, double average, int level, int absences, char motivation)
-            throws IllegalArgumentException {
-        super(name);
-        setAverage(average);
-        setLevel(level);
-        setAbsences(absences);
-        setMotivation(motivation);
     }
 
     /**
