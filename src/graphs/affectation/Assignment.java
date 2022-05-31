@@ -347,7 +347,7 @@ public class Assignment {
         int diff = tutored.size() - tutor.size();
 
         if (polyTutor) {
-            tutor = Tools.tutorsSplit2(tutor, diff);
+            tutor = Tools.tutorsSplit(tutor, diff);
         }
 
         diff = tutored.size() - tutor.size();

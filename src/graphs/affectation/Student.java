@@ -31,8 +31,7 @@ public abstract class Student extends Person implements Comparable<Student> {
      * @throws IllegalArgumentException if level is not between 1 and 3.
      * @throws IllegalArgumentException if motivation is not A, B or C.
      */
-    protected Student(final String name, double average, int level, int absences, char motivation)
-            throws IllegalArgumentException {
+    protected Student(final String name, double average, int level, int absences, char motivation) {
         super(name);
         if (average < 0 || average > 20) {
             throw new IllegalArgumentException("Average must be between 0 and 20.");
@@ -119,7 +118,7 @@ public abstract class Student extends Person implements Comparable<Student> {
         if (shortString) {
             return this.getName();
         } else {
-            return "Student [nom=" + FORENAME + " " + SURNAME + ", moyenne=" + average + ", niveau=" + level + "]";
+            return "Student [name=" + FORENAME + " " + SURNAME + ", average=" + average + ", level=" + level + "]";
         }
     }
 

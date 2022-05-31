@@ -1,7 +1,6 @@
 package graphs.affectation;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -26,7 +25,7 @@ public final class Tools {
     }
 
     /**
-     * Returns a Student list from a list of any children class of Student.
+     * Returns a list of Students from a list of any children class of Student.
      * 
      * @param list Student list to convert.
      * @return Resulting Student list.
@@ -34,14 +33,11 @@ public final class Tools {
     public static List<Student> getStudentList(List<? extends Student> list) {
         List<Student> students = new ArrayList<>();
         students.addAll(list);
-        // for (Student student : list) {
-        // students.add(student);
-        // }
         return students;
     }
 
     /**
-     * Splits up to all the tutors that can take multiple students in charge in a
+     * Duplicates up to all the tutors that can take multiple students in charge in a
      * given list. Number of splits is determined by the number of tutored students
      * without an available tutors. Splits are done after list has been sorted.
      * Returns the list with potential student splits. Current max number of tutored
@@ -51,53 +47,12 @@ public final class Tools {
      * @param diff Number of potential splits.
      * @return List of tutors with all available or necessary splits.
      * 
-     * @throws IllegalArgumentException if number of students to take in charge is
-     *                                  superior to 2.
-     * 
-     * @see Tutored#compareTo(Student)
-     * @see Tutor#compareTo(Student)
-     */
-    public static List<Tutor> tutorsSplit(List<Tutor> list, int diff) {
-        list.sort((s1, s2) -> s1.compareTo(s2));
-        boolean noMoreAvailableStudents = false;
-        while (diff > 0 && !noMoreAvailableStudents) {
-            Iterator<Tutor> it = list.iterator();
-            while (it.hasNext()) {
-                Tutor tuteur = it.next();
-                if (tuteur.getNbofTutored() == 2) {
-                    Tutor newTutor1 = tuteur.copyOf('1');
-                    newTutor1.setWeight(tuteur.getWeight());
-                    Tutor newTutor2 = tuteur.copyOf('2');
-                    newTutor2.setWeight(tuteur.getWeight() * 1.5);
-                    list.remove(tuteur);
-                    list.addAll(List.of(newTutor1, newTutor2));
-                    break;
-                } else if (tuteur.getNbofTutored() > 2) {
-                    throw new IllegalArgumentException("Max number of tutored taken in charge is 3.");
-                }
-                if (!it.hasNext()) {
-                    noMoreAvailableStudents = true;
-                    break;
-                }
-            }
-            diff--;
-        }
-        return list;
-    }
-
-    /**
-     * Alexandre's version.
-     * 
-     * @param list
-     * @param diff
-     * @return list of tutors
-     * 
      * @see #tutorsSplit(List, int)
      * @see Tutored#compareTo(Student)
      * @see Tutor#compareTo(Student)
      * @see Tutor#duplicate()
      */
-    public static List<Tutor> tutorsSplit2(List<Tutor> list, int diff) {
+    public static List<Tutor> tutorsSplit(List<Tutor> list, int diff) {
         list.sort((s1, s2) -> s1.compareTo(s2));
         List<Tutor> toAdd = new ArrayList<>();
         for (Tutor t : list) {
@@ -121,7 +76,7 @@ public final class Tools {
      * 
      * @param list list to sort and build the waiting list from.
      * @param diff number of students to remove.
-     * @return The waiting list of
+     * @return The waiting list of students.
      * 
      * @see Tutored#compareTo(Student)
      * @see Tutor#compareTo(Student)
