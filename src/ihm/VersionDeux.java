@@ -19,6 +19,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -119,7 +120,6 @@ public class VersionDeux extends Application{
         HBox header = initHeader();
         ToolBar options = initOptions();
 
-
         top.getChildren().addAll(menu, header, options);
         return top;
     }
@@ -150,7 +150,7 @@ public class VersionDeux extends Application{
 
         etudiantsControls.getChildren().addAll(add, del);
 
-        BorderedTitle etudiants = new BorderedTitle("Etudiants", etudiantsControls);
+        TitledPane etudiants = new TitledPane("Etudiants", etudiantsControls);
 
         VBox triControls = new VBox();
 
@@ -179,7 +179,7 @@ public class VersionDeux extends Application{
         motiv.getChildren().addAll(new Label("Motivation "), spacers[5], motivTri);
 
         triControls.getChildren().addAll(alpha, avg, abs, motiv);
-        BorderedTitle tri = new BorderedTitle("Trier par:", triControls);
+        TitledPane tri = new TitledPane("Trier par:", triControls);
 
         listControls.getChildren().addAll(etudiants, tri);
         listControls.setPadding(PAD_MIN);
@@ -223,8 +223,8 @@ public class VersionDeux extends Application{
     ToolBar initOptions(){
         ToolBar options = new ToolBar();
 
-        BorderedTitle borderCoefs = new BorderedTitle("Coefficients", initToolCoefs());
-        BorderedTitle borderAffec = new BorderedTitle("Affectation", initToolAffect());
+        TitledPane borderCoefs = new TitledPane("Coefficients", initToolCoefs());
+        TitledPane borderAffec = new TitledPane("Affectation", initToolAffect());
         // BorderedTitle borderList = new BorderedTitle("Listes", initToolListes());
 
 
