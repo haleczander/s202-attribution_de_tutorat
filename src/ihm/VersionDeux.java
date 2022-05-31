@@ -55,8 +55,8 @@ public class VersionDeux extends Application{
     Insets PAD_BTN = new Insets(5, 9, 5, 9);
 
     //Lists
-    List<Tutor> tutorsOrigin = loadTutors();
-    List<Tutored> tutoredOrigin = loadTutored();
+    // List<Tutor> tutorsOrigin = loadTutors();
+    // List<Tutored> tutoredOrigin = loadTutored();
     List<Tutor> tutorsList;
     List<Tutored> tutoredList;
     
@@ -97,7 +97,7 @@ public class VersionDeux extends Application{
     }
 
     void setLists(){
-        setLists(tutoredOrigin, tutorsOrigin);
+        // setLists(tutoredOrigin, tutorsOrigin);
     }
 
     void setLists(List<Tutored> tutored, List<Tutor> tutor){

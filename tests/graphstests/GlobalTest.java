@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 import fr.ulille.but.sae2_02.graphes.Arete;
 import graphs.affectation.Assignment;
 import graphs.affectation.Tools;
-import graphs.useAffectation.Scenario;
+import graphs.useaffectation.Scenario;
 import oop.Student;
 import oop.Tutor;
 import oop.Tutored;
