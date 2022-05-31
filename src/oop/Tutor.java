@@ -1,4 +1,6 @@
-package graphs.affectation;
+package oop;
+
+import graphs.affectation.Tools;
 
 /**
  * Class that represents a tutor student.
@@ -29,27 +31,52 @@ public class Tutor extends Student {
     protected static int defaultNbOfTutored = 1;
     protected static int defaultNbOfTutoredThirdLevel = 2;
 
-    public Tutor(String name, double average, int level, int absences, char motivation, int nbofTutored)
-            throws IllegalArgumentException {
+    
+
+    public static int getDefaultLevel() {
+        return defaultLevel;
+    }
+
+    public static void setDefaultLevel(int defaultLevel) {
+        Tutor.defaultLevel = defaultLevel;
+    }
+
+    public static int getDefaultNbOfTutored() {
+        return defaultNbOfTutored;
+    }
+
+    public static void setDefaultNbOfTutored(int defaultNbOfTutored) {
+        Tutor.defaultNbOfTutored = defaultNbOfTutored;
+    }
+
+    public static int getDefaultNbOfTutoredThirdLevel() {
+        return defaultNbOfTutoredThirdLevel;
+    }
+
+    public static void setDefaultNbOfTutoredThirdLevel(int defaultNbOfTutoredThirdLevel) {
+        Tutor.defaultNbOfTutoredThirdLevel = defaultNbOfTutoredThirdLevel;
+    }
+
+
+
+    public Tutor(String name, double average, int level, int absences, char motivation, int nbofTutored){//            throws IllegalArgumentException {
         super(name, average, level, absences, motivation);
         setNbOfTutored(level, nbofTutored);
     }
 
-    private void setNbOfTutored(int level, int nbofTutored) throws IllegalArgumentException{
 
-        if (level != 2 && level != 3) {
-            this.level = Tutor.defaultLevel;
-            this.nbofTutored = Tutor.defaultNbOfTutored;
-            throw new IllegalArgumentException("Tutor students must be of level 2 or 3, number of tutorees set to default (" +Tutor.defaultNbOfTutored+").");
-        } else if (level ==2 && nbofTutored ==2){
-            this.nbofTutored = Tutor.defaultNbOfTutored;
-            throw new IllegalArgumentException("Too much tutorees for  a level 2, number of tutorees set to default (" +Tutor.defaultNbOfTutored+").");
-        }        
-        else if (nbofTutored ==0){
-            this.nbofTutored = getDefaultNbOfTutored(level);
+    private void setNbOfTutored(int level, int nbofTutored){// throws IllegalArgumentException{
+        if (level == 3) {
+            if (nbofTutored == 1) {
+                this.nbofTutored = 1;
+            }
+            else{
+                this.nbofTutored = Tutor.defaultNbOfTutoredThirdLevel;
+            }
         }
         else{
-            this.nbofTutored = nbofTutored;
+            setLevel(Tutor.defaultLevel);
+            this.nbofTutored = Tutor.defaultNbOfTutored;
         }
     }
     /**
@@ -66,16 +93,8 @@ public class Tutor extends Student {
      * @throws IllegalArgumentException if level is not between 2 and 3.
      * @throws IllegalArgumentException if motivation is not A, B or C.
      */
-    public Tutor(String name, double average, int level, int absences, char motivation)
-            throws IllegalArgumentException {
+    public Tutor(String name, double average, int level, int absences, char motivation){//           throws IllegalArgumentException {
         this(name, average, level, absences, motivation, 0);
-    }
-
-    private int getDefaultNbOfTutored(int level){
-        if (level == 3) {
-            return Tutor.defaultNbOfTutoredThirdLevel;
-        }
-        return Tutor.defaultNbOfTutored;
     }
 
     @Override
@@ -122,6 +141,10 @@ public class Tutor extends Student {
     public Tutor copyOf(char toAppend) {
         return new Tutor(this.getName() + "(" + toAppend + ")", average, level, absences, motivation, 1);
     }
+    public Tutor copyOf(){
+        return copyOf('D');
+    }
+
 
     /**
      * Returns {@code true} if the tutor is a duplicate of another (which is never the case).
@@ -138,7 +161,7 @@ public class Tutor extends Student {
      * @return the duplicate of the tutor.
      * @see TutorDuplicate
      */
-    protected TutorDuplicate duplicate() {
+    public TutorDuplicate duplicate() {
         return new TutorDuplicate(this);
     }
 }

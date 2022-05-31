@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.ListIterator;
 
 import fr.ulille.but.sae2_02.graphes.Arete;
+import oop.Student;
+import oop.Tutor;
+import oop.Tutored;
 
 /**
  * Utility class that regroups multiple static methods useful for list

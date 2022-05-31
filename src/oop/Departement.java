@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import graphs.affectation.Assignment;
-import graphs.affectation.Student;
 
 public class Departement {
     private String name;

@@ -1,9 +1,9 @@
 package graphstests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,11 +15,11 @@ import org.junit.jupiter.api.Test;
 
 import fr.ulille.but.sae2_02.graphes.Arete;
 import graphs.affectation.Assignment;
-import graphs.affectation.Student;
 import graphs.affectation.Tools;
-import graphs.affectation.Tutor;
-import graphs.affectation.Tutored;
-import graphs.useaffectation.Scenario;
+import graphs.useAffectation.Scenario;
+import oop.Student;
+import oop.Tutor;
+import oop.Tutored;
 
 /**
  * Tests unitaire des différents scénarios imaginés.

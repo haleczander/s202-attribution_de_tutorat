@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import oop.Departement;
+import oop.Student;
 import oop.Teacher;
 
 public final class UseDepartement {
