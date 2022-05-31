@@ -66,7 +66,15 @@ public class Assignment {
     /**
      * Teacher in charge of the assignment.
      */
-    private Teacher teacher;
+    private Teacher teacher;  
+
+    public Teacher getTeacher() {
+        return teacher;
+    }
+
+    public void setTeacher(Teacher teacher) {
+        this.teacher = teacher;
+    }
 
     private Assignment() {
         this.polyTutor = true;
@@ -98,7 +106,7 @@ public class Assignment {
      */
     public Assignment(Set<Student> students) {
         this();
-        dispatchStudents(students);
+        addStudent(students);
     }
 
     /**
@@ -236,7 +244,7 @@ public class Assignment {
      * 
      * @param students a list of all students to dispatch.
      */
-    private void dispatchStudents(Set<Student> students) {
+    public void addStudent(Set<Student> students) {
         for (Student s : students) {
             addStudent(s);
         }

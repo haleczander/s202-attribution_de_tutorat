@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 public class Scenario {
-    List<Departement> IUT = new ArrayList<>();
+    static List<Departement> IUT = new ArrayList<>();
     public static void main(String[] args) {
         /* 
         L'I.U.T. de Lille veut mettre en place un système de tutorat
@@ -20,24 +20,35 @@ public class Scenario {
             Situation par défaut, aucun tutorat pour la matière n'existe
             Nous ne disposons que de la liste des élèves et celle des enseignants
         */
+        
         scenario1();
         scenario2();
         scenario3();
     }
 
-    void scenario1(){
+    static void scenario1(){
         Departement info = new Departement("Info");
         IUT.add(info);
 
         Set<Student> students = ToolsCSV.importStudents();
         info.addStudent(students);
+        Set<Teacher> teachers = ToolsCSV.importTeachers();
+        info.addTeacher(teachers);
 
+        Resource bdd = Resource.R104;        
+        info.addTutoring(bdd);
+        info.registerStudents(bdd);
 
+        /*
+        Il y a pénurie d'enseignants, de jeunes doctorants sont mis à contribution
+         */
+        Teacher corwyn = new Teacher("Corwyn Fèvre");
+        info.setTeacher(bdd, corwyn);
     };
 
-    void scenario2(){
+    static void scenario2(){
     };
 
-    void scenario3(){
+    static void scenario3(){
     };
 }
