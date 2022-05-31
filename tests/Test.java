@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import graphs.affectation.Assignment;
-import graphs.affectation.Tutor;
-import graphs.affectation.Tutored;
+import oop.Tutor;
+import oop.Tutored;
 import oop.Departement;
 import oop.Resource;
 

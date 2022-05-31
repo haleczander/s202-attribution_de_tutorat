@@ -1,5 +1,10 @@
 package ihm;
 
+import java.util.List;
+
+import oop.Tutored;
+import oop.Tutor;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -20,12 +25,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
-import javafx.scene.layout.Region;
 
 public class VersionDeux extends Application{
     //Glob
@@ -47,6 +52,14 @@ public class VersionDeux extends Application{
 
     //Padding
     Insets PAD_MIN = new Insets(5);
+    Insets PAD_BTN = new Insets(5, 9, 5, 9);
+
+    //Lists
+    List<Tutor> tutorsOrigin = loadTutors();
+    List<Tutored> tutoredOrigin = loadTutored();
+    List<Tutor> tutorsList;
+    List<Tutored> tutoredList;
+    
 
 
     @Override
@@ -54,8 +67,10 @@ public class VersionDeux extends Application{
         BorderPane root = new BorderPane();
         Scene scene = new Scene(root, 850, 600);
 
-        MenuBar menu = initMenu();
-        root.setTop(menu);
+        // MenuBar menu = initMenu();
+        // root.setTop(menu);
+        VBox top = initTop();
+        root.setTop(top);
 
         VBox main = initMain();
         root.setCenter(main);
@@ -63,22 +78,127 @@ public class VersionDeux extends Application{
         HBox footer = initFooter();
         root.setBottom(footer);
 
+        VBox listControls = initListControls();
+        root.setLeft(listControls);
+        
+        initValues();
+
         stage.setScene(scene);
         stage.show();
-        
+    }
+
+    void initValues(){
+        setCoefs();
+        // setLists();
+    }
+
+    void setCoefs(){
+        setCoefs(1, 1, 1);
+    }
+
+    void setLists(){
+        setLists(tutoredOrigin, tutorsOrigin);
+    }
+
+    void setLists(List<Tutored> tutored, List<Tutor> tutor){
         
     }
+
+    void setCoefs(int avg, int abs, int motivation){
+        slAvg.setValue(avg);
+        slAbs.setValue(abs);
+        slMot.setValue(motivation);
+    }
+
+
+
+    VBox initTop(){
+        VBox top= new VBox();
+
+        MenuBar menu = initMenu();
+        HBox header = initHeader();
+        ToolBar options = initOptions();
+
+
+        top.getChildren().addAll(menu, header, options);
+        return top;
+    }
+
+    VBox initListControls(){
+        VBox listControls = new VBox();
+        
+        Region[] spacers = new Region[6];
+        for (int i = 0; i < spacers.length; i++) {
+            spacers [i] = new Region();
+            HBox.setHgrow(spacers[i], Priority.ALWAYS);
+        }
+
+
+        VBox etudiantsControls = new VBox();
+        HBox add = new HBox(new Label("Ajouter "));
+        add.setAlignment(Pos.CENTER);
+        Button addButton = new Button("+");
+        addButton.setPadding(new Insets(5, 8 ,5 ,8));
+        addButton.setAlignment(Pos.CENTER_RIGHT);
+        add.getChildren().addAll(spacers[0], addButton);
+
+        HBox del = new HBox(new Label("Supprimer "));
+        del.setAlignment(Pos.CENTER);
+        Button delButton = new Button("‒");
+        delButton.setPadding(PAD_BTN);
+        del.getChildren().addAll(spacers[1], delButton);
+
+        etudiantsControls.getChildren().addAll(add, del);
+
+        BorderedTitle etudiants = new BorderedTitle("Etudiants", etudiantsControls);
+
+        VBox triControls = new VBox();
+
+        HBox alpha = new HBox();
+        alpha.setAlignment(Pos.CENTER);
+        Button alphaTri = new Button("↓");
+        alphaTri.setPadding(PAD_BTN);
+        alpha.getChildren().addAll(new Label("Nom "), spacers[2], alphaTri);
+
+        HBox avg = new HBox();
+        avg.setAlignment(Pos.CENTER);
+        Button avgTri = new Button("↓");
+        avgTri.setPadding(PAD_BTN);
+        avg.getChildren().addAll(new Label("Notes "), spacers[3], avgTri);
+
+        HBox abs = new HBox();
+        abs.setAlignment(Pos.CENTER);
+        Button absTri = new Button("↓");
+        absTri.setPadding(PAD_BTN);
+        abs.getChildren().addAll(new Label("Absences "), spacers[4], absTri);
+
+        HBox motiv = new HBox();
+        motiv.setAlignment(Pos.CENTER);
+        Button motivTri = new Button("↓");
+        motivTri.setPadding(PAD_BTN);
+        motiv.getChildren().addAll(new Label("Motivation "), spacers[5], motivTri);
+
+        triControls.getChildren().addAll(alpha, avg, abs, motiv);
+        BorderedTitle tri = new BorderedTitle("Trier par:", triControls);
+
+        listControls.getChildren().addAll(etudiants, tri);
+        listControls.setPadding(PAD_MIN);
+
+        return listControls;
+    }
+
 
     VBox initMain(){
         VBox main = new VBox();
 
-        HBox header = initHeader();        
+        // HBox header = initHeader();        
 
-        ToolBar options = initOptions();
+        // ToolBar options = initOptions();
 
         HBox listes = initListes();
 
-        main.getChildren().addAll(header, options, listes);
+        // main.getChildren().addAll(header, options, listes);
+        main.getChildren().addAll(listes);
 
         return main;
     }
@@ -105,10 +225,10 @@ public class VersionDeux extends Application{
 
         BorderedTitle borderCoefs = new BorderedTitle("Coefficients", initToolCoefs());
         BorderedTitle borderAffec = new BorderedTitle("Affectation", initToolAffect());
-        BorderedTitle borderList = new BorderedTitle("Listes", initToolListes());
+        // BorderedTitle borderList = new BorderedTitle("Listes", initToolListes());
 
 
-        options.getItems().addAll(borderCoefs, borderAffec, borderList);
+        options.getItems().addAll(borderCoefs, borderAffec);//, borderList);
         return options;
     }
 

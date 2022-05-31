@@ -15,7 +15,7 @@ class BorderedTitle extends StackPane {
 
         StackPane contentPane = new StackPane();
         //   content.getStyleClass().add("bordered-titled-content");
-        content.setStyle("-fx-padding: 26 5 5 5;");
+        content.setStyle("-fx-padding: 15 5 5 5;");
         contentPane.getChildren().add(content);
 
         // getStyleClass().add("bordered-titled-border");
