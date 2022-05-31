@@ -1,4 +1,6 @@
-package graphs.affectation;
+package oop;
+
+import graphs.affectation.Tools;
 
 /**
  * Class that represents a tutored student.
@@ -19,7 +21,7 @@ public class Tutored extends Student {
      * @throws IllegalArgumentException if average is not between 0 and 20.
      * @throws IllegalArgumentException if motivation is not between A, B or C.
      */
-    public Tutored(String name, double average, int absences, char motivation) throws IllegalArgumentException {
+    public Tutored(String name, double average, int absences, char motivation){// throws IllegalArgumentException {
         super(name, average, 1, absences, motivation);
     }
 

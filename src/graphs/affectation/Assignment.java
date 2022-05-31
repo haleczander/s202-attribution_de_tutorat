@@ -8,7 +8,10 @@ import java.util.Map;
 import fr.ulille.but.sae2_02.graphes.Arete;
 import fr.ulille.but.sae2_02.graphes.CalculAffectation;
 import fr.ulille.but.sae2_02.graphes.GrapheNonOrienteValue;
+import oop.Student;
 import oop.Teacher;
+import oop.Tutor;
+import oop.Tutored;
 
 /**
  * Class that represents an assignment of two groups of students : one is

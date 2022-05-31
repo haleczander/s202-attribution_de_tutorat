@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import graphs.affectation.Assignment;
-import graphs.affectation.Student;
-import graphs.affectation.Tutor;
-import graphs.affectation.Tutored;
+import oop.Student;
+import oop.Tutor;
+import oop.Tutored;
 
 /**
  * Scénario pour représenter un cas concret d'utilisation de l'affection.

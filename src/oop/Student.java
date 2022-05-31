@@ -1,4 +1,4 @@
-package graphs.affectation;
+package oop;
 
 /**
  * Abstract class that represents a student.
@@ -18,6 +18,47 @@ public abstract class Student extends Person implements Comparable<Student> {
     protected static double levelWeighting = 1;
     protected static double absenceWeighting = 1;
 
+    protected static double defaultAverage = 15;
+    protected static char defaultMotivation = 'B';
+    protected static int defaultLevel = 1;
+    protected static int defaultAbsences = 0;
+
+    
+
+
+    public static double getDefaultAverage() {
+        return defaultAverage;
+    }
+
+    public static void setDefaultAverage(double defaultAverage) {
+        Student.defaultAverage = defaultAverage;
+    }
+
+    public static char getDefaultMotivation() {
+        return defaultMotivation;
+    }
+
+    public static void setDefaultMotivation(char defaultMotivation) {
+        Student.defaultMotivation = defaultMotivation;
+    }
+
+    public static int getDefaultLevel() {
+        return defaultLevel;
+    }
+
+    public static void setDefaultLevel(int defaultLevel) {
+        Student.defaultLevel = defaultLevel;
+    }
+
+    public static int getDefaultAbsences() {
+        return defaultAbsences;
+    }
+
+    public static void setDefaultAbsences(int defaultAbsences) {
+        Student.defaultAbsences = defaultAbsences;
+    }
+
+
     /**
      * Instantiate a student.
      * 
@@ -31,24 +72,50 @@ public abstract class Student extends Person implements Comparable<Student> {
      * @throws IllegalArgumentException if level is not between 1 and 3.
      * @throws IllegalArgumentException if motivation is not A, B or C.
      */
-    protected Student(final String name, double average, int level, int absences, char motivation) {
-        super(name);
+
+    public void setAverage(double average){// throws IllegalArgumentException{
         if (average < 0 || average > 20) {
-            throw new IllegalArgumentException("Average must be between 0 and 20.");
+            this.average = Student.defaultAverage;
+            // throw new IllegalArgumentException("Average must be between 0 and 20.");
         } else {
             this.average = average;
         }
+    }   
+
+    public void setLevel(int level){// throws IllegalArgumentException{
         if (level < 1 || level > 3) {
-            throw new IllegalArgumentException("Level must be between 1 and 3.");
+            this.level = Student.defaultLevel;
+            // throw new IllegalArgumentException("Level must be between 1 and 3.");
         } else {
             this.level = level;
         }
-        this.absences = absences;
+    }
+
+    public void setAbsences(int absences){// throws IllegalArgumentException{
+        if (absences >= 0){
+            this.absences = absences;
+        }
+        else{
+            this.absences = Student.defaultAbsences;
+            // throw new IllegalArgumentException(" Nombre d'absences négatif");
+        }
+    }
+
+    public void setMotivation(char motivation){// throws IllegalArgumentException{
         if (motivation != 'A' && motivation != 'B' && motivation != 'C') {
-            throw new IllegalArgumentException("Motivation must be A, B or C");
+            this.motivation = defaultMotivation;
+            // throw new IllegalArgumentException("Motivation must be A, B or C");
         } else {
             this.motivation = motivation;
         }
+    }
+
+    protected Student(final String name, double average, int level, int absences, char motivation){//throws IllegalArgumentException {
+        super(name);
+        setAverage(average);
+        setLevel(level);
+        setAbsences(absences);
+        setMotivation(motivation);
     }
 
     /**
@@ -69,7 +136,7 @@ public abstract class Student extends Person implements Comparable<Student> {
      * @param absencesAvg average of absences of all students.
      * @return the weight of the student.
      */
-    protected abstract void setWeight(double averageAvg, double absencesAvg);
+    public abstract void setWeight(double averageAvg, double absencesAvg);
 
     @Override
     public int hashCode() {
@@ -122,14 +189,7 @@ public abstract class Student extends Person implements Comparable<Student> {
         }
     }
 
-    /**
-     * Gets the student's name.
-     * 
-     * @return the student's name.
-     */
-    public String getName() {
-        return FORENAME + " " + SURNAME;
-    }
+
 
     /**
      * Returns the student's average.
