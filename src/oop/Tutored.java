@@ -26,9 +26,9 @@ public class Tutored extends Student {
     }
 
     @Override
-    public void setWeight(double averageAvg, double absencesAvg) {
-        this.weight = ((this.average / averageAvg) * averageWeighting
-                + Math.sqrt((1 + this.absences) / (1 + absencesAvg)) * absenceWeighting) / 2
+    public void setWeight(double averageAvg, double absencesAvg, Teacher teacher) {
+        this.weight = ((this.average / averageAvg) * teacher.getAverageWeighting()
+                + Math.sqrt((1 + this.absences) / (1 + absencesAvg)) * teacher.getAbsenceWeighting()) / 2
                 * Tools.motivationValue(this.motivation);
     }
 }

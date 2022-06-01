@@ -6,6 +6,10 @@ import java.util.List;
 public class Teacher extends Person {
     private List<Resource> resources;
 
+    private double averageWeighting = 1;
+    private double levelWeighting = 1;
+    private double absenceWeighting = 1;
+
     /**
      * Constructs a Teacher from their name and the resource(s) they teach.
      * 
@@ -78,5 +82,47 @@ public class Teacher extends Person {
     @Override
     boolean isStudent() {
         return false;
+    }
+
+        /**
+     * Sets the weighting of the average of students for weight computing. Default
+     * value is 1.
+     * 
+     * @param levelWeighting new weighting of students level.
+     */
+    public void setLevelWeighting(double levelWeighting) {
+        this.levelWeighting = levelWeighting;
+    }
+
+    /**
+     * Sets the weighting of the level of students for weight computing. Default
+     * value is 1.
+     * 
+     * @param averageWeighting new weighting of students average.
+     */
+    public void setAverageWeighting(double averageWeighting) {
+        this.averageWeighting = averageWeighting;
+    }
+
+    /**
+     * Sets the weighting of the level of students for weight computing. Default
+     * value is 1.
+     * 
+     * @param absenceWeighting new weighting of students absence.
+     */
+    public void setAbsenceWeighting(double absenceWeighting) {
+        this.absenceWeighting = absenceWeighting;
+    }
+
+    public double getLevelWeighting() {
+        return levelWeighting;
+    }
+
+    public double getAverageWeighting() {
+        return averageWeighting;
+    }
+
+    public double getAbsenceWeighting() {
+        return absenceWeighting;
     }
 }

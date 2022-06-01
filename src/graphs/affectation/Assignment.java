@@ -319,18 +319,18 @@ public class Assignment {
 
         double weight;
 
-        for (Tutored tutored : duplicateTutored) {
+        for (Tutored tutoreds : duplicateTutored) {
             for (Tutor tutor : duplicateTutor) {
-                if (this.forcedAssignments.containsKey(tutored) && this.forcedAssignments.get(tutored).equals(tutor)) {
+                if (this.forcedAssignments.containsKey(tutoreds) && this.forcedAssignments.get(tutoreds).equals(tutor)) {
                     weight = -1000;
-                } else if (this.forbiddenAssignments.containsKey(tutored)
-                        && this.forbiddenAssignments.get(tutored).equals(tutor)) {
+                } else if (this.forbiddenAssignments.containsKey(tutoreds)
+                        && this.forbiddenAssignments.get(tutoreds).equals(tutor)) {
                     weight = 1000;
                 } else {
-                    weight = tutored.getWeight() + tutor.getWeight();
+                    weight = tutoreds.getWeight() + tutor.getWeight();
                 }
 
-                graph.ajouterArete(tutored, tutor, weight);
+                graph.ajouterArete(tutoreds, tutor, weight);
             }
         }
         return graph;
@@ -396,7 +396,7 @@ public class Assignment {
         double avgAvg = Tools.computeAverage(list);
         double absAvg = Tools.computeAbsenceAverage(list);
         for (Student s : list) {
-            s.setWeight(avgAvg, absAvg);
+            s.setWeight(avgAvg, absAvg, teacher);
         }
     }
 

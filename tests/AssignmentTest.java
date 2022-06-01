@@ -5,9 +5,9 @@ import org.junit.jupiter.api.Test;
 class AssignmentTest {
 
 	
-	void init() {
-		Tutor t1
-		Tutor t2
-	}
+	// void init() {
+	// 	Tutor t1
+	// 	Tutor t2
+	// }
 
 }

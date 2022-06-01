@@ -17,7 +17,9 @@ import fr.ulille.but.sae2_02.graphes.Arete;
 import graphs.affectation.Assignment;
 import graphs.affectation.Tools;
 import graphs.useaffectation.Scenario;
+import oop.Resource;
 import oop.Student;
+import oop.Teacher;
 import oop.Tutor;
 import oop.Tutored;
 
@@ -42,6 +44,7 @@ public class GlobalTest {
             t3,
             t4,
             t5;
+    private Teacher teacher;
     private Assignment assignment;
     private static final double DELTA = 0.002;
 
@@ -61,15 +64,17 @@ public class GlobalTest {
         t4 = new Tutor("Édouard", 16.2, 3, 0, 'C', 1);
         t5 = new Tutor("Olivier", 11.3, 3, 2, 'B');
 
-        Student.setAbsenceWeighting(1);
-        Student.setAverageWeighting(1);
-        Student.setLevelWeighting(1);
+        teacher = new Teacher("name", Resource.R106);
+        teacher.setAbsenceWeighting(1);
+        teacher.setAverageWeighting(1);
+        teacher.setLevelWeighting(1);
 
         List<Tutored> tutoredList = new ArrayList<>();
         tutoredList.addAll(List.of(u1, u2, u3, u4, u5, u6, u7));
         List<Tutor> tutorList = new ArrayList<>();
         tutorList.addAll(List.of(t1, t2, t3, t4, t5));
         assignment = new Assignment(tutoredList, tutorList);
+        assignment.setTeacher(teacher);
     }
 
     @Test
@@ -116,7 +121,7 @@ public class GlobalTest {
         assignment.setPolyTutor(false);
         List<Arete<Student>> edges = assignment.getAssignment();
         
-        Arete<Student> wantedAssignment = new Arete<Student>(u1, t2);
+        Arete<Student> wantedAssignment = new Arete<>(u1, t2);
         for (Arete<Student> edge : edges) {
             assertFalse(Tools.edgeTextEquals(edge, wantedAssignment));
         }
@@ -152,11 +157,9 @@ public class GlobalTest {
         assignment.setPolyTutor(false);
         List<Arete<Student>> edges = assignment.getAssignment();
 
-        Arete<Student> unwantedAssignment = new Arete<Student>(u1, t4);
+        Arete<Student> unwantedAssignment = new Arete<>(u1, t4);
         boolean isEdgeInAssignment = false;
         for (Arete<Student> edge : edges) {
-            System.out.println(edge);
-            System.out.println(unwantedAssignment);
             if(Tools.edgeTextEquals(edge, unwantedAssignment)) {
                 isEdgeInAssignment = true;
             }
@@ -190,7 +193,7 @@ public class GlobalTest {
     public void casPonderationMoyenne() {
         // cas 3.A
         assignment.setPolyTutor(false);
-        Student.setAverageWeighting(2);
+        teacher.setAverageWeighting(2);
         List<Arete<Student>> edges = assignment.getAssignment();
         List<Student> waitingList = assignment.getWaitingList();
  
@@ -215,7 +218,7 @@ public class GlobalTest {
     public void casPonderationNiveau() {
         // cas 3.B
         assignment.setPolyTutor(false);
-        Student.setLevelWeighting(2);
+        teacher.setLevelWeighting(2);
         List<Arete<Student>> edges = assignment.getAssignment();
         List<Student> waitingList = assignment.getWaitingList();
          
@@ -236,7 +239,7 @@ public class GlobalTest {
     public void casPonderationAbsences() {
         // cas 3.C
         assignment.setPolyTutor(false);
-        Student.setAbsenceWeighting(2);
+        teacher.setAbsenceWeighting(2);
         List<Arete<Student>> edges = assignment.getAssignment();
         List<Student> waitingList = assignment.getWaitingList();
          

@@ -18,19 +18,15 @@ public abstract class Student extends Person implements Comparable<Student> {
     protected Map<Resource, Double> grades = new EnumMap<>(Resource.class);
 
     protected static boolean shortString = true;
-    protected static double averageWeighting = 1;
-    protected static double levelWeighting = 1;
-    protected static double absenceWeighting = 1;
 
     protected static double defaultAverage = 15;
     protected static char defaultMotivation = 'B';
     protected static int defaultLevel = 1;
     protected static int defaultAbsences = 0;
 
-    public Map<Resource,Double> getGrades(){
+    public Map<Resource, Double> getGrades() {
         return this.grades;
     }
-
 
     public static double getDefaultAverage() {
         return defaultAverage;
@@ -64,7 +60,6 @@ public abstract class Student extends Person implements Comparable<Student> {
         Student.defaultAbsences = defaultAbsences;
     }
 
-
     /**
      * Instantiate a student.
      * 
@@ -79,44 +74,39 @@ public abstract class Student extends Person implements Comparable<Student> {
      * @throws IllegalArgumentException if motivation is not A, B or C.
      */
 
-    public void setAverage(double average){// throws IllegalArgumentException{
+    public void setAverage(double average) {
         if (average < 0 || average > 20) {
             this.average = Student.defaultAverage;
-            // throw new IllegalArgumentException("Average must be between 0 and 20.");
         } else {
             this.average = average;
         }
-    }   
+    }
 
-    public void setLevel(int level){// throws IllegalArgumentException{
+    public void setLevel(int level) {
         if (level < 1 || level > 3) {
             this.level = Student.defaultLevel;
-            // throw new IllegalArgumentException("Level must be between 1 and 3.");
         } else {
             this.level = level;
         }
     }
 
-    public void setAbsences(int absences){// throws IllegalArgumentException{
-        if (absences >= 0){
+    public void setAbsences(int absences) {
+        if (absences >= 0) {
             this.absences = absences;
-        }
-        else{
+        } else {
             this.absences = Student.defaultAbsences;
-            // throw new IllegalArgumentException(" Nombre d'absences négatif");
         }
     }
 
-    public void setMotivation(char motivation){// throws IllegalArgumentException{
+    public void setMotivation(char motivation) {
         if (motivation != 'A' && motivation != 'B' && motivation != 'C') {
             this.motivation = defaultMotivation;
-            // throw new IllegalArgumentException("Motivation must be A, B or C");
         } else {
             this.motivation = motivation;
         }
     }
 
-    protected Student(final String name, double average, int level, int absences, char motivation){//throws IllegalArgumentException {
+    protected Student(final String name, double average, int level, int absences, char motivation) {
         super(name);
         setAverage(average);
         setLevel(level);
@@ -142,7 +132,7 @@ public abstract class Student extends Person implements Comparable<Student> {
      * @param absencesAvg average of absences of all students.
      * @return the weight of the student.
      */
-    public abstract void setWeight(double averageAvg, double absencesAvg);
+    public abstract void setWeight(double averageAvg, double absencesAvg, Teacher teacher);
 
     @Override
     public int hashCode() {
@@ -195,8 +185,6 @@ public abstract class Student extends Person implements Comparable<Student> {
         }
     }
 
-
-
     /**
      * Returns the student's average.
      * 
@@ -240,36 +228,6 @@ public abstract class Student extends Person implements Comparable<Student> {
      */
     public double getWeight() {
         return weight;
-    }
-
-    /**
-     * Sets the weighting of the average of students for weight computing. Default
-     * value is 1.
-     * 
-     * @param levelWeighting new weighting of students level.
-     */
-    public static void setLevelWeighting(double levelWeighting) {
-        Student.levelWeighting = levelWeighting;
-    }
-
-    /**
-     * Sets the weighting of the level of students for weight computing. Default
-     * value is 1.
-     * 
-     * @param averageWeighting new weighting of students average.
-     */
-    public static void setAverageWeighting(double averageWeighting) {
-        Student.averageWeighting = averageWeighting;
-    }
-
-    /**
-     * Sets the weighting of the level of students for weight computing. Default
-     * value is 1.
-     * 
-     * @param absenceWeighting new weighting of students absence.
-     */
-    public static void setAbsenceWeighting(double absenceWeighting) {
-        Student.absenceWeighting = absenceWeighting;
     }
 
     /**

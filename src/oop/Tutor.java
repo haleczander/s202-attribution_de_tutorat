@@ -117,19 +117,14 @@ public class Tutor extends Student {
     }
 
     @Override
-    public void setWeight(double averageAvg, double absencesAvg) {
-        this.weight = ((averageAvg / this.average) * averageWeighting // poids de la moyenne
-                + (double) (3.0 / this.level) * levelWeighting // poids du niveau
-                + Math.sqrt((1 + this.absences) / (1 + absencesAvg)) * absenceWeighting // poids des absences
-        ) / 3
+    public void setWeight(double averageAvg, double absencesAvg, Teacher teacher) {
+        this.weight = ((averageAvg / this.average) * teacher.getAverageWeighting() // poids de la moyenne
+                + (double) (3.0 / this.level) * teacher.getLevelWeighting() // poids du niveau
+                + Math.sqrt((1 + this.absences) / (1 + absencesAvg)) * teacher.getAbsenceWeighting() // poids des absences
+                ) / 3
                 * Tools.motivationValue(this.motivation); // motivation
     }
-
     
-    public double getWeight() {
-        return this.weight;
-    }
-
     /**
      * Returns a copy of a tutor, using the same Tutor class.
      * 

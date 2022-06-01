@@ -1,10 +1,11 @@
-package graphs.useAffectation;
+package graphs.useaffectation;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import graphs.affectation.Assignment;
-import oop.Student;
+import oop.Resource;
+import oop.Teacher;
 import oop.Tutor;
 import oop.Tutored;
 
@@ -59,6 +60,9 @@ public final class Scenario {
         Tutored u6 = new Tutored("Alexandria", 12.5, 0, 'A');
         Tutored u7 = new Tutored("Anouk", 10.5, 1, 'B');
 
+        // Professeur en charge de la matière.
+        Teacher teacher = new Teacher("Baste", Resource.R104);
+
         /**
          * Ajout de tous les tuteurs et tutorés dans leur liste respective
          * Instanciation de l'assignation
@@ -68,6 +72,7 @@ public final class Scenario {
         System.out.println("Initialisation des listes :\nTutorés:\t "+tutored+"\nTuteurs:\t "+tutors);
         System.out.println("\nDes différences d'arrondis à 0.001 près avec le rapport peuvent être constatées.\n");
         Assignment cas1 = new Assignment(tutored, tutors);
+        cas1.setTeacher(teacher);
 
         /**
          * Cas 1.A : Un seul tutoré par tuteur
@@ -124,9 +129,9 @@ public final class Scenario {
          * Affectation :        5 tutorés, 5 tuteurs
          * Liste d'attente :    2 tutorés
          */
-        Student.setAverageWeighting(2);        
+        teacher.setAverageWeighting(2);        
         cas1.printScenario("3.A", "Force de la moyenne doublée");
-        Student.setAverageWeighting(1);
+        teacher.setAverageWeighting(1);
 
         /**
          * Cas 3.B : La force du niveau est doublée
@@ -136,9 +141,9 @@ public final class Scenario {
          * Affectation :        5 tutorés, 5 tuteurs
          * Liste d'attente :    2 tutorés
          */
-        Student.setLevelWeighting(2);        
+        teacher.setLevelWeighting(2);        
         cas1.printScenario("3.B", "Force du niveau doublée");
-        Student.setLevelWeighting(1);
+        teacher.setLevelWeighting(1);
 
         /**
          * Cas 3.A : La force des absences est doublée
@@ -148,9 +153,9 @@ public final class Scenario {
          * Affectation :        5 tutorés, 5 tuteurs
          * Liste d'attente :    2 tutorés
          */
-        Student.setAbsenceWeighting(2);
+        teacher.setAbsenceWeighting(2);
         cas1.printScenario("3.C", "Force des absences doublée");
-        Student.setAbsenceWeighting(1);
+        teacher.setAbsenceWeighting(1);
 
         /**
          * Cas 4.A : Un tuteur est exclu
