@@ -1,4 +1,4 @@
-package ihm;
+package nonUsed;
 
            
 import javafx.geometry.Pos;
@@ -6,8 +6,8 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 
-class TitledPane extends StackPane {
-    TitledPane(String titleString, Node content) {
+class TitledPane1 extends StackPane {
+    TitledPane1(String titleString, Node content) {
         Label title = new Label(" " + titleString + " ");
         title.getStyleClass().add("bordered-titled-title");
         title.setStyle("-fx-translate-y: -16;");
