@@ -9,6 +9,8 @@ public enum Resource {
     R105("Introduction aux bases de données et SQL"),
     R106("Mathématiques discrètes");
 
+    private static boolean shortName = false;
+
     private String label;
 
     Resource(String label) {
@@ -17,5 +19,21 @@ public enum Resource {
 
     public String getLabel() {
         return label;
+    }
+
+    public String getName(){
+        return this.name();
+        
+    }
+
+    public String toString() {
+        if (Resource.shortName) { 
+            return this.getName();
+        }
+        return this.getName()+": "+this.getLabel();
+    }
+
+    public static void setShortName(boolean bool){
+        Resource.shortName = bool;
     }
 }

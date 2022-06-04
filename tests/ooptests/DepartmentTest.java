@@ -1,5 +1,7 @@
 package ooptests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,10 +9,6 @@ import oop.Departement;
 import oop.Student;
 import oop.Tutor;
 import oop.Tutored;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import org.junit.jupiter.api.Test;
 
 public class DepartmentTest {
 	Tutor tutor1 = new Tutor("A", 12.1, 2, 3, 'A');
@@ -24,9 +22,9 @@ public class DepartmentTest {
 	
 	Departement dep = new Departement("Test");
 	
-	List<Tutor> tuteur = new ArrayList<Tutor>();
-	List<Tutored> tutoré = new ArrayList<Tutored>();
-	List<Student> student = new ArrayList<Student>();
+	List<Tutor> tutors = new ArrayList<Tutor>();
+	List<Tutored> tutored = new ArrayList<Tutored>();
+	List<Student> students = new ArrayList<Student>();
 	
 	public static void main(String[] args) {
 		DepartmentTest test = new DepartmentTest();
@@ -38,16 +36,16 @@ public class DepartmentTest {
 	}
 	
 	void addTest() {
-		student.add(tutor1);
-		student.add(tutor2);
-		student.add(tutor3);
+		students.add(tutor1);
+		students.add(tutor2);
+		students.add(tutor3);
       
-		student.add(tutored1);
-		student.add(tutored2);
-		student.add(tutored3);
-		student.add(tutored4);
+		students.add(tutored1);
+		students.add(tutored2);
+		students.add(tutored3);
+		students.add(tutored4);
 		
-		 assertEquals(dep.getStudents(), student);
+		 assertEquals(dep.getStudents(), students);
 	}
 	
 }

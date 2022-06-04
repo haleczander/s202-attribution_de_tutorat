@@ -1,14 +1,3 @@
-
-
-import java.util.ArrayList;
-import java.util.List;
-
-import graphs.affectation.Assignment;
-import oop.Tutor;
-import oop.Tutored;
-import oop.Departement;
-import oop.Resource;
-
 /**
  * Test Class
  * 

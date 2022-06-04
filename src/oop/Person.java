@@ -74,7 +74,10 @@ public abstract class Person {
         this.surname = surname;
     }
 
-    @Override
+    public void setShortName(boolean bool){
+        Person.shortName = bool;
+    }
+
     public String toString() {
         if (Person.shortName) {
             return this.getName();

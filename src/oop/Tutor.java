@@ -100,7 +100,7 @@ public class Tutor extends Student {
 
     @Override
     public String toString() {
-        if (Student.shortString) {
+        if (Person.shortName) {
             return super.toString();
         } else {
             return super.toString() + " " + nbofTutored;

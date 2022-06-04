@@ -63,6 +63,15 @@ public class Assignment {
      */
     private double assignmentCost;
 
+
+    private double tutoredGradesAverage;
+    private double tutorGradesAverage;
+
+    private double tutoredAbsenceAverage;
+    private double tutorAbsenceAverage;
+
+
+
     /**
      * Teacher in charge of the assignment.
      */

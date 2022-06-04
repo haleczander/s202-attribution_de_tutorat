@@ -16,18 +16,6 @@ public class Departement {
     // -> lire la doc (c'est presque la même chose)
 
 
-    public Teacher getTeacher(Resource resource) {
-        return tutorings.get(resource).getTeacher();
-    }
-
-    public void setTeacher(Resource resource, Teacher teacher) {
-        if (!teachers.contains(teacher)){
-            teachers.add(teacher);
-        }
-        tutorings.get(resource).setTeacher(teacher);
-    }
-
-
     public Departement(String name) {
         this(name, new HashSet<Student>(), new HashSet<Teacher>());
     }
@@ -55,15 +43,13 @@ public class Departement {
     }
 
     public void add(Person person) throws IllegalArgumentException{
-        if (person.isTeacher()) {
-            addTeacher((Teacher)person);
-        }
-        else if (person.isStudent()){
+        if (person.isStudent()) {
             addStudent((Student)person);
         }
-        else {
-            throw new IllegalArgumentException();
+        else{
+            addTeacher((Teacher)person);
         }
+
     }
 
     public void addTutoring(Resource resource) {
@@ -98,4 +84,27 @@ public class Departement {
     public Set<Student> getStudents() {
         return students;
     }
+
+    public int getNbOfStudents(){
+        return this.students.size();
+    }
+    public int getNbOfteachers(){
+        return this.teachers.size();
+    }
+    public int getNbOfTutorings(){
+        return this.tutorings.size();
+    }
+    
+    public Teacher getTeacher(Resource resource) {
+        return tutorings.get(resource).getTeacher();
+    }
+
+    public void setTeacher(Resource resource, Teacher teacher) {
+        if (!teachers.contains(teacher)){
+            teachers.add(teacher);
+        }
+        tutorings.get(resource).setTeacher(teacher);
+    }
+
+
 }
