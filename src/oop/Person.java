@@ -1,22 +1,24 @@
 package oop;
 
 public abstract class Person {
-    protected final String FORENAME;
-    protected final String SURNAME;
+    protected String forename;
+    protected String surname;
+    /**
+     * A Person is either a Student or a Teacher
+     */
+    private boolean isStudent;
+    protected static boolean shortName = true;
 
     /**
      * Constructs a Person from a forename and a surname.
      * 
-     * @param forename forename of the student.
-     * @param surname  surname of the student.
+     * @param forename forename of the person.
+     * @param surname  surname of the person.
+     * @param isStudent defines if the person is a student or not
      */
-    protected Person(String forename, String surname) {
-        this.FORENAME = forename;
-        this.SURNAME = surname;
+    protected Person(String forename, String surname, boolean isStudent) {
+        this(forename + " " + surname, isStudent);
     }
-
-    abstract boolean isTeacher();
-    abstract boolean isStudent();
 
     /**
      * Constructs a Person from a full name (forename and surname separated by a
@@ -24,30 +26,24 @@ public abstract class Person {
      * 
      * @param name full name in the form : "forename surname".
      */
-    protected Person(String name) {
-        // je retire le chainage temporairement ça fait tout niquer si on a pas
-        // d'espaces.
-        // String fname;
-        // String sname;
+    protected Person(String name, boolean isStudent) {
+
         String[] names = name.split(" ");
 
         if (names.length == 1) {
-            this.FORENAME = name;
-            this.SURNAME = null;
+            this.forename = name;
+            this.surname = null;
         }
         else {
-            this.FORENAME = names[0];
-            this.SURNAME = names[1];
+            this.forename = names[0];
+            this.surname = names[1];
         }
-        // try {
-        //     fname = name.split(" ")[0];
-        //     sname = name.split(" ")[1];
-        // } catch (ArrayIndexOutOfBoundsException e) {
-        //     fname = name;
-        //     sname = "";
-        // }
-        // this.FORENAME = fname;
-        // this.SURNAME = sname;
+        this.isStudent = isStudent;
+    }
+
+
+    public boolean isStudent(){
+        return this.isStudent;
     }
 
         /**
@@ -56,9 +52,37 @@ public abstract class Person {
      * @return the person's name.
      */
     public String getName() {
-        if (this.SURNAME == null) {
-            return FORENAME;
+        if (this.surname == null) {
+            return forename;
         }
-        return FORENAME + " " + SURNAME;
+        return forename + " " + surname;
     }
+
+    public String getForename() {
+        return forename;
+    }
+
+    public void setForename(String forename) {
+        this.forename = forename;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    @Override
+    public String toString() {
+        if (Person.shortName) {
+            return this.getName();
+        }
+        return this.getClass().getSimpleName()+" ["+ this.getName() +"]";
+    }
+
+    
+
+    
 }

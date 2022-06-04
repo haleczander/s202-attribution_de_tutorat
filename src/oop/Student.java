@@ -17,8 +17,6 @@ public abstract class Student extends Person implements Comparable<Student> {
     protected double weight;
     protected Map<Resource, Double> grades = new EnumMap<>(Resource.class);
 
-    protected static boolean shortString = true;
-
     protected static double defaultAverage = 15;
     protected static char defaultMotivation = 'B';
     protected static int defaultLevel = 1;
@@ -107,7 +105,7 @@ public abstract class Student extends Person implements Comparable<Student> {
     }
 
     protected Student(final String name, double average, int level, int absences, char motivation) {
-        super(name);
+        super(name, true);
         setAverage(average);
         setLevel(level);
         setAbsences(absences);
@@ -178,11 +176,11 @@ public abstract class Student extends Person implements Comparable<Student> {
 
     @Override
     public String toString() {
-        if (shortString) {
-            return this.getName();
-        } else {
-            return "Student [name=" + FORENAME + " " + SURNAME + ", average=" + average + ", level=" + level + "]";
+        if (Person.shortName) {
+            return super.toString();
         }
+        return super.toString().substring(0, super.toString().length()-1) + ", level= "+this.level + ", absences= "+this.absences + ", notes= " + this.grades.toString() +"]";
+
     }
 
     /**
@@ -237,15 +235,5 @@ public abstract class Student extends Person implements Comparable<Student> {
      */
     public void setWeight(double weight) {
         this.weight = weight;
-    }
-
-    @Override
-    boolean isTeacher() {
-        return false;
-    }
-
-    @Override
-    boolean isStudent() {
-        return true;
     }
 }

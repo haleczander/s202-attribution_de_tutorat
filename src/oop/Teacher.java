@@ -6,9 +6,11 @@ import java.util.List;
 public class Teacher extends Person {
     private List<Resource> resources;
 
-    private double averageWeighting = 1;
-    private double levelWeighting = 1;
-    private double absenceWeighting = 1;
+    private static double defaultWeighting = 1;
+
+    private double averageWeighting;
+    private double levelWeighting;
+    private double absenceWeighting;
 
     /**
      * Constructs a Teacher from their name and the resource(s) they teach.
@@ -17,8 +19,11 @@ public class Teacher extends Person {
      * @param resources resources the teacher teaches.
      */
     public Teacher(String name, List<Resource> resources) {
-        super(name);
+        super(name, false);
         this.resources = resources;
+        this.averageWeighting = Teacher.defaultWeighting;
+        this.levelWeighting = Teacher.defaultWeighting;
+        this.absenceWeighting = Teacher.defaultWeighting;
     }
 
     /**
@@ -37,7 +42,8 @@ public class Teacher extends Person {
      * @param resource resource the teacher teaches.
      */
     public Teacher(String name, Resource resource) {
-        this(name, List.of(resource));
+        this(name);
+        resources.add(resource);
     }
 
     /**
@@ -67,21 +73,6 @@ public class Teacher extends Person {
      */
     public boolean addResource(Resource resource) {
         return this.resources.add(resource);
-    }
-
-    @Override
-    public String toString() {
-        return this.FORENAME + " " + this.SURNAME;
-    }
-
-    @Override
-    boolean isTeacher() {
-        return true;
-    }
-
-    @Override
-    boolean isStudent() {
-        return false;
     }
 
         /**
@@ -125,4 +116,22 @@ public class Teacher extends Person {
     public double getAbsenceWeighting() {
         return absenceWeighting;
     }
+
+    public static double getDefaultWeighting() {
+        return defaultWeighting;
+    }
+
+    public static void setDefaultWeighting(double defaultWeighting) {
+        Teacher.defaultWeighting = defaultWeighting;
+    }
+
+    @Override
+    public String toString() {
+        if (Person.shortName) {
+            return super.toString();
+        }
+        return super.toString().substring(0, super.toString().length()-1) + ", matières= "+resources.toString()+"]";
+    }
+
+    
 }

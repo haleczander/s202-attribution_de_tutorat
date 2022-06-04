@@ -2,12 +2,12 @@ package oop;
 
 public enum Resource {
 
-    R101("1"),
-    R102("2"),
-    R103("3"),
-    R104("4"),
-    R105("5"),
-    R106("6");
+    R101("Initiation au développement"),
+    R102("Développement d'interfaces web"),
+    R103("Introduction à l'architecture des ordinateurs"),
+    R104("Introduction aux systèmes d'exploitation et à leur fonctionnement"),
+    R105("Introduction aux bases de données et SQL"),
+    R106("Mathématiques discrètes");
 
     private String label;
 
