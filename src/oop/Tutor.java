@@ -117,7 +117,7 @@ public class Tutor extends Student {
     }
 
     @Override
-    public void setWeight(double averageAvg, double absencesAvg, Teacher teacher) {
+    public void setWeight(double averageAvg, double absencesAvg, Teacher teacher) { //Le professeur gère les coefficients
         this.weight = ((averageAvg / this.average) * teacher.getAverageWeighting() // poids de la moyenne
                 + (double) (3.0 / this.level) * teacher.getLevelWeighting() // poids du niveau
                 + Math.sqrt((1 + this.absences) / (1 + absencesAvg)) * teacher.getAbsenceWeighting() // poids des absences
@@ -125,21 +125,21 @@ public class Tutor extends Student {
                 * Tools.motivationValue(this.motivation); // motivation
     }
     
-    /**
-     * Returns a copy of a tutor, using the same Tutor class.
-     * 
-     * @param toAppend character appended to the name of the new tutor to differenciate them.
-     * @return a new tutor.
-     * 
-     * @see #duplicate()
-     * @see TutorDuplicate
-     */
-    public Tutor copyOf(char toAppend) {
-        return new Tutor(this.getName() + "(" + toAppend + ")", average, level, absences, motivation, 1);
-    }
-    public Tutor copyOf(){
-        return copyOf('D');
-    }
+    // /**
+    //  * Returns a copy of a tutor, using the same Tutor class.
+    //  * 
+    //  * @param toAppend character appended to the name of the new tutor to differenciate them.
+    //  * @return a new tutor.
+    //  * 
+    //  * @see #duplicate()
+    //  * @see TutorDuplicate
+    //  */
+    // public Tutor copyOf(char toAppend) {
+    //     return new Tutor(this.getName() + "(" + toAppend + ")", average, level, absences, motivation, 1);
+    // }
+    // public Tutor copyOf(){
+    //     return copyOf('D');
+    // }
 
 
     /**
@@ -157,7 +157,10 @@ public class Tutor extends Student {
      * @return the duplicate of the tutor.
      * @see TutorDuplicate
      */
-    public TutorDuplicate duplicate() {
-        return new TutorDuplicate(this);
+    public TutorDuplicate duplicate(){
+        if (this.nbofTutored>1) {
+            return new TutorDuplicate(this);
+        }
+        return null;
     }
 }

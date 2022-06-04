@@ -2,10 +2,11 @@ package oop;
 
 public class TutorDuplicate extends Tutor {
     private static double weightModifier = 1.5;
+    private static char tutorDuplicateIdentifier = 'D';
 
     private TutorDuplicate(String name, double average, int level, int absences, char motivation)
             throws IllegalArgumentException {
-        super(name + "(D)", average, level, absences, motivation, 1);
+        super(name + "("+TutorDuplicate.tutorDuplicateIdentifier+")", average, level, absences, motivation, 1);
     }
 
     public TutorDuplicate(Tutor t) {
@@ -26,4 +27,13 @@ public class TutorDuplicate extends Tutor {
         return true;
     }
 
+    public static char getTutorDuplicateIdentifier() {
+        return tutorDuplicateIdentifier;
+    }
+
+    public static void setTutorDuplicateIdentifier(char tutorDuplicateIdentifier) {
+        TutorDuplicate.tutorDuplicateIdentifier = tutorDuplicateIdentifier;
+    }
+
+    
 }

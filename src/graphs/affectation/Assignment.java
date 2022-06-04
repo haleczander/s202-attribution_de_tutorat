@@ -92,6 +92,12 @@ public class Assignment {
         this.waitingList = new ArrayList<>();
         this.assignmentCost = 0;
         this.teacher = null;
+        
+        this.tutoredGradesAverage = 0;
+        this.tutorGradesAverage = 0;
+
+        this.tutoredAbsenceAverage = 0;
+        this.tutorAbsenceAverage = 0;
     }
 
     /**
@@ -105,6 +111,29 @@ public class Assignment {
         this();
         this.tutored = tutored;
         this.tutors = tutors;
+        updateAverages();
+    }
+    
+    private void updateAverages(){
+        double values[] = Assignment.computeAverages(tutored);
+        this.tutoredAbsenceAverage = values[0];
+        this.tutoredGradesAverage = values[1];
+
+        values = Assignment.computeAverages(tutors);
+        this.tutorAbsenceAverage = values[0];
+        this.tutorGradesAverage = values[1];
+    }
+
+
+
+    private static double[] computeAverages(List<? extends Student> students){
+        int abs = 0;
+        double avg = 0;
+        for (Student student : students) {
+            abs += student.getAbsences();
+            avg += student.getAverage();
+        }
+        return new double[] {abs / students.size(), avg / students.size()};
     }
 
     /**
@@ -116,6 +145,7 @@ public class Assignment {
     public Assignment(Set<Student> students) {
         this();
         addStudent(students);
+        updateAverages();
     }
 
     /**
