@@ -14,6 +14,10 @@ public class TutorDuplicate extends Tutor {
         this.weight = t.getWeight() * TutorDuplicate.weightModifier;
     }
 
+    public double getWeight(Resource resource, double gradesAverage, int absencesAverage, double gradesWeight, double absencesWeight, double levelWeight){
+        return super.getWeight(resource, gradesAverage, absencesAverage, gradesWeight, absencesWeight, levelWeight) * TutorDuplicate.weightModifier;
+    }
+
     public static double getWeightModifier() {
         return weightModifier;
     }

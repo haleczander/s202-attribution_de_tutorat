@@ -17,6 +17,8 @@ public abstract class Student extends Person implements Comparable<Student> {
     protected double weight;
     protected Map<Resource, Double> grades = new EnumMap<>(Resource.class);
 
+    
+
     protected static double defaultAverage = 15;
     protected static char defaultMotivation = 'B';
     protected static int defaultLevel = 1;
@@ -224,9 +226,17 @@ public abstract class Student extends Person implements Comparable<Student> {
      * 
      * @return the weight of the student.
      */
-    public double getWeight() {
-        return weight;
+    public double getWeight(){
+        return this.weight;
     }
+    
+    
+     public double getWeight(Resource resource) {
+        // return weight;
+        return this.getWeight(resource, Student.defaultAverage, Student.defaultAbsences, Teacher.getDefaultWeighting(), Teacher.getDefaultWeighting(), Teacher.getDefaultWeighting());
+    }
+
+    public abstract double getWeight(Resource resource, double gradesAverage, int absencesAverage, double gradesWeight, double absencesWeight, double levelWeight);
 
     /**
      * Manually sets a weight for the student. Used when duplicating students.

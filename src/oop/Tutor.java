@@ -118,11 +118,22 @@ public class Tutor extends Student {
 
     @Override
     public void setWeight(double averageAvg, double absencesAvg, Teacher teacher) { //Le professeur gère les coefficients
-        this.weight = ((averageAvg / this.average) * teacher.getAverageWeighting() // poids de la moyenne
+        this.weight = (
+                (averageAvg / this.average) * teacher.getAverageWeighting() // poids de la moyenne
                 + (double) (3.0 / this.level) * teacher.getLevelWeighting() // poids du niveau
                 + Math.sqrt((1 + this.absences) / (1 + absencesAvg)) * teacher.getAbsenceWeighting() // poids des absences
                 ) / 3
                 * Tools.motivationValue(this.motivation); // motivation
+    }
+
+    public double getWeight(Resource resource, double gradesAverage, int absencesAverage, double gradesWeight, double absencesWeight, double levelWeight){
+        return (
+                    (gradesAverage / this.grades.get(resource))             *   gradesWeight
+                +   (double) (3.0 / this.level)                             *   levelWeight
+                +   Math.sqrt((1 + this.absences) / (1 + absencesAverage))  *   absencesWeight
+            )   
+                * Tools.motivationValue(this.motivation)
+                / 3; //Le tout divisé par le nombre de paramètres pour rester autour de 1
     }
     
     // /**

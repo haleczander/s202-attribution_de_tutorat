@@ -31,4 +31,14 @@ public class Tutored extends Student {
                 + Math.sqrt((1 + this.absences) / (1 + absencesAvg)) * teacher.getAbsenceWeighting()) / 2
                 * Tools.motivationValue(this.motivation);
     }
+
+    public double getWeight(Resource resource, double gradesAverage, int absencesAverage, double gradesWeight, double absencesWeight, double levelWeight){
+        return (
+                    (this.grades.get(resource) / gradesAverage)             *   gradesWeight
+                +   Math.sqrt((1 + this.absences) / (1 + absencesAverage))  *   absencesWeight
+            )   
+                * Tools.motivationValue(this.motivation)
+                / 2; //Le tout divisé par le nombre de paramètres pour rester autour de 1
+    }
+
 }
