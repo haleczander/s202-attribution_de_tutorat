@@ -9,6 +9,7 @@ import java.util.Set;
 import fr.ulille.but.sae2_02.graphes.Arete;
 import fr.ulille.but.sae2_02.graphes.CalculAffectation;
 import fr.ulille.but.sae2_02.graphes.GrapheNonOrienteValue;
+import oop.Resource;
 import oop.Student;
 import oop.Teacher;
 import oop.Tutor;
@@ -27,6 +28,7 @@ import oop.Tutored;
  * @see fr.ulille.but.sae2_02.graphes.CalculAffectation
  */
 public class Assignment {
+    private Resource resource;
 
     /**
      * a list of tutored students to process the assignment with.
@@ -398,16 +400,19 @@ public class Assignment {
         int diff = tutored.size() - tutor.size();
 
         if (polyTutor) {
-            tutor = Tools.tutorsSplit(tutor, diff);
+            // tutor = Tools.tutorsSplit(tutor, diff);
+            tutor = Tools.tutorsSplit(tutor, this.resource, diff);
         }
 
         diff = tutored.size() - tutor.size();
         if (diff > 0) {
             // tutored in waiting list
-            waitingList = Tools.waitingListBuilder(tutored, Math.abs(diff));
+            // waitingList = Tools.waitingListBuilder(tutored, Math.abs(diff));
+            waitingList = Tools.waitingListBuilder(tutored, this.resource, Math.abs(diff));
         } else if (diff < 0) {
             // tutors in waiting list
-            waitingList = Tools.waitingListBuilder(tutor, Math.abs(diff));
+            // waitingList = Tools.waitingListBuilder(tutor, Math.abs(diff));
+            waitingList = Tools.waitingListBuilder(tutor, this.resource, Math.abs(diff));
         }
 
         diff = tutored.size() - tutor.size();

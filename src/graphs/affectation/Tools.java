@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.ListIterator;
 
 import fr.ulille.but.sae2_02.graphes.Arete;
+import oop.Resource;
 import oop.Student;
+import oop.StudentComparator;
 import oop.Tutor;
 import oop.Tutored;
 
@@ -55,8 +57,9 @@ public final class Tools {
      * @see Tutor#compareTo(Student)
      * @see Tutor#duplicate()
      */
-    public static List<Tutor> tutorsSplit(List<Tutor> list, int diff) {
-        list.sort((s1, s2) -> s1.compareTo(s2));
+    public static List<Tutor> tutorsSplit(List<Tutor> list, Resource resource, int diff) {
+        // list.sort((s1, s2) -> s1.compareTo(s2));
+        list.sort(new StudentComparator(resource));
         List<Tutor> toAdd = new ArrayList<>();
         for (Tutor t : list) {
             if (t.getNbofTutored() > 1) {
@@ -84,9 +87,25 @@ public final class Tools {
      * @see Tutored#compareTo(Student)
      * @see Tutor#compareTo(Student)
      */
-    public static List<Student> waitingListBuilder(List<? extends Student> list, int diff) {
+    // public static List<Student> waitingListBuilder(List<? extends Student> list, int diff) {
+    //     List<Student> waitingList = new ArrayList<>();
+    //     list.sort((s1, s2) -> s1.compareTo(s2));
+
+    //     ListIterator<? extends Student> it = list.listIterator(list.size());
+    //     while (it.hasPrevious() && diff != 0) {
+    //         Student student = it.previous();
+    //         waitingList.add(student);
+    //         diff--;
+    //     }
+    //     for (Student student : waitingList) {
+    //         list.remove(student);
+    //     }
+
+    //     return waitingList;
+    // }
+    public static List<Student> waitingListBuilder(List<? extends Student> list, Resource resource, int diff) {
         List<Student> waitingList = new ArrayList<>();
-        list.sort((s1, s2) -> s1.compareTo(s2));
+        list.sort(new StudentComparator(resource));
 
         ListIterator<? extends Student> it = list.listIterator(list.size());
         while (it.hasPrevious() && diff != 0) {

@@ -9,7 +9,7 @@ import java.util.Map;
  * @author Léopold V.
  * @author Alexandre H.
  */
-public abstract class Student extends Person implements Comparable<Student> {
+public abstract class Student extends Person{// implements Comparable<Student> {
     protected double average;
     protected int level;
     protected int absences;
@@ -120,10 +120,10 @@ public abstract class Student extends Person implements Comparable<Student> {
      * @param student the student to compare to.
      * @return -1, 1 or 0 depending on the comparison.
      */
-    @Override
-    public int compareTo(Student student) {
-        return (int) (100 * (this.weight - student.getWeight()));
-    }
+    // @Override
+    // public int compareTo(Student student) {
+    //     return (int) (100 * (this.weight - student.getWeight()));
+    // }
 
     /**
      * Calculates the weight of the student.
@@ -231,7 +231,7 @@ public abstract class Student extends Person implements Comparable<Student> {
     }
     
     
-     public double getWeight(Resource resource) {
+    public double getWeight(Resource resource) {
         // return weight;
         return this.getWeight(resource, Student.defaultAverage, Student.defaultAbsences, Teacher.getDefaultWeighting(), Teacher.getDefaultWeighting(), Teacher.getDefaultWeighting());
     }
