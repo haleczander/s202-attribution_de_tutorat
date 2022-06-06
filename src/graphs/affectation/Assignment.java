@@ -1,9 +1,8 @@
 package graphs.affectation;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import fr.ulille.but.sae2_02.graphes.Arete;
@@ -30,41 +29,17 @@ import oop.Tutored;
 public class Assignment {
     private Resource resource;
 
-    /**
-     * a list of tutored students to process the assignment with.
-     */
     private List<Tutored> tutored;
-
-    /**
-     * a list of tutor students to process the assignment with.
-     */
     private List<Tutor> tutors;
 
-    /**
-     * whether the tutors will be split if needed or not.
-     */
     private boolean polyTutor;
 
-    /**
-     * the waiting list in case there are too many students.
-     */
     private List<Student> waitingList;
 
-    /**
-     * Map of all duos who should be assigned together.
-     */
-    private Map<Tutored, Tutor> forcedAssignments;
+    private Set<Edge> forcedAssignments;
+    private Set<Edge> forbiddenAssignments;
 
-    /**
-     * Map of all duos who should not be assigned together.
-     */
-    private Map<Tutored, Tutor> forbiddenAssignments;
-
-    /**
-     * cost of the assignment.
-     */
     private double assignmentCost;
-
 
     private double tutoredGradesAverage;
     private double tutorGradesAverage;
@@ -72,12 +47,8 @@ public class Assignment {
     private double tutoredAbsenceAverage;
     private double tutorAbsenceAverage;
 
-
-
-    /**
-     * Teacher in charge of the assignment.
-     */
     private Teacher teacher;  
+
 
     public Teacher getTeacher() {
         return teacher;
@@ -89,8 +60,8 @@ public class Assignment {
 
     private Assignment() {
         this.polyTutor = true;
-        this.forcedAssignments = new HashMap<>();
-        this.forbiddenAssignments = new HashMap<>();
+        this.forcedAssignments = new HashSet<>();
+        this.forbiddenAssignments = new HashSet<>();
         this.waitingList = new ArrayList<>();
         this.assignmentCost = 0;
         this.teacher = null;
@@ -194,11 +165,8 @@ public class Assignment {
      * 
      * @throws IllegalArgumentException if this duo has already been put in the map.
      */
-    public void addForcedAssignments(Tutored tutored, Tutor tutor) {
-        if (this.forcedAssignments.containsKey(tutored)) {
-            throw new IllegalArgumentException("This forced assignment already exists.");
-        }
-        this.forcedAssignments.put(tutored, tutor);
+    public boolean addForcedAssignments(Tutored tutored, Tutor tutor) {
+        return this.forcedAssignments.add(new Edge(tutored, tutor));
     }
 
     /**
@@ -209,11 +177,8 @@ public class Assignment {
      * 
      * @throws IllegalArgumentException if this duo has already been put in the map.
      */
-    public void addForbiddenAssignments(Tutored tutored, Tutor tutor) {
-        if (this.forbiddenAssignments.containsKey(tutored)) {
-            throw new IllegalArgumentException("This forbidden assignment already exists.");
-        }
-        this.forbiddenAssignments.put(tutored, tutor);
+    public boolean addForbiddenAssignments(Tutored tutored, Tutor tutor) {
+        return this.forbiddenAssignments.add(new Edge(tutored, tutor));
     }
 
     /**
@@ -224,11 +189,8 @@ public class Assignment {
      * @throws IllegalArgumentException if the tutored student has no forced
      *                                  assignment with anyone.
      */
-    public void removeForcedAssignment(Tutored tutored) {
-        if (!this.forcedAssignments.containsKey(tutored)) {
-            throw new IllegalArgumentException("This forced assignment does not exist.");
-        }
-        this.forcedAssignments.remove(tutored);
+    public boolean removeForcedAssignment(Tutored tutored, Tutor tutor) {
+        return this.forcedAssignments.remove(new Edge(tutored, tutor));
     }
 
     /**
@@ -239,11 +201,8 @@ public class Assignment {
      * @throws IllegalArgumentException if the tutored student has no forbidden
      *                                  assignment with anyone.
      */
-    public void removeForbiddenAssignment(Tutored tutored) {
-        if (!this.forbiddenAssignments.containsKey(tutored)) {
-            throw new IllegalArgumentException("This forbidden assignment does not exist.");
-        }
-        this.forbiddenAssignments.remove(tutored);
+    public boolean removeForbiddenAssignment(Tutored tutored, Tutor tutor) {
+        return this.forbiddenAssignments.remove(new Edge(tutored, tutor));
     }
 
     public void removeStudent(Tutor student) {
@@ -362,10 +321,11 @@ public class Assignment {
 
         for (Tutored tutoreds : duplicateTutored) {
             for (Tutor tutor : duplicateTutor) {
-                if (this.forcedAssignments.containsKey(tutoreds) && this.forcedAssignments.get(tutoreds).equals(tutor)) {
+                Edge duo = new Edge(tutoreds, tutor);
+
+                if (this.forcedAssignments.contains(duo)) {
                     weight = -1000;
-                } else if (this.forbiddenAssignments.containsKey(tutoreds)
-                        && this.forbiddenAssignments.get(tutoreds).equals(tutor)) {
+                } else if (this.forbiddenAssignments.contains(duo)) {
                     weight = 1000;
                 } else {
                     weight = tutoreds.getWeight() + tutor.getWeight();
