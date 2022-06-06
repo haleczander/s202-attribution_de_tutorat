@@ -2,8 +2,6 @@ package ihm;
 
 import java.util.List;
 
-import javax.tools.Tool;
-
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;

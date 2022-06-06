@@ -59,16 +59,21 @@ public class Departement {
     public void registerStudents(Resource resource){
         for (Student student : students) {
             if (student.grades.containsKey(resource)){
-                tutorings.get(resource).addStudent(student);
+                registerStudent(resource, student);
             }
         }
     }
 
     public void registerStudent(Resource resource, Student student){
+        if (!student.grades.containsKey(resource)){
+            student.addGrade(resource, Student.getDefaultGrade());
+        }
         tutorings.get(resource).addStudent(student);
     }
     public void registerStudent(Resource resource, Set<Student> students){
-        tutorings.get(resource).addStudent(students);
+        for (Student student : students) {
+            registerStudent(resource, student);
+        }
     }
 
 

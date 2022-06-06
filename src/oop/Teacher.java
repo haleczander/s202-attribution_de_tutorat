@@ -1,16 +1,18 @@
 package oop;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
+
+import graphs.affectation.Assignment;
 
 public class Teacher extends Person {
     private List<Resource> resources;
 
     private static double defaultWeighting = 1;
 
-    private double averageWeighting;
-    private double levelWeighting;
-    private double absenceWeighting;
+    private Map<Coefficient, Double> weights = new EnumMap<>(Coefficient.class);
 
     /**
      * Constructs a Teacher from their name and the resource(s) they teach.
@@ -21,9 +23,9 @@ public class Teacher extends Person {
     public Teacher(String name, List<Resource> resources) {
         super(name, false);
         this.resources = resources;
-        this.averageWeighting = Teacher.defaultWeighting;
-        this.levelWeighting = Teacher.defaultWeighting;
-        this.absenceWeighting = Teacher.defaultWeighting;
+        this.weights.put(Coefficient.GRADES, Teacher.defaultWeighting);
+        this.weights.put(Coefficient.ABSENCES, Teacher.defaultWeighting);
+        this.weights.put(Coefficient.LEVEL, Teacher.defaultWeighting);
     }
 
     /**
@@ -75,14 +77,25 @@ public class Teacher extends Person {
         return this.resources.add(resource);
     }
 
+    public void setWeighting(Coefficient coefficient, double weighting){  
+        double weight = weighting;
+        if (weight<0 ) {
+            weight = 0;
+        }
+        else if (weight>Assignment.getMaxWeighting()) {
+            weight = Assignment.getMaxWeighting();
+        }
+        this.weights.replace(coefficient, weight);
+    }
+
         /**
      * Sets the weighting of the average of students for weight computing. Default
      * value is 1.
      * 
      * @param levelWeighting new weighting of students level.
      */
-    public void setLevelWeighting(double levelWeighting) {
-        this.levelWeighting = levelWeighting;
+    public void setLevelWeighting(double weighting) {
+        setWeighting(Coefficient.LEVEL, weighting);
     }
 
     /**
@@ -91,8 +104,8 @@ public class Teacher extends Person {
      * 
      * @param averageWeighting new weighting of students average.
      */
-    public void setAverageWeighting(double averageWeighting) {
-        this.averageWeighting = averageWeighting;
+    public void setAverageWeighting(double weighting) {
+        setWeighting(Coefficient.GRADES, weighting);
     }
 
     /**
@@ -101,20 +114,28 @@ public class Teacher extends Person {
      * 
      * @param absenceWeighting new weighting of students absence.
      */
-    public void setAbsenceWeighting(double absenceWeighting) {
-        this.absenceWeighting = absenceWeighting;
+    public void setAbsenceWeighting(double weighting) {
+        setWeighting(Coefficient.ABSENCES, weighting);
+    }
+
+    public double getWeighting(Coefficient coefficient){
+        return this.weights.get(coefficient);
     }
 
     public double getLevelWeighting() {
-        return levelWeighting;
+        return getWeighting(Coefficient.LEVEL);
     }
 
     public double getAverageWeighting() {
-        return averageWeighting;
+        return getWeighting(Coefficient.GRADES);
     }
 
     public double getAbsenceWeighting() {
-        return absenceWeighting;
+        return getWeighting(Coefficient.ABSENCES);
+    }
+
+    public Map<Coefficient, Double> getWeightings(){
+        return this.weights;
     }
 
     public static double getDefaultWeighting() {
@@ -124,6 +145,7 @@ public class Teacher extends Person {
     public static void setDefaultWeighting(double defaultWeighting) {
         Teacher.defaultWeighting = defaultWeighting;
     }
+
 
     @Override
     public String toString() {

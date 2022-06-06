@@ -98,7 +98,7 @@ public class Tutor extends Student {
         if (Person.shortName) {
             return super.toString();
         } else {
-            return super.toString() + " " + nbofTutored;
+            return super.toString().substring(0, super.toString().length() - 1) + ", nbOfTutored= "+this.nbofTutored+"]";
         }
     }
 

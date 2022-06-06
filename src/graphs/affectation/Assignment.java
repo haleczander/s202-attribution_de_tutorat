@@ -47,8 +47,20 @@ public class Assignment {
     private double tutoredAbsenceAverage;
     private double tutorAbsenceAverage;
 
+    private static double maxWeighting = 5;
+
     private Teacher teacher;  
 
+    
+
+
+    public static double getMaxWeighting() {
+        return maxWeighting;
+    }
+
+    public static void setMaxWeighting(double maxWeighting) {
+        maxWeighting = maxWeighting;
+    }
 
     public Teacher getTeacher() {
         return teacher;

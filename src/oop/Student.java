@@ -16,7 +16,7 @@ public abstract class Student extends Person {
     protected double weight;
     protected Map<Resource, Double> grades = new EnumMap<>(Resource.class);
 
-    protected static double defaultGrade = 15;
+    protected static double defaultGrade = 9.99;
     protected static char defaultMotivation = 'B';
     protected static int defaultLevel = 1;
     protected static int defaultAbsences = 0;
@@ -38,6 +38,9 @@ public abstract class Student extends Person {
 
     public void addGrade(Resource resource, double grade) {
         this.grades.put(resource, grade);
+    }
+    public void addGrade(String resource, double grade) {
+        addGrade(Resource.valueOf(resource), grade);
     }
 
     public double getWeight(Resource resource) {
@@ -86,7 +89,7 @@ public abstract class Student extends Person {
             return super.toString();
         }
         return super.toString().substring(0, super.toString().length() - 1) + ", level= " + this.level + ", absences= "
-                + this.absences + ", notes= " + this.grades.toString() + "]";
+                + this.absences + ", notes= " + this.grades.toString() + ", motivation= " + this.motivation + "]";
     }
 
     public int getLevel() {
@@ -109,11 +112,11 @@ public abstract class Student extends Person {
         return this.grades;
     }
 
-    public static double getDefaultAverage() {
+    public static double getDefaultGrade() {
         return defaultGrade;
     }
 
-    public static void setDefaultAverage(double defaultAverage) {
+    public static void setDefaultGrade(double defaultAverage) {
         Student.defaultGrade = defaultAverage;
     }
 
