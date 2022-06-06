@@ -302,7 +302,7 @@ public class Assignment {
 
         listArrange(duplicateTutored, duplicateTutor);
 
-        GrapheNonOrienteValue<Student> graph = graphSetup(duplicateTutored, duplicateTutor);
+        GrapheNonOrienteValue<Student> graph = getGraph(duplicateTutored, duplicateTutor);
 
         CalculAffectation<Student> calcul = new CalculAffectation<>(graph, Tools.getStudentList(duplicateTutored), Tools.getStudentList(duplicateTutor));
         this.assignmentCost = calcul.getCout();
@@ -319,7 +319,7 @@ public class Assignment {
      * @see Tutored#getWeight(double, double)
      * @see Tutor#getWeight(double, double)
      */
-    private GrapheNonOrienteValue<Student> graphSetup(List<Tutored> duplicateTutored, List<Tutor> duplicateTutor) {
+    private GrapheNonOrienteValue<Student> getGraph(List<Tutored> duplicateTutored, List<Tutor> duplicateTutor) {
         GrapheNonOrienteValue<Student> graph = new GrapheNonOrienteValue<>();
 
         addVertices(graph, duplicateTutored);
@@ -371,20 +371,15 @@ public class Assignment {
     private void listArrange(List<Tutored> tutored, List<Tutor> tutor) {
         int diff = tutored.size() - tutor.size();
 
-        if (polyTutor) {
-            // tutor = Tools.tutorsSplit(tutor, diff);
+        if (diff > 0 && polyTutor) {
             tutor = Tools.tutorsSplit(tutor, this.resource, diff);
         }
 
         diff = tutored.size() - tutor.size();
         if (diff > 0) {
-            // tutored in waiting list
-            // waitingList = Tools.waitingListBuilder(tutored, Math.abs(diff));
-            waitingList = Tools.waitingListBuilder(tutored, this.resource, Math.abs(diff));
+            waitingList = Tools.waitingListBuilder(tutored, this.resource, diff);
         } else if (diff < 0) {
-            // tutors in waiting list
-            // waitingList = Tools.waitingListBuilder(tutor, Math.abs(diff));
-            waitingList = Tools.waitingListBuilder(tutor, this.resource, Math.abs(diff));
+            waitingList = Tools.waitingListBuilder(tutor, this.resource, -diff);
         }
 
         diff = tutored.size() - tutor.size();
