@@ -2,10 +2,11 @@ package ihm;
 
 import java.util.List;
 
-import oop.Tutored;
-import oop.Tutor;
+import javax.tools.Tool;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -21,6 +22,7 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToolBar;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -32,6 +34,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+import oop.Tutor;
+import oop.Tutored;
 
 public class VersionDeux extends Application{
     //Glob
@@ -40,6 +44,8 @@ public class VersionDeux extends Application{
     ComboBox<String> cbMatieres = new ComboBox<>();
     Image profilPhoto;
     ComboBox<String> cbSession = new ComboBox<>();
+
+    double TOOLBAR_HEIGHT = 55;
 
     int slMin = 0;
     int slMax = 5;
@@ -61,6 +67,37 @@ public class VersionDeux extends Application{
     List<Tutor> tutorsList;
     List<Tutored> tutoredList;
     
+    private class orderListHandler implements EventHandler<ActionEvent>{
+        public void handle(ActionEvent e) {
+            Button bt = ((Button)e.getTarget());
+            if (bt.getText().equals("↓")) {
+                bt.setText("↑");
+                bt.getTooltip().setText("Tri décroissant");
+            }
+            else {
+                bt.setText("↓");                
+                bt.getTooltip().setText("Tri croissant");
+            }
+        } 
+    }
+
+    private class studentHandler implements EventHandler<ActionEvent>{
+        public void handle(ActionEvent e) {
+            Button bt = ((Button)e.getTarget());
+            if (bt.getText().equals("+")) {
+                System.out.println("J'ajoute");
+            }
+            else if (bt.getText().equals("-")){
+                System.out.println("Je retire");
+            }
+            else if (bt.getText().equals("🔗")){ //⩆
+                System.out.println("J'affecte'");
+            }
+            else{
+                System.out.println("J'interdis'");
+            }
+        } 
+    }
 
 
     @Override
@@ -115,74 +152,61 @@ public class VersionDeux extends Application{
 
     VBox initTop(){
         VBox top= new VBox();
-
-        MenuBar menu = initMenu();
-        HBox header = initHeader();
-        ToolBar options = initOptions();
-
-        top.getChildren().addAll(menu, header, options);
+        top.getChildren().addAll(initMenu(), initHeader(), initOptions());
         return top;
+    }
+
+    HBox initLabelButton(String label, String button, EventHandler<ActionEvent> handler, String tooltip){
+        HBox box = new HBox();        
+        box.setAlignment(Pos.CENTER);
+
+        Label lb = new Label(label);
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        Button bt = new Button(button);
+        bt.setOnAction(handler);
+        bt.setStyle("-fx-font-size : 15;");
+        bt.setTooltip(new Tooltip(tooltip));
+        bt.setPadding(new Insets(0));
+        bt.setPrefSize(20, 20);
+
+        box.getChildren().addAll(lb, spacer, bt);
+        return box;
+    }
+
+
+    TitledPane initEtudiantsControls(){
+        VBox etudiantsControls = new VBox();
+
+        HBox add = initLabelButton("Ajouter", "+", new studentHandler(), "Ajouter un étudiant");
+        HBox del = initLabelButton("Supprimer", "‒", new studentHandler(), "Supprimer un étudiant");
+        HBox union = initLabelButton("Forcer", "🔗", new studentHandler(), "Forcer une affectation");
+        HBox disUnion = initLabelButton("Interdire", "⦸", new studentHandler(), "Interdire une affectation");
+
+        etudiantsControls.getChildren().addAll(add, del, union, disUnion);
+        return new TitledPane("Etudiants", etudiantsControls);
+    }
+
+    TitledPane initOrderControls(){
+        VBox triControls = new VBox();
+
+        HBox alpha = initLabelButton("Nom", "↓", new orderListHandler(), "Tri croissant");
+        HBox avg = initLabelButton("Moyenne", "↓", new orderListHandler(), "Tri croissant");
+        HBox abs = initLabelButton("Absences", "↓", new orderListHandler(), "Tri croissant");
+        HBox motiv = initLabelButton("Motivation", "↓", new orderListHandler(), "Tri croissant");
+
+        triControls.getChildren().addAll(alpha, avg, abs, motiv);
+        return new TitledPane("Trier par", triControls);
     }
 
     VBox initListControls(){
         VBox listControls = new VBox();
-        
-        Region[] spacers = new Region[6];
-        for (int i = 0; i < spacers.length; i++) {
-            spacers [i] = new Region();
-            HBox.setHgrow(spacers[i], Priority.ALWAYS);
-        }
-
-
-        VBox etudiantsControls = new VBox();
-        HBox add = new HBox(new Label("Ajouter "));
-        add.setAlignment(Pos.CENTER);
-        Button addButton = new Button("+");
-        addButton.setPadding(new Insets(5, 8 ,5 ,8));
-        addButton.setAlignment(Pos.CENTER_RIGHT);
-        add.getChildren().addAll(spacers[0], addButton);
-
-        HBox del = new HBox(new Label("Supprimer "));
-        del.setAlignment(Pos.CENTER);
-        Button delButton = new Button("‒");
-        delButton.setPadding(PAD_BTN);
-        del.getChildren().addAll(spacers[1], delButton);
-
-        etudiantsControls.getChildren().addAll(add, del);
-
-        TitledPane etudiants = new TitledPane("Etudiants", etudiantsControls);
-
-        VBox triControls = new VBox();
-
-        HBox alpha = new HBox();
-        alpha.setAlignment(Pos.CENTER);
-        Button alphaTri = new Button("↓");
-        alphaTri.setPadding(PAD_BTN);
-        alpha.getChildren().addAll(new Label("Nom "), spacers[2], alphaTri);
-
-        HBox avg = new HBox();
-        avg.setAlignment(Pos.CENTER);
-        Button avgTri = new Button("↓");
-        avgTri.setPadding(PAD_BTN);
-        avg.getChildren().addAll(new Label("Notes "), spacers[3], avgTri);
-
-        HBox abs = new HBox();
-        abs.setAlignment(Pos.CENTER);
-        Button absTri = new Button("↓");
-        absTri.setPadding(PAD_BTN);
-        abs.getChildren().addAll(new Label("Absences "), spacers[4], absTri);
-
-        HBox motiv = new HBox();
-        motiv.setAlignment(Pos.CENTER);
-        Button motivTri = new Button("↓");
-        motivTri.setPadding(PAD_BTN);
-        motiv.getChildren().addAll(new Label("Motivation "), spacers[5], motivTri);
-
-        triControls.getChildren().addAll(alpha, avg, abs, motiv);
-        TitledPane tri = new TitledPane("Trier par:", triControls);
-
-        listControls.getChildren().addAll(etudiants, tri);
         listControls.setPadding(PAD_MIN);
+        listControls.setPrefWidth(150);       
+
+        listControls.getChildren().addAll(initEtudiantsControls(), initOrderControls());
 
         return listControls;
     }
@@ -220,26 +244,34 @@ public class VersionDeux extends Application{
         {((Slider)s).setValue( Math.ceil((double)newVal*2) / 2.0d);}
     }
     
-    ToolBar initOptions(){
-        ToolBar options = new ToolBar();
-
-        TitledPane borderCoefs = new TitledPane("Coefficients", initToolCoefs());
-        TitledPane borderAffec = new TitledPane("Affectation", initToolAffect());
-        // BorderedTitle borderList = new BorderedTitle("Listes", initToolListes());
-
-
-        options.getItems().addAll(borderCoefs, borderAffec);//, borderList);
+    HBox initOptions(){
+        HBox options = new HBox();
+        Region spacer = new Region();
+        spacer.setMinWidth(10);
+        options.getChildren().addAll(initToolCoefs(), spacer, initToolAffect());
+        options.setPadding(PAD_MIN);
+        options.setMaxHeight(Double.MIN_VALUE);
+        options.setAlignment(Pos.TOP_LEFT);
+        options.setStyle("-fx-background-color: #EFEFEF;-fx-effect: dropshadow(gaussian, rgba(125,125,125,0.8), 2, 0, 0, 1);");
         return options;
     }
 
-    ToolBar initToolAffect(){
+    TitledPane initToolAffect(){
         ToolBar tb = new ToolBar();
-        HBox.setHgrow(tb, Priority.ALWAYS);
+        tb.setPrefHeight(TOOLBAR_HEIGHT);
         Button btAffect = new Button("Affecter !");
+        btAffect.setTooltip(new Tooltip("Lancer l'affectation"));
+
+        Region spacer = new Region();
+        spacer.setPrefWidth(10);
+
         Button btShuffle = new Button("🔀");
+        btShuffle.setTooltip(new Tooltip("Lancer une affectation avec des coefficients aléatoires"));
+
+        tb.setPadding(PAD_MIN);
         tb.getStyleClass().clear();
-        tb.getItems().addAll(btAffect, btShuffle);
-        return tb;
+        tb.getItems().addAll(btAffect, spacer, btShuffle);
+        return new TitledPane("Affectation", tb);
     }
 
     HBox initToolListes(){
@@ -254,8 +286,9 @@ public class VersionDeux extends Application{
         return tb;
     }
 
-    HBox initToolCoefs(){
-        HBox coefs = new HBox();
+    TitledPane initToolCoefs(){
+        HBox coefs = new HBox();        
+        coefs.setPrefHeight(TOOLBAR_HEIGHT);
         Slider[] sliders = {slAvg, slAbs, slMot};
         for (Slider s : sliders) {
             s.setMaxWidth(75);
@@ -271,9 +304,10 @@ public class VersionDeux extends Application{
         Label labelAbs = new Label("Absences");
         Label labelMot = new Label("Motivation");
         Button resetCoef = new Button("↺");
+        resetCoef.setTooltip(new Tooltip("Réinitialiser les coefficients"));
 
         coefs.getChildren().addAll(labelAvg, slAvg, labelAbs, slAbs, labelMot, slMot, resetCoef);
-        return coefs;
+        return new TitledPane("Coefficients",coefs);
     }
 
     HBox initHeader(){
