@@ -12,8 +12,8 @@ public abstract class Person {
     /**
      * Constructs a Person from a forename and a surname.
      * 
-     * @param forename forename of the person.
-     * @param surname  surname of the person.
+     * @param forename  forename of the person.
+     * @param surname   surname of the person.
      * @param isStudent defines if the person is a student or not
      */
     protected Person(String forename, String surname, boolean isStudent) {
@@ -33,24 +33,56 @@ public abstract class Person {
         if (names.length == 1) {
             this.forename = name;
             this.surname = null;
-        }
-        else {
+        } else {
             this.forename = names[0];
             this.surname = names[1];
         }
         this.isStudent = isStudent;
     }
 
-
-    public boolean isStudent(){
+    public boolean isStudent() {
         return this.isStudent;
     }
 
-        /**
-     * Gets the person's name.
-     * 
-     * @return the person's name.
-     */
+    @Override
+    public String toString() {
+        if (Person.shortName) {
+            return this.getName();
+        }
+        return this.getClass().getSimpleName() + " [" + this.getName() + "]";
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((forename == null) ? 0 : forename.hashCode());
+        result = prime * result + ((surname == null) ? 0 : surname.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Person other = (Person) obj;
+        if (forename == null) {
+            if (other.forename != null)
+                return false;
+        } else if (!forename.equals(other.forename))
+            return false;
+        if (surname == null) {
+            if (other.surname != null)
+                return false;
+        } else if (!surname.equals(other.surname))
+            return false;
+        return true;
+    }
+
     public String getName() {
         if (this.surname == null) {
             return forename;
@@ -74,18 +106,7 @@ public abstract class Person {
         this.surname = surname;
     }
 
-    public void setShortName(boolean bool){
+    public static void setShortName(boolean bool) {
         Person.shortName = bool;
     }
-
-    public String toString() {
-        if (Person.shortName) {
-            return this.getName();
-        }
-        return this.getClass().getSimpleName()+" ["+ this.getName() +"]";
-    }
-
-    
-
-    
 }

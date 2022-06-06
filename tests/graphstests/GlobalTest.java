@@ -141,7 +141,7 @@ public class GlobalTest {
         assertEquals(waitingList, List.of(u5, u2));
         assertEquals(assignment.getCost(), 7.415, DELTA);
 
-        assignment.removeForcedAssignment(u1);
+        assignment.removeForcedAssignment(u1, t2);
         edges = assignment.getAssignment();
         for (Arete<Student> edge : edges) {
             assertFalse(Tools.edgeTextEquals(edge, wantedAssignment));
@@ -177,7 +177,7 @@ public class GlobalTest {
         assertEquals(waitingList, List.of(u5, u2));
         assertEquals(assignment.getCost(), 9.242, DELTA);
 
-        assignment.removeForbiddenAssignment(u1);
+        assignment.removeForbiddenAssignment(u1, t4);
         edges = assignment.getAssignment();
         isEdgeInAssignment = false;
         for (Arete<Student> edge : edges) {

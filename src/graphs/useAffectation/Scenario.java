@@ -106,7 +106,7 @@ public final class Scenario {
          */
         cas1.addForcedAssignments(u1, t2);
         cas1.printScenario("2.A", "L'enseignant veut associer Claude à Jaqueline");
-        cas1.removeForcedAssignment(u1);
+        cas1.removeForcedAssignment(u1, t2);
 
         /**
          * Cas 2.B : Incompatibilité entre deux étudiants
@@ -118,7 +118,7 @@ public final class Scenario {
          */
         cas1.addForbiddenAssignments(u1, t4);        
         cas1.printScenario("2.B", "Claude et Édouard refusent d'être associés");
-        cas1.removeForbiddenAssignment(u1);
+        cas1.removeForbiddenAssignment(u1, t4);
 
 
         /**
