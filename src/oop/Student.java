@@ -13,7 +13,6 @@ public abstract class Student extends Person {
     protected int level;
     protected int absences;
     protected char motivation;
-    protected double weight;
     protected Map<Resource, Double> grades = new EnumMap<>(Resource.class);
 
     protected static double defaultGrade = 9.99;
@@ -51,9 +50,6 @@ public abstract class Student extends Person {
     public abstract double getWeight(Resource resource, double gradesAverage, int absencesAverage, double gradesWeight,
             double absencesWeight, double levelWeight);
 
-    public void setWeight(double weight) {
-        this.weight = weight;
-    }
 
     @Override
     public int hashCode() {
@@ -104,10 +100,6 @@ public abstract class Student extends Person {
         return motivation;
     }
 
-    public double getWeight() {
-        return this.weight;
-    }
-
     public Map<Resource, Double> getGrades() {
         return this.grades;
     }
@@ -142,6 +134,10 @@ public abstract class Student extends Person {
 
     public static void setDefaultAbsences(int defaultAbsences) {
         Student.defaultAbsences = defaultAbsences;
+    }
+
+    public double getGrade(Resource resource) {
+        return this.grades.get(resource);
     }
 
     public void setLevel(int level) {

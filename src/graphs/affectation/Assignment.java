@@ -49,40 +49,23 @@ public class Assignment {
 
     private static double maxWeighting = 5;
 
-    private Teacher teacher;  
+    private Teacher teacher;
 
-    
-
-
-    public static double getMaxWeighting() {
-        return maxWeighting;
-    }
-
-    public static void setMaxWeighting(double maxWeighting) {
-        maxWeighting = maxWeighting;
-    }
-
-    public Teacher getTeacher() {
-        return teacher;
-    }
-
-    public void setTeacher(Teacher teacher) {
-        this.teacher = teacher;
-    }
-
-    private Assignment() {
+    private Assignment(Resource resource) {
         this.polyTutor = true;
         this.forcedAssignments = new HashSet<>();
         this.forbiddenAssignments = new HashSet<>();
         this.waitingList = new ArrayList<>();
         this.assignmentCost = 0;
         this.teacher = null;
-        
+
         this.tutoredGradesAverage = 0;
         this.tutorGradesAverage = 0;
 
         this.tutoredAbsenceAverage = 0;
         this.tutorAbsenceAverage = 0;
+
+        this.resource = resource;
     }
 
     /**
@@ -92,33 +75,11 @@ public class Assignment {
      * @param tutors  List of tutor students that will take in charge tutored
      *                students.
      */
-    public Assignment(List<Tutored> tutored, List<Tutor> tutors) {
-        this();
+    public Assignment(List<Tutored> tutored, List<Tutor> tutors, Resource resource) {
+        this(resource);
         this.tutored = tutored;
         this.tutors = tutors;
         updateAverages();
-    }
-    
-    private void updateAverages(){
-        double values[] = Assignment.computeAverages(tutored);
-        this.tutoredAbsenceAverage = values[0];
-        this.tutoredGradesAverage = values[1];
-
-        values = Assignment.computeAverages(tutors);
-        this.tutorAbsenceAverage = values[0];
-        this.tutorGradesAverage = values[1];
-    }
-
-
-
-    private static double[] computeAverages(List<? extends Student> students){
-        int abs = 0;
-        double avg = 0;
-        for (Student student : students) {
-            abs += student.getAbsences();
-            avg += student.getAverage();
-        }
-        return new double[] {abs / students.size(), avg / students.size()};
     }
 
     /**
@@ -127,8 +88,8 @@ public class Assignment {
      * 
      * @param students List of students to dispatch.
      */
-    public Assignment(Set<Student> students) {
-        this();
+    public Assignment(Set<Student> students, Resource resource) {
+        this(resource);
         addStudent(students);
         updateAverages();
     }
@@ -140,8 +101,8 @@ public class Assignment {
      * @param students List of students to dispatch.
      * @param teacher  Teacher overseeing the tutoring.
      */
-    public Assignment(Set<Student> students, Teacher teacher) {
-        this(students);
+    public Assignment(Set<Student> students, Teacher teacher, Resource resource) {
+        this(students, resource);
         this.teacher = teacher;
     }
 
@@ -154,8 +115,8 @@ public class Assignment {
      *                students.
      * @param teacher Teacher overseeing the tutoring.
      */
-    public Assignment(List<Tutored> tutored, List<Tutor> tutors, Teacher teacher) {
-        this(tutored, tutors);
+    public Assignment(List<Tutored> tutored, List<Tutor> tutors, Teacher teacher, Resource resource) {
+        this(tutored, tutors, resource);
         this.teacher = teacher;
     }
 
@@ -164,9 +125,29 @@ public class Assignment {
      * 
      * @param teacher Teacher overseeing the tutoring.
      */
-    public Assignment(Teacher teacher) {
-        this();
+    public Assignment(Teacher teacher, Resource resource) {
+        this(resource);
         this.teacher = teacher;
+    }
+
+    private void updateAverages() {
+        double[] values = Assignment.computeAverages(tutored, resource);
+        this.tutoredAbsenceAverage = values[0];
+        this.tutoredGradesAverage = values[1];
+
+        values = Assignment.computeAverages(tutors, resource);
+        this.tutorAbsenceAverage = values[0];
+        this.tutorGradesAverage = values[1];
+    }
+
+    private static double[] computeAverages(List<? extends Student> students, Resource resource) {
+        int abs = 0;
+        double avg = 0;
+        for (Student student : students) {
+            abs += student.getAbsences();
+            avg += student.getGrade(resource);
+        }
+        return new double[] { abs / students.size(), avg / students.size() };
     }
 
     /**
@@ -272,6 +253,11 @@ public class Assignment {
         if (this.tutored.contains(student) || this.tutors.contains(student)) {
             return false;
         }
+
+        if (!student.getGrades().containsKey(this.resource)) {
+            return false;
+        }
+
         if (student.getLevel() == 1) {
             return this.tutored.add((Tutored) student);
         } else {
@@ -294,7 +280,6 @@ public class Assignment {
      */
     private CalculAffectation<Student> assignment() {
         this.waitingList.clear();
-        computeStudentsWeight();
 
         List<Tutored> duplicateTutored = new ArrayList<>();
         duplicateTutored.addAll(this.tutored);
@@ -340,7 +325,11 @@ public class Assignment {
                 } else if (this.forbiddenAssignments.contains(duo)) {
                     weight = 1000;
                 } else {
-                    weight = tutoreds.getWeight() + tutor.getWeight();
+                    weight = tutoreds.getWeight(resource, tutoredGradesAverage, (int) tutoredAbsenceAverage,
+                            teacher.getAverageWeighting(), teacher.getAbsenceWeighting(), teacher.getLevelWeighting())
+                            + tutor.getWeight(resource, tutorGradesAverage, (int) tutorAbsenceAverage,
+                                    teacher.getAverageWeighting(), teacher.getAbsenceWeighting(),
+                                    teacher.getLevelWeighting());
                 }
 
                 graph.ajouterArete(tutoreds, tutor, weight);
@@ -390,29 +379,6 @@ public class Assignment {
         diff = tutored.size() - tutor.size();
         if (diff != 0) {
             throw new IllegalArgumentException("marche pas dommage");
-        }
-    }
-
-    private void computeStudentsWeight() {
-        computeStudentWeight(this.tutored);
-        computeStudentWeight(this.tutors);
-    }
-
-    /**
-     * Calculates the average of all students in a given list, then sets the weight
-     * to all students in the list.
-     * 
-     * @param list list of students.
-     * 
-     * @see Tools#computeAverage(List)
-     * @see Tools#computeAbsenceAverage(List)
-     * @see Student#setWeight(double, double)
-     */
-    private void computeStudentWeight(List<? extends Student> list) {
-        double avgAvg = Tools.computeAverage(list);
-        double absAvg = Tools.computeAbsenceAverage(list);
-        for (Student s : list) {
-            s.setWeight(avgAvg, absAvg, teacher);
         }
     }
 
@@ -482,5 +448,21 @@ public class Assignment {
     public String toString() {
         return "[Tuteurs: " + this.tutors.size() + ", Tutorés: " + this.tutored.size() + ", Attente: "
                 + this.waitingList.size() + "]";
+    }
+
+    public Teacher getTeacher() {
+        return teacher;
+    }
+
+    public void setTeacher(Teacher teacher) {
+        this.teacher = teacher;
+    }
+
+    public static double getMaxWeighting() {
+        return maxWeighting;
+    }
+
+    public static void setMaxWeighting(double maxWeighting) {
+        maxWeighting = maxWeighting;
     }
 }
