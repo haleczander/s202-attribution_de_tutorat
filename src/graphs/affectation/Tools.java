@@ -133,7 +133,7 @@ public final class Tools {
         if (motivation < 'A' && motivation > 'C') {
             throw new IllegalArgumentException("The motivation character is not valid (A, B or C).");
         }
-        return 1 - (motivation - 'B') * 0.1;
+        return 1 + (motivation - 'B') * 0.1;
     }
 
     /**

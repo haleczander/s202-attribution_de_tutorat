@@ -23,7 +23,7 @@ public class Tutored extends Student {
     }
 
     @Override
-    public double getWeight(Resource resource, double gradesAverage, int absencesAverage, double gradesWeight, double absencesWeight, double levelWeight){
+    public double getWeight(Resource resource, double gradesAverage, double absencesAverage, double gradesWeight, double absencesWeight, double levelWeight){
         return (
                     (this.grades.get(resource) / gradesAverage)             *   gradesWeight
                 +   Math.sqrt((1 + this.absences) / (1 + absencesAverage))  *   absencesWeight

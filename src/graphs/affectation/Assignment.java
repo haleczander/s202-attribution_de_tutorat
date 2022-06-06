@@ -141,7 +141,7 @@ public class Assignment {
     }
 
     private static double[] computeAverages(List<? extends Student> students, Resource resource) {
-        int abs = 0;
+        double abs = 0;
         double avg = 0;
         for (Student student : students) {
             abs += student.getAbsences();
@@ -317,6 +317,8 @@ public class Assignment {
         double weight;
 
         for (Tutored tutoreds : duplicateTutored) {
+            System.out.println(tutoreds.getName());
+            System.out.println(tutoreds.getWeight(resource, tutoredGradesAverage, tutoredAbsenceAverage, teacher.getAverageWeighting(), teacher.getAbsenceWeighting(), teacher.getLevelWeighting()));
             for (Tutor tutor : duplicateTutor) {
                 Edge duo = new Edge(tutoreds, tutor);
 
@@ -325,13 +327,12 @@ public class Assignment {
                 } else if (this.forbiddenAssignments.contains(duo)) {
                     weight = 1000;
                 } else {
-                    weight = tutoreds.getWeight(resource, tutoredGradesAverage, (int) tutoredAbsenceAverage,
+                    weight = tutoreds.getWeight(resource, tutoredGradesAverage, tutoredAbsenceAverage,
                             teacher.getAverageWeighting(), teacher.getAbsenceWeighting(), teacher.getLevelWeighting())
-                            + tutor.getWeight(resource, tutorGradesAverage, (int) tutorAbsenceAverage,
+                            + tutor.getWeight(resource, tutorGradesAverage, tutorAbsenceAverage,
                                     teacher.getAverageWeighting(), teacher.getAbsenceWeighting(),
                                     teacher.getLevelWeighting());
                 }
-
                 graph.ajouterArete(tutoreds, tutor, weight);
             }
         }

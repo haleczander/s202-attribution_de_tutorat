@@ -47,7 +47,7 @@ public abstract class Student extends Person {
                 Teacher.getDefaultWeighting(), Teacher.getDefaultWeighting());
     }
 
-    public abstract double getWeight(Resource resource, double gradesAverage, int absencesAverage, double gradesWeight,
+    public abstract double getWeight(Resource resource, double gradesAverage, double absencesAverage, double gradesWeight,
             double absencesWeight, double levelWeight);
 
 

@@ -58,6 +58,8 @@ public class PersonTest {
     }
 
     @Test void toStringTest(){
+        Person.setShortName(false);
+
         assertEquals("Tutored [Antoine, level= 1, absences= 0, notes= {}, motivation= A]", p1.toString());
         assertEquals("Tutored [Jean Carle, level= 1, absences= 1, notes= {}, motivation= B]", p2.toString());
         assertEquals("Tutor [Delphine, level= 2, absences= 3, notes= {}, motivation= C, nbOfTutored= 1]", p3.toString());

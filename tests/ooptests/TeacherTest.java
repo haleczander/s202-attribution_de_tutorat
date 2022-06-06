@@ -23,14 +23,7 @@ public class TeacherTest {
 
     static Teacher[] teachers = new Teacher[] {t1, t2, t3, t4};
     
-    public static void main(String[] args) {
-        getResourceTest();
-        addResourceTest();
-        getWeightingtest();
-        setWeightingTest();
-    }
-
-    @Test static void getResourceTest(){
+    @Test void getResourceTest(){
         assertTrue(t1.getResources().isEmpty());
         assertEquals(Resource.R105, t2.getResources().get(0));
         assertEquals(Resource.R103, t3.getResources().get(0));
@@ -39,16 +32,16 @@ public class TeacherTest {
 
     }
 
-    @Test static void addResourceTest(){
+    @Test void addResourceTest(){
         assertTrue(t1.addResource(Resource.R105));
         assertFalse(t1.getResources().isEmpty());
         assertEquals(Resource.R105, t1.getResources().get(0));
 
-        assertTrue(t3.addResource(Resource.R104));
-        assertEquals(3, t3.getResources().size());
+        assertTrue(t4.addResource(Resource.R104));
+        assertEquals(3, t4.getResources().size());
     }
 
-    @Test static void getWeightingtest(){
+    @Test void getWeightingtest(){
         Map<Coefficient, Double> defaultCoefs = new EnumMap<>(Coefficient.class);
         defaultCoefs.put(Coefficient.GRADES, Teacher.getDefaultWeighting());
         defaultCoefs.put(Coefficient.ABSENCES, Teacher.getDefaultWeighting());
@@ -61,7 +54,7 @@ public class TeacherTest {
         }
     }
 
-    @Test static void setWeightingTest(){
+    @Test void setWeightingTest(){
         t1.setLevelWeighting(2);
         assertEquals(2, t1.getWeighting(Coefficient.LEVEL));
 

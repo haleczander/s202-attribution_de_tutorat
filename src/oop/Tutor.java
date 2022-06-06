@@ -61,7 +61,7 @@ public class Tutor extends Student {
         return nbofTutored;
     }
 
-    public double getWeight(Resource resource, double gradesAverage, int absencesAverage, double gradesWeight,
+    public double getWeight(Resource resource, double gradesAverage, double absencesAverage, double gradesWeight,
             double absencesWeight, double levelWeight) {
         return ((gradesAverage / this.grades.get(resource)) * gradesWeight
                 + (double) (3.0 / this.level) * levelWeight
