@@ -13,6 +13,10 @@ import oop.Student;
 import oop.Teacher;
 import oop.Tutor;
 import oop.Tutored;
+import utility.Couples;
+import utility.Persons;
+import utility.Tools;
+import utility.Tutors;
 
 /**
  * Class that represents an assignment of two groups of students : one is
@@ -26,7 +30,7 @@ import oop.Tutored;
  * @see #getAssignment()
  * @see fr.ulille.but.sae2_02.graphes.CalculAffectation
  */
-public class Assignment {
+public class Tutorat {
     private Resource resource;
 
     private List<Tutored> tutored;
@@ -72,7 +76,7 @@ public class Assignment {
 
     private static double maxWeighting = 5;
 
-    public Assignment(Resource resource) {
+    public Tutorat(Resource resource) {
         this.resource = resource;
 
         this.tutored = new ArrayList<>();
@@ -103,7 +107,7 @@ public class Assignment {
      * @param tutors  List of tutor students that will take in charge tutored
      *                students.
      */
-    public Assignment(List<Tutored> tutored, List<Tutor> tutors, Resource resource) {
+    public Tutorat(List<Tutored> tutored, List<Tutor> tutors, Resource resource) {
         this(resource);
         this.tutored = tutored;
         this.tutors = tutors;
@@ -115,7 +119,7 @@ public class Assignment {
      * 
      * @param students List of students to dispatch.
      */
-    public Assignment(Set<Student> students, Resource resource) {
+    public Tutorat(Set<Student> students, Resource resource) {
         this(resource);
         addStudent(students);
     }
@@ -127,7 +131,7 @@ public class Assignment {
      * @param students List of students to dispatch.
      * @param teacher  Teacher overseeing the tutoring.
      */
-    public Assignment(Set<Student> students, Teacher teacher, Resource resource) {
+    public Tutorat(Set<Student> students, Teacher teacher, Resource resource) {
         this(students, resource);
         this.teacher = teacher;
     }
@@ -141,7 +145,7 @@ public class Assignment {
      *                students.
      * @param teacher Teacher overseeing the tutoring.
      */
-    public Assignment(List<Tutored> tutored, List<Tutor> tutors, Teacher teacher, Resource resource) {
+    public Tutorat(List<Tutored> tutored, List<Tutor> tutors, Teacher teacher, Resource resource) {
         this(tutored, tutors, resource);
         this.teacher = teacher;
     }
@@ -151,17 +155,17 @@ public class Assignment {
      * 
      * @param teacher Teacher overseeing the tutoring.
      */
-    public Assignment(Teacher teacher, Resource resource) {
+    public Tutorat(Teacher teacher, Resource resource) {
         this(resource);
         this.teacher = teacher;
     }
 
     private void updateAverages() {
-        double[] values = Assignment.computeAverages(tutored, resource);
+        double[] values = Tutorat.computeAverages(tutored, resource);
         this.tutoredAbsenceAverage = values[0];
         this.tutoredGradesAverage = values[1];
 
-        values = Assignment.computeAverages(tutors, resource);
+        values = Tutorat.computeAverages(tutors, resource);
         this.tutorAbsenceAverage = values[0];
         this.tutorGradesAverage = values[1];
     }
@@ -189,7 +193,7 @@ public class Assignment {
         return this.forcedAssignments.add(new Edge(tutored, tutor));
     }
     public boolean addForcedAssignments(String tutored, String tutor) {
-        return addForcedAssignments((Tutored)Tools.getPerson(tutored, this.tutored), (Tutor)Tools.getPerson(tutor, this.tutors));
+        return addForcedAssignments((Tutored)Persons.getPerson(tutored, this.tutored), (Tutor)Persons.getPerson(tutor, this.tutors));
     }
 
     /**
@@ -205,7 +209,7 @@ public class Assignment {
         return this.forbiddenAssignments.add(new Edge(tutored, tutor));
     }
     public boolean addForbiddenAssignments(String tutored, String tutor) {
-        return addForbiddenAssignments((Tutored)Tools.getPerson(tutored, this.tutored), (Tutor)Tools.getPerson(tutor, this.tutors));
+        return addForbiddenAssignments((Tutored)Persons.getPerson(tutored, this.tutored), (Tutor)Persons.getPerson(tutor, this.tutors));
     }
 
     /**
@@ -315,17 +319,14 @@ public class Assignment {
     private CalculAffectation<Student> assignment() {
         this.waitingList.clear();
 
-        List<Tutored> duplicateTutored = new ArrayList<>();
-        duplicateTutored.addAll(this.tutored);
+        List<Tutored> tutoredCopy = new ArrayList<>(this.tutored);
+        List<Tutor> tutorCopy = new ArrayList<>(this.tutors);
 
-        List<Tutor> duplicateTutor = new ArrayList<>();
-        duplicateTutor.addAll(this.tutors);
+        listArrange(tutoredCopy, tutorCopy);
 
-        listArrange(duplicateTutored, duplicateTutor);
+        GrapheNonOrienteValue<Student> graph = getGraph(tutoredCopy, tutorCopy);
 
-        GrapheNonOrienteValue<Student> graph = getGraph(duplicateTutored, duplicateTutor);
-
-        CalculAffectation<Student> calcul = new CalculAffectation<>(graph, Tools.getStudentList(duplicateTutored), Tools.getStudentList(duplicateTutor));
+        CalculAffectation<Student> calcul = new CalculAffectation<>(graph, new ArrayList<Student>(tutoredCopy), new ArrayList<Student>(tutorCopy));
         this.assignmentCost = calcul.getCout();
 
         return calcul;
@@ -354,12 +355,12 @@ public class Assignment {
                 // Edge duo = new Edge(tutoreds, tutor);
 
                 // if ( this.forcedAssignments.contains(duo)) {
-                if (Couple.exists(this.forcedCouples, tutoreds, tutor)){
+                if (Couples.exists(this.forcedCouples, tutoreds, tutor)){
                     System.out.println("Couple forcé");
                     weight = -1000;
                 } 
                 //else if (this.forbiddenAssignments.contains(duo)){                
-                else if (Couple.exists(this.forbiddenCouples, tutoreds, tutor)){
+                else if (Couples.exists(this.forbiddenCouples, tutoreds, tutor)){
                     System.out.println("Couple interdit");
                     weight = 1000;
                 } 
@@ -400,7 +401,7 @@ public class Assignment {
         int diff = tutored.size() - tutor.size();
 
         if (diff > 0 && polyTutor) {
-            tutor = Tools.tutorsSplit(tutor, this, diff);
+            tutor = Tutors.gapClose(tutor, this, diff);
         }
 
         diff = tutored.size() - tutor.size();
@@ -498,7 +499,7 @@ public class Assignment {
     }
 
     public static void setMaxWeighting(double maxWeighting) {
-        Assignment.maxWeighting = maxWeighting;
+        Tutorat.maxWeighting = maxWeighting;
     }
 
     public List<Tutored> getTutored() {
@@ -510,10 +511,10 @@ public class Assignment {
     }
 
     public Tutor getTutor(String name){
-        return (Tutor)Tools.getPerson(name, tutors);
+        return (Tutor)Persons.getPerson(name, tutors);
     }
     public Tutored getTutored(String name){
-        return (Tutored)Tools.getPerson(name, tutored);
+        return (Tutored)Persons.getPerson(name, tutored);
     }
     
 }

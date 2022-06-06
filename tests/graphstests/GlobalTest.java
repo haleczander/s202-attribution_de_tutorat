@@ -14,14 +14,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import fr.ulille.but.sae2_02.graphes.Arete;
-import graphs.affectation.Assignment;
-import graphs.affectation.Tools;
+import graphs.affectation.Tutorat;
 import oop.Person;
 import oop.Resource;
 import oop.Student;
 import oop.Teacher;
 import oop.Tutor;
 import oop.Tutored;
+import utility.Tools;
 
 /**
  * Tests unitaire des différents scénarios imaginés.
@@ -45,7 +45,7 @@ public class GlobalTest {
             t4,
             t5;
     private Teacher teacher;
-    private Assignment assignment;
+    private Tutorat assignment;
     private static final double DELTA = 0.002;
     private static final Resource RESOURCE = Resource.R101;
 
@@ -86,7 +86,7 @@ public class GlobalTest {
             tutorList.get(i).addGrade(RESOURCE, tGrades[i]);
         }
 
-        assignment = new Assignment(tutoredList, tutorList, RESOURCE);
+        assignment = new Tutorat(tutoredList, tutorList, RESOURCE);
         assignment.setTeacher(teacher);
     }
 

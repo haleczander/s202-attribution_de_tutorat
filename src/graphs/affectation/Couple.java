@@ -1,8 +1,5 @@
 package graphs.affectation;
 
-import java.util.Set;
-
-import oop.Student;
 import oop.Tutor;
 import oop.Tutored;
 
@@ -13,25 +10,6 @@ public class Couple{
     public Couple(Tutored tutored, Tutor tutor) {
         this.tutored = tutored;
         this.tutor = tutor;
-    }
-
-    public static boolean exists(Set<Couple> set, Tutored tutored, Tutor tutor){
-        for (Couple couple : set) {
-            // System.out.println(couple +" --> " + tutored +" & " + tutor + " : " + (tutored.equals(couple.getTutored()) && tutor.equals(couple.getTutor())));
-            if (tutored.equals(couple.getTutored()) && tutor.equals(couple.getTutor())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static boolean containsStudent(Set<Couple> set, Student student){
-        for (Couple couple : set) {
-            if ( student.equals((Student)couple.getTutor()) || student.equals((Student)couple.getTutored()) ){
-                return true;
-            }
-        }
-        return false;
     }
 
     public Tutored getTutored() {

@@ -1,10 +1,16 @@
-package oop;
+package utility;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.HashSet;
 import java.util.Set;
+
+import oop.Resource;
+import oop.Student;
+import oop.Teacher;
+import oop.Tutor;
+import oop.Tutored;
 
 public class ToolsCSV {
     static String path = "res" + File.separator + "data" + File.separator;

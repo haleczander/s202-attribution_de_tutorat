@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import graphs.affectation.Assignment;
+import graphs.affectation.Tutorat;
+import utility.ToolsCSV;
 
 public class Scenario {
     static List<Departement> IUT = new ArrayList<>();
@@ -49,7 +50,7 @@ public class Scenario {
 
         Resource web = Resource.R102;
         dptInfo.addTutoring(web, jeanCarle);
-        Assignment webTutorat = dptInfo.getTutoring(web);
+        Tutorat webTutorat = dptInfo.getTutoring(web);
         System.out.println("Le premier tutorat a été créé !");
         System.out.println(webTutorat);
         System.out.println();

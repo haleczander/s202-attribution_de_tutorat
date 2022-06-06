@@ -1,6 +1,6 @@
 package oop;
 
-import graphs.affectation.Tools;
+import utility.Tools;
 
 /**
  * Class that represents a tutored student.

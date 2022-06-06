@@ -2,12 +2,12 @@ package oop;
 
 import java.util.Comparator;
 
-import graphs.affectation.Assignment;
+import graphs.affectation.Tutorat;
 
 public class StudentComparator implements Comparator<Student> {
-    Assignment tutorat;
+    Tutorat tutorat;
 
-    public StudentComparator(Assignment tutorat){
+    public StudentComparator(Tutorat tutorat){
         this.tutorat= tutorat;
     }
 

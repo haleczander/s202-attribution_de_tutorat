@@ -5,7 +5,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-import graphs.affectation.Assignment;
+import graphs.affectation.Tutorat;
 
 public class Teacher extends Person {
     private List<Resource> resources;
@@ -82,8 +82,8 @@ public class Teacher extends Person {
         if (weight<0 ) {
             weight = 0;
         }
-        else if (weight>Assignment.getMaxWeighting()) {
-            weight = Assignment.getMaxWeighting();
+        else if (weight>Tutorat.getMaxWeighting()) {
+            weight = Tutorat.getMaxWeighting();
         }
         this.weights.replace(coefficient, weight);
     }

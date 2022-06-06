@@ -6,13 +6,13 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import graphs.affectation.Assignment;
+import graphs.affectation.Tutorat;
 
 public class Departement {
     private String name;
     private Set<Student> students;
     private Set<Teacher> teachers;
-    private Map<Resource, Assignment> tutorings = new EnumMap<>(Resource.class);
+    private Map<Resource, Tutorat> tutorings = new EnumMap<>(Resource.class);
 
     public Departement(String name) {
         this(name, new HashSet<>(), new HashSet<>());
@@ -24,7 +24,7 @@ public class Departement {
         this.teachers = teachers;
     }
 
-    public Assignment getTutoring(Resource resource){
+    public Tutorat getTutoring(Resource resource){
         return tutorings.get(resource);
     }
 
@@ -53,10 +53,10 @@ public class Departement {
     }
 
     public void addTutoring(Resource resource) {
-        tutorings.put(resource, new Assignment(resource));
+        tutorings.put(resource, new Tutorat(resource));
     }
     public void addTutoring(Resource resource, Teacher teacher) {
-        tutorings.put(resource, new Assignment(teacher, resource));
+        tutorings.put(resource, new Tutorat(teacher, resource));
     }
 
     public void registerStudents(Resource resource) {
@@ -121,7 +121,7 @@ public class Departement {
         return Set.copyOf(teachers);
     }
 
-    public Map<Resource, Assignment> getTutorings() {
+    public Map<Resource, Tutorat> getTutorings() {
         return Map.copyOf(tutorings);
     }
 }
