@@ -10,7 +10,6 @@ public class TutorDuplicate extends Tutor {
 
     public TutorDuplicate(Tutor t) {
         this(t.getName(), t.getLevel(), t.getAbsences(), t.getMotivation());
-        this.weight = t.getWeight() * TutorDuplicate.weightModifier;
     }
 
     @Override

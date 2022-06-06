@@ -22,16 +22,8 @@ public class PersonTest {
     
     static Person[] persons = new Person[] {p1, p2, p3, p4, p5, p6, p7};
 
-    public static void main(String[] args) {
-        forenameTest();
-        surnameTest();
-        nameTest();
-        isStudentTest();
-        toStringTest();
-        shortToStringTest();
-    }
 
-    @Test static void forenameTest(){
+    @Test void forenameTest(){
         String[] forenames = new String[] {"Antoine", "Jean", "Delphine", "Patricia", "Corwyn", "Iovka", "Patricia"};
 
         for (int i = 0 ; i < PersonTest.persons.length ; i++) {
@@ -39,7 +31,7 @@ public class PersonTest {
         }
     }
 
-    @Test static void surnameTest(){
+    @Test void surnameTest(){
         String[] surnames = new String[] {null, "Carle", null, "Everaere", "Fèvre", null, "Everaere(D)"};
 
         for (int i = 0 ; i < PersonTest.persons.length ; i++) {
@@ -47,7 +39,7 @@ public class PersonTest {
         }
     }
 
-    @Test static void nameTest(){
+    @Test void nameTest(){
         String[] names = new String[] {"Antoine", "Jean Carle", "Delphine", "Patricia Everaere", "Corwyn Fèvre", "Iovka", "Patricia Everaere(D)"};
 
         for (int i = 0 ; i < PersonTest.persons.length ; i++) {
@@ -55,7 +47,7 @@ public class PersonTest {
         }
     }
 
-    @Test static void isStudentTest(){
+    @Test void isStudentTest(){
         assertTrue(p1.isStudent());
         assertTrue(p2.isStudent());
         assertTrue(p3.isStudent());
@@ -65,7 +57,7 @@ public class PersonTest {
         assertTrue(p7.isStudent());
     }
 
-    @Test static void toStringTest(){
+    @Test void toStringTest(){
         assertEquals("Tutored [Antoine, level= 1, absences= 0, notes= {}, motivation= A]", p1.toString());
         assertEquals("Tutored [Jean Carle, level= 1, absences= 1, notes= {}, motivation= B]", p2.toString());
         assertEquals("Tutor [Delphine, level= 2, absences= 3, notes= {}, motivation= C, nbOfTutored= 1]", p3.toString());
@@ -75,7 +67,7 @@ public class PersonTest {
         assertEquals("TutorDuplicate [Patricia Everaere(D), level= 3, absences= 0, notes= {}, motivation= A, nbOfTutored= 1]", p7.toString());
     }
 
-    @Test static void shortToStringTest(){
+    @Test void shortToStringTest(){
         Person.setShortName(true);
         
         assertEquals("Antoine", p1.toString());
