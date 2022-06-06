@@ -5,9 +5,10 @@ import java.util.List;
 import java.util.ListIterator;
 
 import fr.ulille.but.sae2_02.graphes.Arete;
-import oop.Resource;
+import oop.Person;
 import oop.Student;
 import oop.StudentComparator;
+import oop.StudentPriorityComparator;
 import oop.Tutor;
 import oop.Tutored;
 
@@ -57,9 +58,9 @@ public final class Tools {
      * @see Tutor#compareTo(Student)
      * @see Tutor#duplicate()
      */
-    public static List<Tutor> tutorsSplit(List<Tutor> list, Resource resource, int diff) {
+    public static List<Tutor> tutorsSplit(List<Tutor> list, Assignment tutorat, int diff) {
         // list.sort((s1, s2) -> s1.compareTo(s2));
-        list.sort(new StudentComparator(resource));
+        list.sort(new StudentComparator(tutorat));
         List<Tutor> toAdd = new ArrayList<>();
         for (Tutor t : list) {
             if (t.getNbofTutored() > 1) {
@@ -103,12 +104,32 @@ public final class Tools {
 
     //     return waitingList;
     // }
-    public static List<Student> waitingListBuilder(List<? extends Student> list, Resource resource, int diff) {
+    // public static List<Student> waitingListBuilder(List<? extends Student> list, Resource resource, int diff) {
+    //     List<Student> waitingList = new ArrayList<>();
+    //     list.sort(new StudentComparator(resource));
+
+    //     ListIterator<? extends Student> it = list.listIterator(list.size());
+    //     while (it.hasPrevious() && diff != 0) {
+    //         Student student = it.previous();
+    //         waitingList.add(student);
+    //         diff--;
+    //     }
+    //     for (Student student : waitingList) {
+    //         list.remove(student);
+    //     }
+
+    //     return waitingList;
+    // }
+    
+    public static List<Student> waitingListBuilder(List<? extends Student> list, Assignment tutorat, int diff) {
         List<Student> waitingList = new ArrayList<>();
-        list.sort(new StudentComparator(resource));
+        list.sort(new StudentPriorityComparator(tutorat));
+        List<Student> copy = new ArrayList<>();
+        copy.addAll(list);
+
 
         ListIterator<? extends Student> it = list.listIterator(list.size());
-        while (it.hasPrevious() && diff != 0) {
+        while (it.hasPrevious() && diff > 0) {
             Student student = it.previous();
             waitingList.add(student);
             diff--;
@@ -161,4 +182,15 @@ public final class Tools {
     public static boolean edgeTextEquals(Arete<Student> edge1, Arete<Student> edge2) {
         return edge1.toString().equals(edge2.toString());
     }
+
+    public static Person getPerson(String name, List<? extends Person> persons){
+        for (Person p : persons) {
+            if (p.getName().equals(name)){
+                System.out.println("Egalité nom - student : "+ name +" <--> "+p);
+                return p;
+            }
+        }
+        return null;
+    }
+
 }

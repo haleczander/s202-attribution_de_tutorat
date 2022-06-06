@@ -46,4 +46,11 @@ public class Edge {
             return false;
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Edge [arete=" + arete + "]";
+    }
+
+    
 }

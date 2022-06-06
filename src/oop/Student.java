@@ -140,6 +140,10 @@ public abstract class Student extends Person {
         return this.grades.get(resource);
     }
 
+    public void setGrade(Resource resource, double grade){
+        this.grades.replace(resource, grade);
+    }
+
     public void setLevel(int level) {
         if (level < 1 || level > 3) {
             this.level = Student.defaultLevel;

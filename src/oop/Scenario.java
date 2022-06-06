@@ -72,12 +72,16 @@ public class Scenario {
         /*
         Nous sommes prêts à lancer une première affectation !
          */
-        webTutorat.printScenario("1", "Tutorat de web");
+        webTutorat.printScenario("1", "Situation de base");
+        System.out.println();
         /*
-        Thérèse et Madeleine s'entendent vraiment bien, 
+        Madeleine et Thérèse s'entendent vraiment bien, 
         mais si Lucas et Martin se trouvent dans la même pièce,
         il vaut mieux avoir une bonne assurance.
         */
+        webTutorat.addForcedAssignments("Madeleine Barre", "Thérèse Gay");
+        webTutorat.addForbiddenAssignments("Lucas Bouchet", "Martin Delmas");
+        webTutorat.printScenario("2", "Affectation forcée + affectation interdite");
 
 
         /* */

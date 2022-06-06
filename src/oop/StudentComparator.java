@@ -2,16 +2,18 @@ package oop;
 
 import java.util.Comparator;
 
-public class StudentComparator implements Comparator<Student> {
-    Resource resource;
+import graphs.affectation.Assignment;
 
-    public StudentComparator(Resource resource){
-        this.resource= resource;
+public class StudentComparator implements Comparator<Student> {
+    Assignment tutorat;
+
+    public StudentComparator(Assignment tutorat){
+        this.tutorat= tutorat;
     }
 
     @Override
     public int compare(Student o1, Student o2) {
-       return (int) (100* (o1.getWeight(resource) - o2.getWeight(resource)));
+        return (int) (100* (o1.getWeight(tutorat.getResource()) - o2.getWeight(tutorat.getResource())));
     }
     
 }

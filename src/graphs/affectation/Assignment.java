@@ -47,6 +47,19 @@ public class Assignment {
     private Set<Edge> forcedAssignments;
     private Set<Edge> forbiddenAssignments;
 
+    private Set<Couple> forcedCouples = new HashSet<>();
+    private Set<Couple> forbiddenCouples = new HashSet<>();
+
+    
+
+    public Set<Couple> getForcedCouples() {
+        return forcedCouples;
+    }
+
+    public Set<Couple> getForbiddenCouples() {
+        return forbiddenCouples;
+    }
+
     private double assignmentCost;
 
     private double tutoredGradesAverage;
@@ -172,7 +185,11 @@ public class Assignment {
      * @throws IllegalArgumentException if this duo has already been put in the map.
      */
     public boolean addForcedAssignments(Tutored tutored, Tutor tutor) {
+        this.forcedCouples.add(new Couple(tutored, tutor));
         return this.forcedAssignments.add(new Edge(tutored, tutor));
+    }
+    public boolean addForcedAssignments(String tutored, String tutor) {
+        return addForcedAssignments((Tutored)Tools.getPerson(tutored, this.tutored), (Tutor)Tools.getPerson(tutor, this.tutors));
     }
 
     /**
@@ -184,7 +201,11 @@ public class Assignment {
      * @throws IllegalArgumentException if this duo has already been put in the map.
      */
     public boolean addForbiddenAssignments(Tutored tutored, Tutor tutor) {
+        this.forbiddenCouples.add(new Couple(tutored, tutor));
         return this.forbiddenAssignments.add(new Edge(tutored, tutor));
+    }
+    public boolean addForbiddenAssignments(String tutored, String tutor) {
+        return addForbiddenAssignments((Tutored)Tools.getPerson(tutored, this.tutored), (Tutor)Tools.getPerson(tutor, this.tutors));
     }
 
     /**
@@ -326,16 +347,23 @@ public class Assignment {
         addVertices(graph, duplicateTutor);
         double weight;
         double tutorWeight, tutoredWeight;
+        System.out.println(forcedCouples +" "+forbiddenCouples);
 
         for (Tutored tutoreds : duplicateTutored) {
             for (Tutor tutor : duplicateTutor) {
-                Edge duo = new Edge(tutoreds, tutor);
+                // Edge duo = new Edge(tutoreds, tutor);
 
-                if (this.forcedAssignments.contains(duo)) {
+                // if ( this.forcedAssignments.contains(duo)) {
+                if (Couple.exists(this.forcedCouples, tutoreds, tutor)){
+                    System.out.println("Couple forcé");
                     weight = -1000;
-                } else if (this.forbiddenAssignments.contains(duo)) {
+                } 
+                //else if (this.forbiddenAssignments.contains(duo)){                
+                else if (Couple.exists(this.forbiddenCouples, tutoreds, tutor)){
+                    System.out.println("Couple interdit");
                     weight = 1000;
-                } else {
+                } 
+                else {
                     tutoredWeight = tutoreds.getWeight(resource, tutoredGradesAverage, tutoredAbsenceAverage,
                     teacher.getAverageWeighting(), teacher.getAbsenceWeighting(), teacher.getLevelWeighting());
                     tutorWeight = tutor.getWeight(resource, tutorGradesAverage, tutorAbsenceAverage,
@@ -372,14 +400,14 @@ public class Assignment {
         int diff = tutored.size() - tutor.size();
 
         if (diff > 0 && polyTutor) {
-            tutor = Tools.tutorsSplit(tutor, this.resource, diff);
+            tutor = Tools.tutorsSplit(tutor, this, diff);
         }
 
         diff = tutored.size() - tutor.size();
         if (diff > 0) {
-            waitingList = Tools.waitingListBuilder(tutored, this.resource, diff);
+            waitingList = Tools.waitingListBuilder(tutored, this, diff);
         } else if (diff < 0) {
-            waitingList = Tools.waitingListBuilder(tutor, this.resource, -diff);
+            waitingList = Tools.waitingListBuilder(tutor, this, -diff);
         }
 
         diff = tutored.size() - tutor.size();
@@ -480,4 +508,12 @@ public class Assignment {
     public List<Tutor> getTutors() {
         return List.copyOf(this.tutors);
     }
+
+    public Tutor getTutor(String name){
+        return (Tutor)Tools.getPerson(name, tutors);
+    }
+    public Tutored getTutored(String name){
+        return (Tutored)Tools.getPerson(name, tutored);
+    }
+    
 }
