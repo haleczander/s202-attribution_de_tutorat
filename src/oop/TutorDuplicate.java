@@ -13,7 +13,7 @@ public class TutorDuplicate extends Tutor {
     }
 
     @Override
-    public double getWeight(Resource resource, double gradesAverage, int absencesAverage, double gradesWeight, double absencesWeight, double levelWeight){
+    public double getWeight(Resource resource, double gradesAverage, double absencesAverage, double gradesWeight, double absencesWeight, double levelWeight){
         return super.getWeight(resource, gradesAverage, absencesAverage, gradesWeight, absencesWeight, levelWeight) * TutorDuplicate.weightModifier;
     }
 

@@ -43,15 +43,14 @@ public class ToolsCSV {
         char motivation = csv[4].charAt(0);
         int nbofTutored = Integer.valueOf(csv[5]);
 
-        double r101 = Double.valueOf(csv[6]); //temporaire le temps de changer la construction
-
         Student student;
 
         if (level == 1){
-            student = new Tutored(forename+" "+surname, r101, absences, motivation);
+            student = new Tutored(forename+" "+surname,  absences, motivation);
+
         }
         else {
-            student = new Tutor(forename+" "+surname, r101, level, absences, motivation, nbofTutored);
+            student = new Tutor(forename+" "+surname, level, absences, motivation, nbofTutored);
         }
         Map<Resource, Double> grades = student.getGrades();
 
