@@ -63,7 +63,8 @@ public class Tutor extends Student {
 
     public double getWeight(Resource resource, double gradesAverage, double absencesAverage, double gradesWeight,
             double absencesWeight, double levelWeight) {
-        return ((gradesAverage / this.grades.get(resource)) * gradesWeight
+        double grade = (this.grades.get(resource) == 0) ? 0.1 : this.grades.get(resource);
+        return ((gradesAverage / grade) * gradesWeight
                 + (double) (3.0 / this.level) * levelWeight
                 + Math.sqrt((1 + this.absences) / (1 + absencesAverage)) * absencesWeight)
                 * Tools.motivationValue(this.motivation)

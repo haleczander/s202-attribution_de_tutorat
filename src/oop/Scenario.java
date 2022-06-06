@@ -72,7 +72,7 @@ public class Scenario {
         /*
         Nous sommes prêts à lancer une première affectation !
          */
-        webTutorat.getAssignment();
+        webTutorat.printScenario("1", "Tutorat de web");
         /*
         Thérèse et Madeleine s'entendent vraiment bien, 
         mais si Lucas et Martin se trouvent dans la même pièce,

@@ -34,6 +34,14 @@ public class Assignment {
 
     private boolean polyTutor;
 
+    public Resource getResource() {
+        return resource;
+    }
+
+    public void setResource(Resource resource) {
+        this.resource = resource;
+    }
+
     private List<Student> waitingList;
 
     private Set<Edge> forcedAssignments;
@@ -86,7 +94,6 @@ public class Assignment {
         this(resource);
         this.tutored = tutored;
         this.tutors = tutors;
-        updateAverages();
     }
 
     /**
@@ -98,7 +105,6 @@ public class Assignment {
     public Assignment(Set<Student> students, Resource resource) {
         this(resource);
         addStudent(students);
-        updateAverages();
     }
 
     /**
@@ -247,7 +253,7 @@ public class Assignment {
     public void addStudent(Set<Student> students) {
         for (Student s : students) {
             addStudent(s);
-        }
+        }     
     }
 
     /**
@@ -297,13 +303,8 @@ public class Assignment {
         listArrange(duplicateTutored, duplicateTutor);
 
         GrapheNonOrienteValue<Student> graph = graphSetup(duplicateTutored, duplicateTutor);
-        System.out.println(graph.sommets().size());
-        System.out.println(graph.aretes().size());
-        // System.out.println(graph.);
-        System.out.println(duplicateTutored+"\n"+ duplicateTutor);
-        CalculAffectation<Student> calcul = new CalculAffectation<>(graph, Tools.getStudentList(duplicateTutored),
-                Tools.getStudentList(duplicateTutor));
-        System.out.println("j'attends le cout");
+
+        CalculAffectation<Student> calcul = new CalculAffectation<>(graph, Tools.getStudentList(duplicateTutored), Tools.getStudentList(duplicateTutor));
         this.assignmentCost = calcul.getCout();
 
         return calcul;
@@ -324,25 +325,23 @@ public class Assignment {
         addVertices(graph, duplicateTutored);
         addVertices(graph, duplicateTutor);
         double weight;
+        double tutorWeight, tutoredWeight;
 
         for (Tutored tutoreds : duplicateTutored) {
             for (Tutor tutor : duplicateTutor) {
                 Edge duo = new Edge(tutoreds, tutor);
-
-                // System.out.println("avg " + teacher.getAverageWeighting());
-                // System.out.println("abs " + teacher.getAbsenceWeighting());
-                // System.out.println("lvl " + teacher.getLevelWeighting());
 
                 if (this.forcedAssignments.contains(duo)) {
                     weight = -1000;
                 } else if (this.forbiddenAssignments.contains(duo)) {
                     weight = 1000;
                 } else {
-                    weight = tutoreds.getWeight(resource, tutoredGradesAverage, tutoredAbsenceAverage,
-                            teacher.getAverageWeighting(), teacher.getAbsenceWeighting(), teacher.getLevelWeighting())
-                            + tutor.getWeight(resource, tutorGradesAverage, tutorAbsenceAverage,
-                                    teacher.getAverageWeighting(), teacher.getAbsenceWeighting(),
-                                    teacher.getLevelWeighting());
+                    tutoredWeight = tutoreds.getWeight(resource, tutoredGradesAverage, tutoredAbsenceAverage,
+                    teacher.getAverageWeighting(), teacher.getAbsenceWeighting(), teacher.getLevelWeighting());
+                    tutorWeight = tutor.getWeight(resource, tutorGradesAverage, tutorAbsenceAverage,
+                    teacher.getAverageWeighting(), teacher.getAbsenceWeighting(),
+                    teacher.getLevelWeighting());
+                    weight = tutorWeight + tutoredWeight; 
                 }
                 graph.ajouterArete(tutoreds, tutor, weight);
             }
@@ -418,7 +417,8 @@ public class Assignment {
      * 
      * @return a copy of the assignment.
      */
-    public List<Arete<Student>> getAssignment() {
+    public List<Arete<Student>> getAssignment() {        
+        updateAverages();
         return List.copyOf(this.assignment().getAffectation());
     }
 
