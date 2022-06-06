@@ -137,20 +137,6 @@ public final class Tools {
     }
 
     /**
-     * Calculates the average from all students in a given list.
-     * 
-     * @param list students to get the average from.
-     * @return the average of all students.
-     */
-    public static double computeAverage(List<? extends Student> list) {
-        double sum = 0;
-        for (Student student : list) {
-            sum += student.getAverage();
-        }
-        return sum / list.size();
-    }
-
-    /**
      * Calculates the average of absences from all students in a given list.
      * 
      * @param list students to get the average of absences from.

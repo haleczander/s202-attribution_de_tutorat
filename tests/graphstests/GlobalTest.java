@@ -46,22 +46,25 @@ public class GlobalTest {
     private Teacher teacher;
     private Assignment assignment;
     private static final double DELTA = 0.002;
+    private static final Resource RESOURCE = Resource.R101;
 
     @BeforeEach
     public void initialize() {
-        u1 = new Tutored("Claude", 9.8, 0, 'A');
-        u2 = new Tutored("Madeleine", 6.9, 8, 'A');
-        u3 = new Tutored("Sabine", 12.7, 0, 'C');
-        u4 = new Tutored("Hugues", 0.2, 2, 'B');
-        u5 = new Tutored("Lucas", 17.3, 5, 'C');
-        u6 = new Tutored("Alexandria", 12.5, 0, 'A');
-        u7 = new Tutored("Anouk", 10.5, 1, 'B');
+        double[] uGrades = new double[]{9.8, 6.9, 12.7, 0.2, 17.3, 12.5, 10.5};
+        u1 = new Tutored("Claude", 0, 'A');
+        u2 = new Tutored("Madeleine", 8, 'A');
+        u3 = new Tutored("Sabine", 0, 'C');
+        u4 = new Tutored("Hugues", 2, 'B');
+        u5 = new Tutored("Lucas", 5, 'C');
+        u6 = new Tutored("Alexandria", 0, 'A');
+        u7 = new Tutored("Anouk", 1, 'B');
 
-        t1 = new Tutor("Vincent", 9.3, 2, 0, 'A');
-        t2 = new Tutor("Jacqueline", 13.2, 2, 1, 'B');
-        t3 = new Tutor("Pénélope", 13.2, 2, 3, 'A');
-        t4 = new Tutor("Édouard", 16.2, 3, 0, 'C', 1);
-        t5 = new Tutor("Olivier", 11.3, 3, 2, 'B');
+        double[] tGrades = new double[]{9.3, 13.2, 13.2, 16.2, 11.3};
+        t1 = new Tutor("Vincent", 2, 0, 'A');
+        t2 = new Tutor("Jacqueline", 2, 1, 'B');
+        t3 = new Tutor("Pénélope", 2, 3, 'A');
+        t4 = new Tutor("Édouard", 3, 0, 'C', 1);
+        t5 = new Tutor("Olivier", 3, 2, 'B');
 
         teacher = new Teacher("name", Resource.R106);
         teacher.setAbsenceWeighting(1);
@@ -70,9 +73,17 @@ public class GlobalTest {
 
         List<Tutored> tutoredList = new ArrayList<>();
         tutoredList.addAll(List.of(u1, u2, u3, u4, u5, u6, u7));
+        for (int i = 0; i < tutoredList.size(); i++) {
+            tutoredList.get(i).addGrade(RESOURCE, uGrades[i]);
+        }
+
         List<Tutor> tutorList = new ArrayList<>();
         tutorList.addAll(List.of(t1, t2, t3, t4, t5));
-        assignment = new Assignment(tutoredList, tutorList);
+        for (int i = 0; i < tutorList.size(); i++) {
+            tutorList.get(i).addGrade(RESOURCE, tGrades[i]);
+        }
+
+        assignment = new Assignment(tutoredList, tutorList, RESOURCE);
         assignment.setTeacher(teacher);
     }
 
@@ -83,10 +94,12 @@ public class GlobalTest {
         List<Arete<Student>> edges = assignment.getAssignment();
         List<Student> waitingList = assignment.getWaitingList();
          
+        System.out.println(assignment.getTextAssignment());
+        System.out.println(waitingList);
 
-        assertEquals(edges.size(), 5);
-        assertEquals(waitingList.size(), 2);
-        assertEquals(assignment.getCost(), 9.242, DELTA);
+        assertEquals(5, edges.size());
+        assertEquals(2, waitingList.size());
+        assertEquals(9.242, assignment.getCost(), DELTA);
     }
 
     @Test
