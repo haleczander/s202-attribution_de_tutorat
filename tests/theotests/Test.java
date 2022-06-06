@@ -1,10 +1,11 @@
+package theotests;
+
 /**
  * Test Class
  * 
  * @author Franos T.
  * 
  */
-
 public class Test {
     public static void main(String[] args) {
        

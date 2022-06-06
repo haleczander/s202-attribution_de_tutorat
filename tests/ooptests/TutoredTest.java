@@ -1,4 +1,4 @@
-package graphstests;
+package ooptests;
 
 public class TutoredTest {
     

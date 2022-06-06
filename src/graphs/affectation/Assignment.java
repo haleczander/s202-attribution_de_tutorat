@@ -47,17 +47,24 @@ public class Assignment {
     private double tutoredAbsenceAverage;
     private double tutorAbsenceAverage;
 
-    private static double maxWeighting = 5;
-
     private Teacher teacher;
 
-    private Assignment(Resource resource) {
+    private static double maxWeighting = 5;
+
+    public Assignment(Resource resource) {
+        this.resource = resource;
+
+        this.tutored = new ArrayList<>();
+        this.tutors = new ArrayList<>();
+
         this.polyTutor = true;
+
+        this.waitingList = new ArrayList<>();
+
         this.forcedAssignments = new HashSet<>();
         this.forbiddenAssignments = new HashSet<>();
-        this.waitingList = new ArrayList<>();
+
         this.assignmentCost = 0;
-        this.teacher = null;
 
         this.tutoredGradesAverage = 0;
         this.tutorGradesAverage = 0;
@@ -65,7 +72,7 @@ public class Assignment {
         this.tutoredAbsenceAverage = 0;
         this.tutorAbsenceAverage = 0;
 
-        this.resource = resource;
+        this.teacher = null;
     }
 
     /**
@@ -317,10 +324,12 @@ public class Assignment {
         double weight;
 
         for (Tutored tutoreds : duplicateTutored) {
-            System.out.println(tutoreds.getName());
-            System.out.println(tutoreds.getWeight(resource, tutoredGradesAverage, tutoredAbsenceAverage, teacher.getAverageWeighting(), teacher.getAbsenceWeighting(), teacher.getLevelWeighting()));
             for (Tutor tutor : duplicateTutor) {
                 Edge duo = new Edge(tutoreds, tutor);
+
+                System.out.println("avg " + teacher.getAverageWeighting());
+                System.out.println("abs " + teacher.getAbsenceWeighting());
+                System.out.println("lvl " + teacher.getLevelWeighting());
 
                 if (this.forcedAssignments.contains(duo)) {
                     weight = -1000;
@@ -465,5 +474,13 @@ public class Assignment {
 
     public static void setMaxWeighting(double maxWeighting) {
         maxWeighting = maxWeighting;
+    }
+
+    public List<Tutored> getTutored() {
+        return List.copyOf(this.tutored);
+    }
+
+    public List<Tutor> getTutors() {
+        return List.copyOf(this.tutors);
     }
 }

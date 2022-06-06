@@ -7,7 +7,7 @@ public abstract class Person {
      * A Person is either a Student or a Teacher
      */
     private boolean isStudent;
-    protected static boolean shortName = false;
+    protected static boolean shortName = true;
 
     /**
      * Constructs a Person from a forename and a surname.

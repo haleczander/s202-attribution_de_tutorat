@@ -5,7 +5,7 @@ public class TutorDuplicate extends Tutor {
     private static char tutorDuplicateIdentifier = 'D';
 
     private TutorDuplicate(String name, int level, int absences, char motivation) {
-        super(name + "("+TutorDuplicate.tutorDuplicateIdentifier+")", level, absences, motivation, 1);
+        super(name + "(" + TutorDuplicate.tutorDuplicateIdentifier + ")", level, absences, motivation, 1);
     }
 
     public TutorDuplicate(Tutor t) {
@@ -13,8 +13,10 @@ public class TutorDuplicate extends Tutor {
     }
 
     @Override
-    public double getWeight(Resource resource, double gradesAverage, double absencesAverage, double gradesWeight, double absencesWeight, double levelWeight){
-        return super.getWeight(resource, gradesAverage, absencesAverage, gradesWeight, absencesWeight, levelWeight) * TutorDuplicate.weightModifier;
+    public double getWeight(Resource resource, double gradesAverage, double absencesAverage, double gradesWeight,
+            double absencesWeight, double levelWeight) {
+        return super.getWeight(resource, gradesAverage, absencesAverage, gradesWeight, absencesWeight, levelWeight)
+                * TutorDuplicate.weightModifier;
     }
 
     @Override
@@ -38,5 +40,4 @@ public class TutorDuplicate extends Tutor {
         TutorDuplicate.tutorDuplicateIdentifier = tutorDuplicateIdentifier;
     }
 
-    
 }

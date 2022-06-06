@@ -88,7 +88,9 @@ public class Tutor extends Student {
      */
     public TutorDuplicate duplicate() {
         if (this.nbofTutored > 1) {
-            return new TutorDuplicate(this);
+            TutorDuplicate duplicate = new TutorDuplicate(this);
+            duplicate.getGrades().putAll(this.grades);
+            return duplicate;
         }
         return null;
     }
