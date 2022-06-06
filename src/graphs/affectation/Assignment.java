@@ -297,10 +297,13 @@ public class Assignment {
         listArrange(duplicateTutored, duplicateTutor);
 
         GrapheNonOrienteValue<Student> graph = graphSetup(duplicateTutored, duplicateTutor);
-
+        System.out.println(graph.sommets().size());
+        System.out.println(graph.aretes().size());
+        // System.out.println(graph.);
+        System.out.println(duplicateTutored+"\n"+ duplicateTutor);
         CalculAffectation<Student> calcul = new CalculAffectation<>(graph, Tools.getStudentList(duplicateTutored),
                 Tools.getStudentList(duplicateTutor));
-
+        System.out.println("j'attends le cout");
         this.assignmentCost = calcul.getCout();
 
         return calcul;
@@ -320,16 +323,15 @@ public class Assignment {
 
         addVertices(graph, duplicateTutored);
         addVertices(graph, duplicateTutor);
-
         double weight;
 
         for (Tutored tutoreds : duplicateTutored) {
             for (Tutor tutor : duplicateTutor) {
                 Edge duo = new Edge(tutoreds, tutor);
 
-                System.out.println("avg " + teacher.getAverageWeighting());
-                System.out.println("abs " + teacher.getAbsenceWeighting());
-                System.out.println("lvl " + teacher.getLevelWeighting());
+                // System.out.println("avg " + teacher.getAverageWeighting());
+                // System.out.println("abs " + teacher.getAbsenceWeighting());
+                // System.out.println("lvl " + teacher.getLevelWeighting());
 
                 if (this.forcedAssignments.contains(duo)) {
                     weight = -1000;
@@ -456,7 +458,7 @@ public class Assignment {
 
     @Override
     public String toString() {
-        return "[Tuteurs: " + this.tutors.size() + ", Tutorés: " + this.tutored.size() + ", Attente: "
+        return "Tutorat [Matière: "+ this.resource.getName() +", Enseignant: "+ this.teacher +", Tuteurs: " + this.tutors.size() + ", Tutorés: " + this.tutored.size() + ", Attente: "
                 + this.waitingList.size() + "]";
     }
 
@@ -473,7 +475,7 @@ public class Assignment {
     }
 
     public static void setMaxWeighting(double maxWeighting) {
-        maxWeighting = maxWeighting;
+        Assignment.maxWeighting = maxWeighting;
     }
 
     public List<Tutored> getTutored() {

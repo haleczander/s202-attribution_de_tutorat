@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import graphs.affectation.Assignment;
+
 public class Scenario {
     static List<Departement> IUT = new ArrayList<>();
     public static void main(String[] args) {
@@ -14,16 +16,76 @@ public class Scenario {
         Cette note est le critère d'éligibilité au tutorat pour cette matière
         Chaque tutorat dispose d'un professeur référent
         */
-       
-        /*
-        Scenario 1:
-            Situation par défaut, aucun tutorat pour la matière n'existe
-            Nous ne disposons que de la liste des élèves et celle des enseignants
-        */
         
-        scenario1();
-        scenario2();
-        scenario3();
+        bienvenueALIUT();
+    }
+
+    static void bienvenueALIUT(){
+        /*
+        Bienvenue à l'IUT, 
+        Cette année nous ne nous intéressons qu'au département informatique !
+        */
+        Departement dptInfo = new Departement("Informatique");
+        IUT.add(dptInfo);
+
+
+        /*        
+        La liste des étudiants ne contient que 57 inscrits, 
+        apparemment Parcoursup a encore causé des ennuis...
+        */
+        dptInfo.addStudent(ToolsCSV.importStudents());
+        System.out.println("Inscription des " + dptInfo.getNbOfStudents() +" étudiants");        
+        // System.out.println(dptInfo.getStudents().toString());
+
+        /*
+        Monsieur Carle se propose d'organiser du tutorat le samedi matin
+        pour celles et ceux en difficulté en R102.
+        */
+        Teacher jeanCarle = new Teacher("Jean carle", Resource.R102);
+        dptInfo.add(jeanCarle);
+        System.out.println("Il y a désormais " + dptInfo.getNbOfteachers() + " enseignant dans le département informatique !");
+        System.out.println(dptInfo.getTeachers());
+        System.err.println();
+
+        Resource web = Resource.R102;
+        dptInfo.addTutoring(web, jeanCarle);
+        Assignment webTutorat = dptInfo.getTutoring(web);
+        System.out.println("Le premier tutorat a été créé !");
+        System.out.println(webTutorat);
+        System.out.println();
+
+        /*
+        Il faut maintenant inscrire les étudiants éligibles à ce tutorat,
+        Tuteurs comme Tutorés.
+         */
+        dptInfo.registerStudents(web);
+        System.out.println("Inscription des étudiants au tutorat de web !");
+        System.out.println(webTutorat);
+        System.out.println();
+        System.out.println("Voici les tutorés : ");
+        System.out.println(webTutorat.getTutored());
+        System.out.println();
+        System.out.println("Et voici les tuteurs : ");
+        System.out.println(webTutorat.getTutors());
+        System.out.println();
+
+        /*
+        Nous sommes prêts à lancer une première affectation !
+         */
+        webTutorat.getAssignment();
+        /*
+        Thérèse et Madeleine s'entendent vraiment bien, 
+        mais si Lucas et Martin se trouvent dans la même pièce,
+        il vaut mieux avoir une bonne assurance.
+        */
+
+
+        /* */
+
+
+
+
+
     }
 
     static void scenario1(){

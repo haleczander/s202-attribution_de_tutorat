@@ -24,6 +24,10 @@ public class Departement {
         this.teachers = teachers;
     }
 
+    public Assignment getTutoring(Resource resource){
+        return tutorings.get(resource);
+    }
+
     public boolean addStudent(Student student) {
         return this.students.add(student);
     }
@@ -50,6 +54,9 @@ public class Departement {
 
     public void addTutoring(Resource resource) {
         tutorings.put(resource, new Assignment(resource));
+    }
+    public void addTutoring(Resource resource, Teacher teacher) {
+        tutorings.put(resource, new Assignment(teacher, resource));
     }
 
     public void registerStudents(Resource resource) {

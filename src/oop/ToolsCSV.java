@@ -4,21 +4,19 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 public class ToolsCSV {
-    static String path = "lib" + File.separator + "data" + File.separator;
+    static String path = "res" + File.separator + "data" + File.separator;
     
     public static Set<Student> importStudents(){
         Set<Student> students = new HashSet<>();
-
         try(BufferedReader br = new BufferedReader(new FileReader(new File(path+"students.csv")))){
             while(br.ready()){
-                students.add(newStudent(br.readLine().split(";")));
+                students.add(newStudent( br.readLine().split(";", 13)));
             }
         }
-        catch(Exception e){}
+        catch(Exception e){System.err.println("Souci a l'import des étudiants");}
         return students;
     }
 
@@ -41,23 +39,20 @@ public class ToolsCSV {
         int level = Integer.valueOf(csv[2]);
         int absences = Integer.valueOf(csv[3]);
         char motivation = csv[4].charAt(0);
-        int nbofTutored = Integer.valueOf(csv[5]);
+        int nbofTutored = (!csv[5].equals("")) ? Integer.valueOf(csv[5]) : 0;
 
         Student student;
-
         if (level == 1){
             student = new Tutored(forename+" "+surname,  absences, motivation);
-
         }
         else {
             student = new Tutor(forename+" "+surname, level, absences, motivation, nbofTutored);
         }
-        Map<Resource, Double> grades = student.getGrades();
 
         Resource[] resources = Resource.values();
         for (int i = 0; i < resources.length; i++) {
             if (csv[6+i].length()>0) {
-                grades.put(resources[i], Double.valueOf(csv[6+i]));
+                student.addGrade(resources[i], Double.valueOf(csv[6+i]));
             }
         }
 

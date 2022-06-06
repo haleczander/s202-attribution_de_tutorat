@@ -41,7 +41,7 @@ public final class EnrichData {
                         bw.append(";");
                     }
                 }
-                bw.append("\n");
+                bw.append("\r\n");
             }
         } catch (Exception e) {
             System.err.println("pocontent : " + e.getMessage());
