@@ -33,6 +33,7 @@ public final class Scenario {
         ilFautAiderCeuxEnDifficulte();
         mrCarleAimeLImplication();
         unEtudiantManqueDeRespect();
+        finDAnnee();
         
     }
 
@@ -145,6 +146,13 @@ public final class Scenario {
         System.out.println();
         System.out.println("Relançons une affectation !\n");
         currentTutoring.scenarioToString("" + cas++, "Il faut respecter les enseignants !");
+    }
+
+    static void finDAnnee(){
+        System.out.println();
+        System.out.println("C'est super, grâce au dévoument de Mr Carle,\nTous le monde a eu une super note au CTP de Web!");
+        System.out.println();
+        System.out.println("Fin du scénario, merci de l'avoir éxécuté!");
     }
 
 }
