@@ -53,6 +53,7 @@ public class DepartmentTest {
 		assertTrue(departement.addStudent(u1));
 		assertTrue(departement.addStudent(u2));
 		assertTrue(departement.addStudent(u3));
+		assertEquals(3, departement.getStudents().size());
 
 		assertFalse(departement.addStudent(u1));
 		assertFalse(departement.addStudent(u2));
@@ -61,6 +62,7 @@ public class DepartmentTest {
 		assertTrue(departement.addStudent(t1));
 		assertTrue(departement.addStudent(t2));
 		assertTrue(departement.addStudent(t3));
+		assertEquals(6, departement.getStudents().size());
 
 		assertFalse(departement.addStudent(t1));
 		assertFalse(departement.addStudent(t2));
@@ -71,9 +73,18 @@ public class DepartmentTest {
 	void addStudent2Test() {
 		assertTrue(departement.addStudent(List.of(u1, u2)));
 		assertTrue(departement.addStudent(List.of(u3)));
+		assertEquals(3, departement.getStudents().size());
 
 		assertFalse(departement.addStudent(List.of(u1)));
 		assertFalse(departement.addStudent(List.of(u1, u2, u3)));
+
+		assertTrue(departement.addStudent(List.of(t1)));
+		assertTrue(departement.addStudent(List.of(t3)));
+		assertEquals(5, departement.getStudents().size());
+
+		assertFalse(departement.addStudent(List.of(t1)));
+		assertTrue(departement.addStudent(List.of(t1, t2)));
+		assertEquals(6, departement.getStudents().size());
 	}
 
 	@Test
@@ -81,19 +92,26 @@ public class DepartmentTest {
 		assertTrue(departement.addTeacher(teacher1));
 		assertTrue(departement.addTeacher(teacher2));
 		assertTrue(departement.addTeacher(teacher3));
+		assertTrue(departement.addTeacher(teacher4));
+		assertEquals(4, departement.getTeachers().size());
 
 		assertFalse(departement.addTeacher(teacher1));
 		assertFalse(departement.addTeacher(teacher2));
 		assertFalse(departement.addTeacher(teacher3));
+		assertFalse(departement.addTeacher(teacher4));
 	}
 
 	@Test
 	void addTeacher2Test() {
 		assertTrue(departement.addTeacher(List.of(teacher1, teacher2)));
 		assertTrue(departement.addTeacher(List.of(teacher3)));
+		assertEquals(3, departement.getTeachers().size());
 
 		assertFalse(departement.addTeacher(List.of(teacher1)));
+		assertFalse(departement.addTeacher(List.of(teacher1, teacher2, teacher3)));
+
 		assertTrue(departement.addTeacher(List.of(teacher1, teacher4, teacher5)));
+		assertEquals(5, departement.getTeachers().size());
 		assertFalse(departement.addTeacher(List.of(teacher1, teacher2, teacher3, teacher4, teacher5)));
 	}
 
@@ -103,6 +121,7 @@ public class DepartmentTest {
 		assertTrue(departement.add(u2));
 		assertTrue(departement.add(u3));
 
+		assertEquals(3, departement.getStudents().size());
 		assertTrue(departement.getStudents().contains(u1));
 		assertTrue(departement.getStudents().contains(u2));
 		assertTrue(departement.getStudents().contains(u3));
@@ -110,6 +129,7 @@ public class DepartmentTest {
 		assertTrue(departement.add(teacher1));
 		assertTrue(departement.add(teacher2));
 
+		assertEquals(2, departement.getTeachers().size());
 		assertTrue(departement.getTeachers().contains(teacher1));
 		assertTrue(departement.getTeachers().contains(teacher2));
 		assertFalse(departement.getTeachers().contains(teacher3));
@@ -117,6 +137,7 @@ public class DepartmentTest {
 		assertTrue(departement.add(t1));
 		assertTrue(departement.add(t2));
 
+		assertEquals(5, departement.getStudents().size());
 		assertTrue(departement.getStudents().contains(t1));
 		assertTrue(departement.getStudents().contains(t2));
 		assertFalse(departement.getStudents().contains(t3));
@@ -127,6 +148,7 @@ public class DepartmentTest {
 		departement.newTutoring(Resource.R101);
 		departement.newTutoring(Resource.R104);
 
+		assertEquals(2, departement.getTutorings().size());
 		assertTrue(departement.getTutorings().containsKey(Resource.R101));
 		assertTrue(departement.getTutorings().containsKey(Resource.R104));
 		assertFalse(departement.getTutorings().containsKey(Resource.R103));

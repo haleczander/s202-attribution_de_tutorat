@@ -289,8 +289,8 @@ public class Tutorat {
 
         GrapheNonOrienteValue<Student> graph = Graphs.getGraph(tutoredCopy, tutorCopy, this);
 
-        this.calculAffectation = new CalculAffectation<>(graph, new ArrayList<Student>(tutoredCopy),
-                new ArrayList<Student>(tutorCopy));
+        this.calculAffectation = new CalculAffectation<>(graph, new ArrayList<>(tutoredCopy),
+                new ArrayList<>(tutorCopy));
     }
 
     /**
