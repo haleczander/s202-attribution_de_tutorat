@@ -1,6 +1,7 @@
 package oop;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -21,9 +22,11 @@ public class Teacher extends Person {
      * @param name teacher's name.
      * @param resources resources the teacher teaches.
      */
-    public Teacher(String name, List<Resource> resources) {
+    public Teacher(String name, Collection<Resource> resources) {
         super(name, false);
-        this.resources = resources;
+        this.resources = new ArrayList<>();
+        this.resources.addAll(resources);
+
         this.weightings.put(Coefficient.GRADES, Teacher.defaultWeighting);
         this.weightings.put(Coefficient.ABSENCES, Teacher.defaultWeighting);
         this.weightings.put(Coefficient.LEVEL, Teacher.defaultWeighting);

@@ -39,10 +39,8 @@ public class TeacherTest {
         assertFalse(t1.getResources().isEmpty());
         assertEquals(Resource.R105, t1.getResources().get(0));
 
-        // assertTrue(t4.addResource(Resource.R104));
-        // assertEquals(3, t4.getResources().size());
-        // ici ça marche pas je comprends pas pourquoi
-        // TODO : régler le pb.
+        assertTrue(t4.addResource(Resource.R104));
+        assertEquals(3, t4.getResources().size());
     }
 
     @Test

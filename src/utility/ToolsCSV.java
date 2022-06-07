@@ -23,7 +23,7 @@ public final class ToolsCSV {
 
     public static Set<Student> importStudents() {
         Set<Student> students = new HashSet<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(new File(path + "students.csv")))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(new File(path + "studentsScenario.csv")))) {
             while (br.ready()) {
                 students.add(newStudent(br.readLine().split(";", 13)));
             }
