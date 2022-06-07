@@ -11,43 +11,47 @@ import oop.Teacher;
 import oop.Tutor;
 import oop.Tutored;
 
-public class PersonTest {    
+public class PersonTest {
     static Person p1 = new Tutored("Antoine", 0, 'A');
     static Person p2 = new Tutored("Jean Carle", 1, 'B');
-    static Person p3 = new Tutor("Delphine", 2,3 , 'C');
+    static Person p3 = new Tutor("Delphine", 2, 3, 'C');
     static Person p4 = new Tutor("Patricia Everaere", 3, 0, 'A');
     static Person p5 = new Teacher("Corwyn Fèvre");
     static Person p6 = new Teacher("Iovka");
-    static Person p7 = ((Tutor)p4).duplicate();
-    
-    static Person[] persons = new Person[] {p1, p2, p3, p4, p5, p6, p7};
+    static Person p7 = ((Tutor) p4).duplicate();
 
+    static Person[] persons = new Person[] { p1, p2, p3, p4, p5, p6, p7 };
 
-    @Test void forenameTest(){
-        String[] forenames = new String[] {"Antoine", "Jean", "Delphine", "Patricia", "Corwyn", "Iovka", "Patricia"};
+    @Test
+    void forenameTest() {
+        String[] forenames = new String[] { "Antoine", "Jean", "Delphine", "Patricia", "Corwyn", "Iovka", "Patricia" };
 
-        for (int i = 0 ; i < PersonTest.persons.length ; i++) {
+        for (int i = 0; i < PersonTest.persons.length; i++) {
             assertEquals(forenames[i], PersonTest.persons[i].getForename());
         }
     }
 
-    @Test void surnameTest(){
-        String[] surnames = new String[] {null, "Carle", null, "Everaere", "Fèvre", null, "Everaere(D)"};
+    @Test
+    void surnameTest() {
+        String[] surnames = new String[] { null, "Carle", null, "Everaere", "Fèvre", null, "Everaere(D)" };
 
-        for (int i = 0 ; i < PersonTest.persons.length ; i++) {
+        for (int i = 0; i < PersonTest.persons.length; i++) {
             assertEquals(surnames[i], PersonTest.persons[i].getSurname());
         }
     }
 
-    @Test void nameTest(){
-        String[] names = new String[] {"Antoine", "Jean Carle", "Delphine", "Patricia Everaere", "Corwyn Fèvre", "Iovka", "Patricia Everaere(D)"};
+    @Test
+    void nameTest() {
+        String[] names = new String[] { "Antoine", "Jean Carle", "Delphine", "Patricia Everaere", "Corwyn Fèvre",
+                "Iovka", "Patricia Everaere(D)" };
 
-        for (int i = 0 ; i < PersonTest.persons.length ; i++) {
+        for (int i = 0; i < PersonTest.persons.length; i++) {
             assertEquals(names[i], PersonTest.persons[i].getName());
         }
     }
 
-    @Test void isStudentTest(){
+    @Test
+    void isStudentTest() {
         assertTrue(p1.isStudent());
         assertTrue(p2.isStudent());
         assertTrue(p3.isStudent());
@@ -57,21 +61,27 @@ public class PersonTest {
         assertTrue(p7.isStudent());
     }
 
-    @Test void toStringTest(){
+    @Test
+    void toStringTest() {
         Person.setShortName(false);
 
         assertEquals("Tutored [Antoine, level= 1, absences= 0, notes= {}, motivation= A]", p1.toString());
         assertEquals("Tutored [Jean Carle, level= 1, absences= 1, notes= {}, motivation= B]", p2.toString());
-        assertEquals("Tutor [Delphine, level= 2, absences= 3, notes= {}, motivation= C, nbOfTutored= 1]", p3.toString());
-        assertEquals("Tutor [Patricia Everaere, level= 3, absences= 0, notes= {}, motivation= A, nbOfTutored= 2]", p4.toString());
+        assertEquals("Tutor [Delphine, level= 2, absences= 3, notes= {}, motivation= C, nbOfTutored= 1]",
+                p3.toString());
+        assertEquals("Tutor [Patricia Everaere, level= 3, absences= 0, notes= {}, motivation= A, nbOfTutored= 2]",
+                p4.toString());
         assertEquals("Teacher [Corwyn Fèvre, matières= []]", p5.toString());
         assertEquals("Teacher [Iovka, matières= []]", p6.toString());
-        assertEquals("TutorDuplicate [Patricia Everaere(D), level= 3, absences= 0, notes= {}, motivation= A, nbOfTutored= 1]", p7.toString());
+        assertEquals(
+                "TutorDuplicate [Patricia Everaere(D), level= 3, absences= 0, notes= {}, motivation= A, nbOfTutored= 1]",
+                p7.toString());
     }
 
-    @Test void shortToStringTest(){
+    @Test
+    void shortToStringTest() {
         Person.setShortName(true);
-        
+
         assertEquals("Antoine", p1.toString());
         assertEquals("Jean Carle", p2.toString());
         assertEquals("Delphine", p3.toString());

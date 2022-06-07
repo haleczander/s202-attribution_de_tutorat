@@ -203,14 +203,14 @@ public class DepartmentTest {
 		departement.newTutoring(Resource.R102);
 
 		assertEquals(
-				"Departement [Département Informatique, tutorings={R101: Initiation au développement=[Tuteurs: 0, Tutorés: 0, Attente: 0], R102: Développement d'interfaces web=[Tuteurs: 0, Tutorés: 0, Attente: 0]}]",
+				"Departement [Département Informatique, tutorings={R101: Initiation au développement=Tutorat [Matière: R101, Enseignant: null, Tuteurs: 0, Tutorés: 0, Attente: 0], R102: Développement d'interfaces web=Tutorat [Matière: R102, Enseignant: null, Tuteurs: 0, Tutorés: 0, Attente: 0]}]",
 				departement.toString());
 
 		departement.newTutoring(Resource.R103);
 		departement.registerStudent(Resource.R103);
 
 		assertEquals(
-				"Departement [Département Informatique, tutorings={R101: Initiation au développement=[Tuteurs: 0, Tutorés: 0, Attente: 0], R102: Développement d'interfaces web=[Tuteurs: 0, Tutorés: 0, Attente: 0], R103: Introduction à l'architecture des ordinateurs=[Tuteurs: 0, Tutorés: 0, Attente: 0]}]",
+				"Departement [Département Informatique, tutorings={R101: Initiation au développement=Tutorat [Matière: R101, Enseignant: null, Tuteurs: 0, Tutorés: 0, Attente: 0], R102: Développement d'interfaces web=Tutorat [Matière: R102, Enseignant: null, Tuteurs: 0, Tutorés: 0, Attente: 0], R103: Introduction à l'architecture des ordinateurs=Tutorat [Matière: R103, Enseignant: null, Tuteurs: 0, Tutorés: 0, Attente: 0]}]",
 				departement.toString());
 	}
 }
