@@ -8,7 +8,7 @@ import java.util.Map;
 import graphs.affectation.Tutorat;
 
 public class Teacher extends Person {
-    private List<Resource> resources;
+    private List<Resource> resources = new ArrayList<>();
 
     private static double defaultWeighting = 1;
 

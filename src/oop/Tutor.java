@@ -78,9 +78,10 @@ public class Tutor extends Student {
         if (Person.shortName) {
             return super.toString();
         } else {
-            return super.toString().substring(0, super.toString().length() - 1) + ", nbOfTutored= "+this.nbofTutored+"]";
+            return super.toString().substring(0, super.toString().length() - 1) + ", nbOfTutored= " + this.nbofTutored
+                    + "]";
         }
-    } 
+    }
 
     @Override
     public int hashCode() {
@@ -94,31 +95,36 @@ public class Tutor extends Student {
     public boolean equals(Object obj) {
         return super.equals(obj);
     }
-    
+
     // ------------------------
-    // Inherited methods to define 
+    // Inherited methods to define
     // ------------------------
+    @Override
     public double getWeight(Resource resource, double gradesAverage, double absencesAverage, double gradesWeight,
             double absencesWeight, double levelWeight) {
         double grade = (this.grades.get(resource) == 0) ? 0.1 : this.grades.get(resource);
         return ((gradesAverage / grade) * gradesWeight
-                + (double) (3.0 / this.level) * levelWeight
+                + (3.0 / this.level) * levelWeight
                 + Math.sqrt((1 + this.absences) / (1 + absencesAverage)) * absencesWeight)
                 * Tools.motivationValue(this.motivation)
                 / 3; // Le tout divisé par le nombre de paramètres pour rester autour de 1
     }
-    public double getWeight(Tutorat tutorat){
-        return getWeight(tutorat.getResource(), tutorat.getTutorGradesAverage(), tutorat.getTutorAbsenceAverage(), tutorat.getTeacher().getAverageWeighting(), tutorat.getTeacher().getAbsenceWeighting(), tutorat.getTeacher().getLevelWeighting());
+
+    @Override
+    public double getWeight(Tutorat tutorat) {
+        return getWeight(tutorat.getResource(), tutorat.getTutorGradesAverage(), tutorat.getTutorAbsenceAverage(),
+                tutorat.getTeacher().getAverageWeighting(), tutorat.getTeacher().getAbsenceWeighting(),
+                tutorat.getTeacher().getLevelWeighting());
     }
 
     // ------------------------
-    // Attribute getters & setters 
-    // ------------------------    
+    // Attribute getters & setters
+    // ------------------------
     public int getNbofTutored() {
         return nbofTutored;
     }
 
-    public void setNbOfTutored(int nbOfTutored){
+    public void setNbOfTutored(int nbOfTutored) {
         setNbOfTutored(this.level, nbOfTutored);
     }
 
@@ -161,5 +167,4 @@ public class Tutor extends Student {
         Tutor.defaultNbOfTutoredThirdLevel = defaultNbOfTutoredThirdLevel;
     }
 
-    
 }
