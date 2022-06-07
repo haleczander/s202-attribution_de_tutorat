@@ -14,23 +14,23 @@ import oop.Tutored;
 
 public class CoupleTest {
     Couple c1, c2, c3;
-	Tutored u1, u2, u3;
-	Tutor t1, t2, t3;
+    Tutored u1, u2, u3;
+    Tutor t1, t2, t3;
 
-	@BeforeEach
-	public void initialize() {  
-		u1 = new Tutored("Anémone", 2, 'B');
-		u2 = new Tutored("Béthanie", 3, 'A');
-		u3 = new Tutored("Christian", 6, 'C');
+    @BeforeEach
+    public void initialize() {
+        u1 = new Tutored("Anémone", 2, 'B');
+        u2 = new Tutored("Béthanie", 3, 'A');
+        u3 = new Tutored("Christian", 6, 'C');
 
-		t1 = new Tutor("Adrien", 3, 2, 'A');
-		t2 = new Tutor("Bill", 2, 7, 'A');
-		t3 = new Tutor("Céline", 3, 0, 'C');
+        t1 = new Tutor("Adrien", 3, 2, 'A');
+        t2 = new Tutor("Bill", 2, 7, 'A');
+        t3 = new Tutor("Céline", 3, 0, 'C');
 
         c1 = new Couple(u1, t2);
         c2 = new Couple(u3, t1);
         c3 = new Couple(u2, t1);
-	}
+    }
 
     @Test
     public void containsTest() {
@@ -46,6 +46,7 @@ public class CoupleTest {
         assertFalse(c1.contains(u3));
         assertFalse(c1.contains(t1));
         assertFalse(c2.contains(t3));
+        assertFalse(c3.contains(t2));
     }
 
     @Test

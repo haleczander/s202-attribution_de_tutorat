@@ -37,13 +37,19 @@ public abstract class Student extends Person {
         setMotivation(motivation);
     }
 
-
     // ------------------------
     // Class methods
     // ------------------------
     public void addGrade(Resource resource, double grade) {
-        this.grades.put(resource, grade);
+        if (grade < 0) {
+            this.grades.put(resource, 0.0);
+        } else if (grade > 20) {
+            this.grades.put(resource, 20.0);
+        } else {
+            this.grades.put(resource, grade);
+        }
     }
+
     public void addGrade(String resource, double grade) {
         addGrade(Resource.valueOf(resource), grade);
     }
@@ -52,8 +58,11 @@ public abstract class Student extends Person {
         return this.getWeight(resource, Student.defaultGrade, Student.defaultAbsences, Teacher.getDefaultWeighting(),
                 Teacher.getDefaultWeighting(), Teacher.getDefaultWeighting());
     }
+
     public abstract double getWeight(Tutorat tutorat);
-    public abstract double getWeight(Resource resource, double gradesAverage, double absencesAverage, double gradesWeight,
+
+    public abstract double getWeight(Resource resource, double gradesAverage, double absencesAverage,
+            double gradesWeight,
             double absencesWeight, double levelWeight);
 
     @Override
@@ -94,7 +103,7 @@ public abstract class Student extends Person {
     }
 
     // ------------------------
-    // Attribute getters & setters 
+    // Attribute getters & setters
     // ------------------------
     protected void setLevel(int level) {
         if (level < 1 || level > 3) {
@@ -141,7 +150,7 @@ public abstract class Student extends Person {
         return this.grades.get(resource);
     }
 
-    public void setGrade(Resource resource, double grade){
+    public void setGrade(Resource resource, double grade) {
         this.grades.replace(resource, grade);
     }
 

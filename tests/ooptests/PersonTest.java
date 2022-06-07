@@ -12,22 +12,22 @@ import oop.Tutor;
 import oop.Tutored;
 
 public class PersonTest {
-    static Person p1 = new Tutored("Antoine", 0, 'A');
-    static Person p2 = new Tutored("Jean Carle", 1, 'B');
-    static Person p3 = new Tutor("Delphine", 2, 3, 'C');
-    static Person p4 = new Tutor("Patricia Everaere", 3, 0, 'A');
-    static Person p5 = new Teacher("Corwyn Fèvre");
-    static Person p6 = new Teacher("Iovka");
-    static Person p7 = ((Tutor) p4).duplicate();
+    Person p1 = new Tutored("Antoine", 0, 'A');
+    Person p2 = new Tutored("Jean Carle", 1, 'B');
+    Person p3 = new Tutor("Delphine", 2, 3, 'C');
+    Person p4 = new Tutor("Patricia Everaere", 3, 0, 'A');
+    Person p5 = new Teacher("Corwyn Fèvre");
+    Person p6 = new Teacher("Iovka");
+    Person p7 = ((Tutor) p4).duplicate();
 
-    static Person[] persons = new Person[] { p1, p2, p3, p4, p5, p6, p7 };
+    Person[] persons = new Person[] { p1, p2, p3, p4, p5, p6, p7 };
 
     @Test
     void forenameTest() {
         String[] forenames = new String[] { "Antoine", "Jean", "Delphine", "Patricia", "Corwyn", "Iovka", "Patricia" };
 
-        for (int i = 0; i < PersonTest.persons.length; i++) {
-            assertEquals(forenames[i], PersonTest.persons[i].getForename());
+        for (int i = 0; i < persons.length; i++) {
+            assertEquals(forenames[i], persons[i].getForename());
         }
     }
 
@@ -35,8 +35,8 @@ public class PersonTest {
     void surnameTest() {
         String[] surnames = new String[] { null, "Carle", null, "Everaere", "Fèvre", null, "Everaere(D)" };
 
-        for (int i = 0; i < PersonTest.persons.length; i++) {
-            assertEquals(surnames[i], PersonTest.persons[i].getSurname());
+        for (int i = 0; i < persons.length; i++) {
+            assertEquals(surnames[i], persons[i].getSurname());
         }
     }
 
@@ -45,8 +45,8 @@ public class PersonTest {
         String[] names = new String[] { "Antoine", "Jean Carle", "Delphine", "Patricia Everaere", "Corwyn Fèvre",
                 "Iovka", "Patricia Everaere(D)" };
 
-        for (int i = 0; i < PersonTest.persons.length; i++) {
-            assertEquals(names[i], PersonTest.persons[i].getName());
+        for (int i = 0; i < persons.length; i++) {
+            assertEquals(names[i], persons[i].getName());
         }
     }
 
