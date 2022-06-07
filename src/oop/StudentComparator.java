@@ -13,7 +13,7 @@ public class StudentComparator implements Comparator<Student> {
 
     @Override
     public int compare(Student o1, Student o2) {
-        return (int) (100* (o1.getWeight(tutorat.getResource()) - o2.getWeight(tutorat.getResource())));
+        return (int) (100* (o1.getWeight(tutorat) - o2.getWeight(tutorat)));
     }
     
 }
