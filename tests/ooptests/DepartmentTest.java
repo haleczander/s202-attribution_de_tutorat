@@ -3,6 +3,7 @@ package ooptests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 import java.util.List;
 import java.util.Set;
@@ -206,16 +207,16 @@ public class DepartmentTest {
 		assertFalse(departement.getTutorings().get(Resource.R102).getTutored().contains(u3));
 		assertTrue(departement.getTutorings().get(Resource.R102).getTutors().contains(t2));
 
-		assertTrue(departement.getTutorings().get(Resource.R102).getTutored().size() == 2);
-		assertTrue(departement.getTutorings().get(Resource.R102).getTutored().get(0).getGrade(Resource.R102) == Student
-				.getDefaultGrade());
-		assertTrue(departement.getTutorings().get(Resource.R102).getTutored().get(1).getGrade(Resource.R102) == 15.3);
-		assertTrue(departement.getTutorings().get(Resource.R102).getTutors().get(0).getGrade(Resource.R102) == Student
-				.getDefaultGrade());
+		assertSame(2, departement.getTutorings().get(Resource.R102).getTutored().size());
+		assertSame(Student.getDefaultGrade(),
+				departement.getTutorings().get(Resource.R102).getTutored().get(0).getGrade(Resource.R102));
+		assertSame(15.3, departement.getTutorings().get(Resource.R102).getTutored().get(1).getGrade(Resource.R102));
+		assertSame(Student.getDefaultGrade(),
+				departement.getTutorings().get(Resource.R102).getTutors().get(0).getGrade(Resource.R102));
 	}
 
 	@Test
-	void toStringTest() {
+	void stringTest() {
 		departement.add(t3);
 		departement.add(teacher4);
 

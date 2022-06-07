@@ -8,8 +8,8 @@ public class TutorDuplicate extends Tutor {
         super(name + "(" + TutorDuplicate.tutorDuplicateIdentifier + ")", level, absences, motivation, 1);
     }
 
-    public TutorDuplicate(Tutor t) {
-        this(t.getName(), t.getLevel(), t.getAbsences(), t.getMotivation());
+    public TutorDuplicate(Tutor tutor) {
+        this(tutor.getName(), tutor.getLevel(), tutor.getAbsences(), tutor.getMotivation());
     }
 
 

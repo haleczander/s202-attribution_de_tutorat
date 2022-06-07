@@ -9,9 +9,15 @@ import oop.StudentComparator;
 import oop.Tutor;
 import oop.Tutored;
 
-public class Tutors {
-        /**
-     * Duplicates up to all the tutors that can take multiple students in charge in a
+public final class Tutors {
+
+    private Tutors() {
+        throw new UnsupportedOperationException("Utility class and cannot be instantiated");
+    }
+
+    /**
+     * Duplicates up to all the tutors that can take multiple students in charge in
+     * a
      * given list. Number of splits is determined by the number of tutored students
      * without an available tutors. Splits are done after list has been sorted.
      * Returns the list with potential student splits. Current max number of tutored
@@ -27,15 +33,15 @@ public class Tutors {
      * @see Tutor#duplicate()
      */
     public static List<Tutor> gapClose(List<Tutor> list, Tutorat tutorat, int diff) {
-        // list.sort((s1, s2) -> s1.compareTo(s2));
+        int difference = diff;
         list.sort(new StudentComparator(tutorat));
         List<Tutor> toAdd = new ArrayList<>();
         for (Tutor t : list) {
             if (t.getNbofTutored() > 1) {
                 toAdd.add(t.duplicate());
-                diff--;
+                difference--;
             }
-            if (diff == 0) {
+            if (difference == 0) {
                 break;
             }
         }

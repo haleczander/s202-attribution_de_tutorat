@@ -5,15 +5,15 @@ import oop.Tutor;
 import oop.Tutored;
 
 public class Couple {
-    private Tutored tutored;
-    private Tutor tutor;
+    private final Tutored tutored;
+    private final Tutor tutor;
 
-    public Couple(Tutored tutored, Tutor tutor) {
+    public Couple(final Tutored tutored, final Tutor tutor) {
         this.tutored = tutored;
         this.tutor = tutor;
     }
 
-    public boolean contains(Student student) {
+    public boolean contains(final Student student) {
         return student.equals(this.getTutor()) || student.equals(this.getTutored());
     }
 
@@ -22,7 +22,7 @@ public class Couple {
         return "(" + tutored + ", " + tutor + ")";
     }
 
-    public boolean equals(Tutored tutored, Tutor tutor) {
+    public boolean equals(final Tutored tutored, final Tutor tutor) {
         return this.tutored.equals(tutored) && this.tutor.equals(tutor);
     }
 
@@ -36,14 +36,14 @@ public class Couple {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj)
             return true;
         if (obj == null)
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Couple other = (Couple) obj;
+        final Couple other = (Couple) obj;
         if (tutor == null) {
             if (other.tutor != null)
                 return false;

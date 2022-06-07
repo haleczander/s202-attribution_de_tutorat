@@ -93,7 +93,14 @@ public class Tutor extends Student {
 
     @Override
     public boolean equals(Object obj) {
-        return super.equals(obj);
+        if (this == obj)
+            return true;
+        if (!super.equals(obj))
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Tutor other = (Tutor) obj;
+        return nbofTutored == other.nbofTutored;
     }
 
     // ------------------------

@@ -62,7 +62,7 @@ public class PersonTest {
     }
 
     @Test
-    void toStringTest() {
+    void stringTest() {
         Person.setShortName(false);
 
         assertEquals("Tutored [Antoine, level= 1, absences= 0, notes= {}, motivation= A]", p1.toString());

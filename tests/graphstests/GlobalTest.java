@@ -30,16 +30,14 @@ import utility.Tools;
  * @see Scenario
  */
 public class GlobalTest {
-    private Tutored 
-            u1,
+    private Tutored u1,
             u2,
             u3,
             u4,
             u5,
             u6,
             u7;
-    private Tutor 
-            t1,
+    private Tutor t1,
             t2,
             t3,
             t4,
@@ -53,7 +51,7 @@ public class GlobalTest {
     public void initialize() {
         Person.setShortName(true);
 
-        double[] uGrades = new double[]{9.8, 6.9, 12.7, 0.2, 17.3, 12.5, 10.5};
+        double[] uGrades = new double[] { 9.8, 6.9, 12.7, 0.2, 17.3, 12.5, 10.5 };
         u1 = new Tutored("Claude", 0, 'A');
         u2 = new Tutored("Madeleine", 8, 'A');
         u3 = new Tutored("Sabine", 0, 'C');
@@ -62,7 +60,7 @@ public class GlobalTest {
         u6 = new Tutored("Alexandria", 0, 'A');
         u7 = new Tutored("Anouk", 1, 'B');
 
-        double[] tGrades = new double[]{9.3, 13.2, 13.2, 16.2, 11.3};
+        double[] tGrades = new double[] { 9.3, 13.2, 13.2, 16.2, 11.3 };
         t1 = new Tutor("Vincent", 2, 0, 'A');
         t2 = new Tutor("Jacqueline", 2, 1, 'B');
         t3 = new Tutor("Pénélope", 2, 3, 'A');
@@ -96,7 +94,7 @@ public class GlobalTest {
         assignment.setPolyTutor(false);
         List<Arete<Student>> edges = assignment.getAssignment();
         List<Student> waitingList = assignment.getWaitingList();
-         
+
         System.out.println(assignment.detailedToString());
         System.out.println(waitingList);
 
@@ -111,7 +109,6 @@ public class GlobalTest {
         assignment.setPolyTutor(true);
         List<Arete<Student>> edges = assignment.getAssignment();
         List<Student> waitingList = assignment.getWaitingList();
-         
 
         assertEquals(edges.size(), 6);
         assertEquals(waitingList.size(), 1);
@@ -122,7 +119,7 @@ public class GlobalTest {
         Matcher matcher;
         for (Arete<Student> edge : edges) {
             matcher = pattern.matcher(edge.getExtremite2().getName());
-            if(matcher.find()) {
+            if (matcher.find()) {
                 olivierCount++;
             }
         }
@@ -135,20 +132,19 @@ public class GlobalTest {
         // rappel : on force l'affectation entre Claude & Jacqueline
         assignment.setPolyTutor(false);
         List<Arete<Student>> edges = assignment.getAssignment();
-        
+
         Arete<Student> wantedAssignment = new Arete<>(u1, t2);
         for (Arete<Student> edge : edges) {
             assertFalse(Tools.edgeTextEquals(edge, wantedAssignment));
         }
-        
+
         assignment.addForcedAssignments(u1, t2);
         edges = assignment.getAssignment();
         List<Student> waitingList = assignment.getWaitingList();
         boolean isEdgeInAssignment = false;
-         
 
         for (Arete<Student> edge : edges) {
-            if(Tools.edgeTextEquals(edge, wantedAssignment)) {
+            if (Tools.edgeTextEquals(edge, wantedAssignment)) {
                 isEdgeInAssignment = true;
             }
         }
@@ -168,14 +164,14 @@ public class GlobalTest {
     @Test
     public void casIncompatibilite() {
         // cas 2.B
-        // rappel : on veut empêcher une affectation entre 
+        // rappel : on veut empêcher une affectation entre
         assignment.setPolyTutor(false);
         List<Arete<Student>> edges = assignment.getAssignment();
 
         Arete<Student> unwantedAssignment = new Arete<>(u1, t4);
         boolean isEdgeInAssignment = false;
         for (Arete<Student> edge : edges) {
-            if(Tools.edgeTextEquals(edge, unwantedAssignment)) {
+            if (Tools.edgeTextEquals(edge, unwantedAssignment)) {
                 isEdgeInAssignment = true;
             }
         }
@@ -184,7 +180,6 @@ public class GlobalTest {
         assignment.addForbiddenAssignments(u1, t4);
         edges = assignment.getAssignment();
         List<Student> waitingList = assignment.getWaitingList();
-         
 
         for (Arete<Student> edge : edges) {
             assertFalse(Tools.edgeTextEquals(edge, unwantedAssignment));
@@ -197,7 +192,7 @@ public class GlobalTest {
         edges = assignment.getAssignment();
         isEdgeInAssignment = false;
         for (Arete<Student> edge : edges) {
-            if(Tools.edgeTextEquals(edge, unwantedAssignment)) {
+            if (Tools.edgeTextEquals(edge, unwantedAssignment)) {
                 isEdgeInAssignment = true;
             }
         }
@@ -211,7 +206,6 @@ public class GlobalTest {
         teacher.setAverageWeighting(2);
         List<Arete<Student>> edges = assignment.getAssignment();
         List<Student> waitingList = assignment.getWaitingList();
- 
 
         // assertNotEquals = poids sans pondération de la moyenne
         // assertEquals(u1.getWeight(), 1.131, DELTA);
@@ -238,7 +232,6 @@ public class GlobalTest {
         teacher.setLevelWeighting(2);
         List<Arete<Student>> edges = assignment.getAssignment();
         List<Student> waitingList = assignment.getWaitingList();
-         
 
         // assertNotEquals = poids avec pondération de la moyenne uniquement
         // assertNotEquals(t1.getWeight(), 1.467, DELTA);
@@ -259,7 +252,6 @@ public class GlobalTest {
         teacher.setAbsenceWeighting(2);
         List<Arete<Student>> edges = assignment.getAssignment();
         List<Student> waitingList = assignment.getWaitingList();
-         
 
         // assertNotEquals = poids sans aucune pondération
         // assertNotEquals(u2.getWeight(), 1.055, DELTA);
@@ -284,8 +276,6 @@ public class GlobalTest {
         assignment.removeStudent(t1);
         List<Arete<Student>> edges = assignment.getAssignment();
         List<Student> waitingList = assignment.getWaitingList();
-         
-
 
         for (Arete<Student> edge : edges) {
             assertNotEquals(edge.getExtremite2(), t1);
@@ -303,7 +293,6 @@ public class GlobalTest {
         assignment.removeStudent(u6);
         List<Arete<Student>> edges = assignment.getAssignment();
         List<Student> waitingList = assignment.getWaitingList();
-         
 
         for (Arete<Student> edge : edges) {
             assertNotEquals(u6, edge.getExtremite1());

@@ -7,8 +7,13 @@ import java.util.Set;
 import graphs.affectation.Tutorat;
 import utility.ToolsCSV;
 
-public class Scenario {
-    static List<Departement> IUT = new ArrayList<>();
+public final class Scenario {
+
+    private Scenario() {
+        throw new UnsupportedOperationException("Utility class cannot be instantiated");
+    }
+
+    static List<Departement> iut = new ArrayList<>();
     public static void main(String[] args) {
         /* 
         L'I.U.T. de Lille veut mettre en place un système de tutorat
@@ -27,7 +32,7 @@ public class Scenario {
         Cette année nous ne nous intéressons qu'au département informatique !
         */
         Departement dptInfo = new Departement("Informatique");
-        IUT.add(dptInfo);
+        iut.add(dptInfo);
 
 
         /*        
@@ -95,7 +100,7 @@ public class Scenario {
 
     static void scenario1(){
         Departement info = new Departement("Info");
-        IUT.add(info);
+        iut.add(info);
 
         Set<Student> students = ToolsCSV.importStudents();
         info.addStudent(students);
@@ -114,8 +119,10 @@ public class Scenario {
     };
 
     static void scenario2(){
+        // TODO
     };
 
     static void scenario3(){
+        // TODO
     };
 }

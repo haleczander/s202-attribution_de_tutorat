@@ -88,9 +88,8 @@ public abstract class Student extends Person {
             return false;
         if (level != other.level)
             return false;
-        if (motivation != other.motivation)
-            return false;
-        return true;
+        return motivation == other.motivation;
+
     }
 
     @Override

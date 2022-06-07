@@ -6,9 +6,9 @@ import oop.Tutor;
 import oop.Tutored;
 
 public class Edge {
-    private Arete<? extends Student> arete;
+    private final Arete<? extends Student> arete;
 
-    public Edge(Tutored tutored, Tutor tutor) {
+    public Edge(final Tutored tutored, final Tutor tutor) {
         this.arete = new Arete<>(tutored, tutor);
     }
 
@@ -29,14 +29,14 @@ public class Edge {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj)
             return true;
         if (obj == null)
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Edge other = (Edge) obj;
+        final Edge other = (Edge) obj;
         if (arete == null) {
             if (other.arete != null)
                 return false;

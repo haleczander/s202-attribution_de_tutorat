@@ -8,8 +8,13 @@ import oop.Student;
 import oop.Tutor;
 import oop.Tutored;
 
-public class Graphs {
-        /**
+public final class Graphs {
+
+    private Graphs() {
+        throw new UnsupportedOperationException("Utility class and cannot be instantiated");
+    }
+
+    /**
      * Returns an undirected weighted graph (bipartite graph) from 2 lists of
      * students.
      * 
@@ -18,7 +23,8 @@ public class Graphs {
      * @see Tutored#getWeight(double, double)
      * @see Tutor#getWeight(double, double)
      */
-    public static GrapheNonOrienteValue<Student> getGraph(List<Tutored> duplicateTutored, List<Tutor> duplicateTutor, Tutorat tutorat) {
+    public static GrapheNonOrienteValue<Student> getGraph(List<Tutored> duplicateTutored, List<Tutor> duplicateTutor,
+            Tutorat tutorat) {
         GrapheNonOrienteValue<Student> graph = new GrapheNonOrienteValue<>();
 
         addVertices(graph, duplicateTutored);
@@ -32,13 +38,13 @@ public class Graphs {
         return graph;
     }
 
-    private static double computeEdgeWeight(Tutored tutored, Tutor tutor, Tutorat tutorat){
-        if (Couples.containsCouple(tutorat.getForcedCouples(), tutored, tutor)){
+    private static double computeEdgeWeight(Tutored tutored, Tutor tutor, Tutorat tutorat) {
+        if (Couples.containsCouple(tutorat.getForcedCouples(), tutored, tutor)) {
             return -Tutorat.getForcedAffectationWeight();
-        } 
-        if (Couples.containsCouple(tutorat.getForbiddenCouples(), tutored, tutor)){
+        }
+        if (Couples.containsCouple(tutorat.getForbiddenCouples(), tutored, tutor)) {
             return Tutorat.getForcedAffectationWeight();
-        } 
+        }
         return tutored.getWeight(tutorat) + tutor.getWeight(tutorat);
     }
 

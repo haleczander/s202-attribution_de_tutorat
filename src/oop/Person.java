@@ -6,7 +6,7 @@ public abstract class Person {
     /**
      * A Person is either a Student or a Teacher
      */
-    private boolean isStudent;
+    private boolean isAStudent;
 
     protected static boolean shortName = true;
 
@@ -38,14 +38,14 @@ public abstract class Person {
             this.forename = names[0];
             this.surname = names[1];
         }
-        this.isStudent = isStudent;
+        this.isAStudent = isStudent;
     }
 
     // ------------------------
     // Class methods
     // ------------------------
     public boolean isStudent() {
-        return this.isStudent;
+        return this.isAStudent;
     }
 
     @Override

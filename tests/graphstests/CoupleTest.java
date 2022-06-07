@@ -50,7 +50,7 @@ public class CoupleTest {
     }
 
     @Test
-    public void toStringTest() {
+    public void stringTest() {
         Person.setShortName(true);
         assertEquals("(Anémone, Bill)", c1.toString());
         assertEquals("(Christian, Adrien)", c2.toString());

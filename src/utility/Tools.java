@@ -41,19 +41,19 @@ public final class Tools {
      * 
      * @see Tutored#compareTo(Student)
      * @see Tutor#compareTo(Student)
-     */   
+     */
     public static List<Student> waitingListBuilder(List<? extends Student> list, Tutorat tutorat, int diff) {
+        int difference = diff;
         List<Student> waitingList = new ArrayList<>();
         list.sort(new StudentPriorityComparator(tutorat));
         List<Student> copy = new ArrayList<>();
         copy.addAll(list);
 
-
         ListIterator<? extends Student> it = list.listIterator(list.size());
-        while (it.hasPrevious() && diff > 0) {
+        while (it.hasPrevious() && difference > 0) {
             Student student = it.previous();
             waitingList.add(student);
-            diff--;
+            difference--;
         }
         for (Student student : waitingList) {
             list.remove(student);
@@ -71,7 +71,7 @@ public final class Tools {
      * @throws IllegalArgumentException if the motivation character is not A, B or
      *                                  C.
      */
-    public static double motivationValue(char motivation) throws IllegalArgumentException {
+    public static double motivationValue(char motivation) {
         if (motivation < 'A' && motivation > 'C') {
             throw new IllegalArgumentException("The motivation character is not valid (A, B or C).");
         }
@@ -89,7 +89,5 @@ public final class Tools {
     public static boolean edgeTextEquals(Arete<Student> edge1, Arete<Student> edge2) {
         return edge1.toString().equals(edge2.toString());
     }
-
-
 
 }

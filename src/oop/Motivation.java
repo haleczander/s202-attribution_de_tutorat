@@ -19,4 +19,8 @@ public enum Motivation {
         }
         return null;
     }
+
+    public double getWeightModifier() {
+        return weightModifier;
+    }
 }

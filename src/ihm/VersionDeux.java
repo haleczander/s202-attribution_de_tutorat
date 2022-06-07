@@ -43,7 +43,7 @@ public class VersionDeux extends Application{
     Image profilPhoto;
     ComboBox<String> cbSession = new ComboBox<>();
 
-    double TOOLBAR_HEIGHT = 55;
+    final double TOOLBAR_HEIGHT = 55;
 
     int slMin = 0;
     int slMax = 5;
@@ -56,8 +56,8 @@ public class VersionDeux extends Application{
     ListView<String> tutored = new ListView<>();
 
     //Padding
-    Insets PAD_MIN = new Insets(5);
-    Insets PAD_BTN = new Insets(5, 9, 5, 9);
+    final Insets PAD_MIN = new Insets(5);
+    final Insets PAD_BTN = new Insets(5, 9, 5, 9);
 
     //Lists
     // List<Tutor> tutorsOrigin = loadTutors();
@@ -65,7 +65,7 @@ public class VersionDeux extends Application{
     List<Tutor> tutorsList;
     List<Tutored> tutoredList;
     
-    private class orderListHandler implements EventHandler<ActionEvent>{
+    private class OrderListHandler implements EventHandler<ActionEvent>{
         public void handle(ActionEvent e) {
             Button bt = ((Button)e.getTarget());
             if (bt.getText().equals("↓")) {
@@ -79,7 +79,7 @@ public class VersionDeux extends Application{
         } 
     }
 
-    private class studentHandler implements EventHandler<ActionEvent>{
+    private class StudentHandler implements EventHandler<ActionEvent>{
         public void handle(ActionEvent e) {
             Button bt = ((Button)e.getTarget());
             if (bt.getText().equals("+")) {
@@ -178,10 +178,10 @@ public class VersionDeux extends Application{
     TitledPane initEtudiantsControls(){
         VBox etudiantsControls = new VBox();
 
-        HBox add = initLabelButton("Ajouter", "+", new studentHandler(), "Ajouter un étudiant");
-        HBox del = initLabelButton("Supprimer", "‒", new studentHandler(), "Supprimer un étudiant");
-        HBox union = initLabelButton("Forcer", "🔗", new studentHandler(), "Forcer une affectation");
-        HBox disUnion = initLabelButton("Interdire", "⦸", new studentHandler(), "Interdire une affectation");
+        HBox add = initLabelButton("Ajouter", "+", new StudentHandler(), "Ajouter un étudiant");
+        HBox del = initLabelButton("Supprimer", "‒", new StudentHandler(), "Supprimer un étudiant");
+        HBox union = initLabelButton("Forcer", "🔗", new StudentHandler(), "Forcer une affectation");
+        HBox disUnion = initLabelButton("Interdire", "⦸", new StudentHandler(), "Interdire une affectation");
 
         etudiantsControls.getChildren().addAll(add, del, union, disUnion);
         return new TitledPane("Etudiants", etudiantsControls);
@@ -190,10 +190,10 @@ public class VersionDeux extends Application{
     TitledPane initOrderControls(){
         VBox triControls = new VBox();
 
-        HBox alpha = initLabelButton("Nom", "↓", new orderListHandler(), "Tri croissant");
-        HBox avg = initLabelButton("Moyenne", "↓", new orderListHandler(), "Tri croissant");
-        HBox abs = initLabelButton("Absences", "↓", new orderListHandler(), "Tri croissant");
-        HBox motiv = initLabelButton("Motivation", "↓", new orderListHandler(), "Tri croissant");
+        HBox alpha = initLabelButton("Nom", "↓", new OrderListHandler(), "Tri croissant");
+        HBox avg = initLabelButton("Moyenne", "↓", new OrderListHandler(), "Tri croissant");
+        HBox abs = initLabelButton("Absences", "↓", new OrderListHandler(), "Tri croissant");
+        HBox motiv = initLabelButton("Motivation", "↓", new OrderListHandler(), "Tri croissant");
 
         triControls.getChildren().addAll(alpha, avg, abs, motiv);
         return new TitledPane("Trier par", triControls);

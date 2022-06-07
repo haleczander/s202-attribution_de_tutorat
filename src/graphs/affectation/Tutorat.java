@@ -56,7 +56,7 @@ public class Tutorat {
 
     private static int forcedAffectationWeight = 1000;
 
-    private CalculAffectation<Student> calculAffectation = null;
+    private CalculAffectation<Student> affectation = null;
 
     public Tutorat(Resource resource) {
         this.resource = resource;
@@ -234,7 +234,7 @@ public class Tutorat {
      * 
      * @param students a list of all students to dispatch.
      */
-    public void addStudent(Set<Student> students) {
+    public final void addStudent(Set<Student> students) {
         for (Student s : students) {
             addStudent(s);
         }
@@ -246,7 +246,7 @@ public class Tutorat {
      * @param student Student to add to the assignment.
      * @return true if student was added, false otherwise.
      */
-    public boolean addStudent(Student student) {
+    public final boolean addStudent(Student student) {
         if (this.tutored.contains(student) || this.tutors.contains(student)) {
             return false;
         }
@@ -289,7 +289,7 @@ public class Tutorat {
 
         GrapheNonOrienteValue<Student> graph = Graphs.getGraph(tutoredCopy, tutorCopy, this);
 
-        this.calculAffectation = new CalculAffectation<>(graph, new ArrayList<>(tutoredCopy),
+        this.affectation = new CalculAffectation<>(graph, new ArrayList<>(tutoredCopy),
                 new ArrayList<>(tutorCopy));
     }
 
@@ -434,7 +434,7 @@ public class Tutorat {
      */
     public List<Arete<Student>> getAssignment() {
         calculAffectation();
-        return List.copyOf(this.calculAffectation.getAffectation());
+        return List.copyOf(this.affectation.getAffectation());
     }
 
     /**
@@ -453,10 +453,10 @@ public class Tutorat {
      * @return minimal cost.
      */
     public double getAffectationCost() {
-        if (calculAffectation == null) {
+        if (affectation == null) {
             calculAffectation();
         }
-        return this.calculAffectation.getCout() % 1000 + (this.calculAffectation.getCout() % 1000 < 0 ? 1000 : 0);
+        return this.affectation.getCout() % 1000 + (this.affectation.getCout() % 1000 < 0 ? 1000 : 0);
     }
 
     // Static getters & setters
