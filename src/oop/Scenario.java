@@ -49,7 +49,7 @@ public class Scenario {
         System.err.println();
 
         Resource web = Resource.R102;
-        dptInfo.addTutoring(web, jeanCarle);
+        dptInfo.newTutoring(web, jeanCarle);
         Tutorat webTutorat = dptInfo.getTutoring(web);
         System.out.println("Le premier tutorat a été créé !");
         System.out.println(webTutorat);
@@ -59,7 +59,7 @@ public class Scenario {
         Il faut maintenant inscrire les étudiants éligibles à ce tutorat,
         Tuteurs comme Tutorés.
          */
-        dptInfo.registerStudents(web);
+        dptInfo.registerStudent(web);
         System.out.println("Inscription des étudiants au tutorat de web !");
         System.out.println(webTutorat);
         System.out.println();
@@ -73,7 +73,7 @@ public class Scenario {
         /*
         Nous sommes prêts à lancer une première affectation !
          */
-        webTutorat.printScenario("1", "Situation de base");
+        webTutorat.scenarioToString("1", "Situation de base");
         System.out.println();
         /*
         Madeleine et Thérèse s'entendent vraiment bien, 
@@ -82,7 +82,7 @@ public class Scenario {
         */
         webTutorat.addForcedAssignments("Madeleine Barre", "Thérèse Gay");
         webTutorat.addForbiddenAssignments("Lucas Bouchet", "Martin Delmas");
-        webTutorat.printScenario("2", "Affectation forcée + affectation interdite");
+        webTutorat.scenarioToString("2", "Affectation forcée + affectation interdite");
 
 
         /* */
@@ -103,8 +103,8 @@ public class Scenario {
         info.addTeacher(teachers);
 
         Resource bdd = Resource.R104;        
-        info.addTutoring(bdd);
-        info.registerStudents(bdd);
+        info.newTutoring(bdd);
+        info.registerStudent(bdd);
 
         /*
         Il y a pénurie d'enseignants, de jeunes doctorants sont mis à contribution

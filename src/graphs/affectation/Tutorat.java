@@ -38,14 +38,6 @@ public class Tutorat {
 
     private boolean polyTutor;
 
-    public Resource getResource() {
-        return resource;
-    }
-
-    public void setResource(Resource resource) {
-        this.resource = resource;
-    }
-
     private List<Student> waitingList;
 
     private Set<Edge> forcedAssignments;
@@ -53,18 +45,6 @@ public class Tutorat {
 
     private Set<Couple> forcedCouples = new HashSet<>();
     private Set<Couple> forbiddenCouples = new HashSet<>();
-
-    
-
-    public Set<Couple> getForcedCouples() {
-        return forcedCouples;
-    }
-
-    public Set<Couple> getForbiddenCouples() {
-        return forbiddenCouples;
-    }
-
-    private double assignmentCost;
 
     private double tutoredGradesAverage;
     private double tutorGradesAverage;
@@ -75,6 +55,12 @@ public class Tutorat {
     private Teacher teacher;
 
     private static double maxWeighting = 5;
+
+    private static int forcedAffectationWeight = 1000;
+
+
+    private CalculAffectation<Student> calculAffectation = null;
+
 
     public Tutorat(Resource resource) {
         this.resource = resource;
@@ -88,8 +74,6 @@ public class Tutorat {
 
         this.forcedAssignments = new HashSet<>();
         this.forbiddenAssignments = new HashSet<>();
-
-        this.assignmentCost = 0;
 
         this.tutoredGradesAverage = 0;
         this.tutorGradesAverage = 0;
@@ -160,6 +144,9 @@ public class Tutorat {
         this.teacher = teacher;
     }
 
+    // ------------------------
+    // Class methods
+    // ------------------------
     private void updateAverages() {
         double[] values = Tutorat.computeAverages(tutored, resource);
         this.tutoredAbsenceAverage = values[0];
@@ -221,9 +208,9 @@ public class Tutorat {
      *                                  assignment with anyone.
      */
     public boolean removeForcedAssignment(Tutored tutored, Tutor tutor) {
+        Couples.remove(this.forcedCouples, tutored, tutor);
         return this.forcedAssignments.remove(new Edge(tutored, tutor));
     }
-
     /**
      * Removes a forbidden assignment for a tutored student.
      * 
@@ -233,41 +220,19 @@ public class Tutorat {
      *                                  assignment with anyone.
      */
     public boolean removeForbiddenAssignment(Tutored tutored, Tutor tutor) {
+        Couples.remove(this.forbiddenCouples, tutored, tutor);
         return this.forbiddenAssignments.remove(new Edge(tutored, tutor));
     }
 
+    // ------------------------
+    // Collections methods
+    // ------------------------
     public void removeStudent(Tutor student) {
         this.tutors.remove(student);
     }
 
     public void removeStudent(Tutored student) {
         this.tutored.remove(student);
-    }
-
-    /**
-     * Sets whether or not tutors should be split if needed. Default value is true.
-     * 
-     * @param polyTutor true if tutors should be doubled, false otherwise.
-     */
-    public void setPolyTutor(boolean polyTutor) {
-        this.polyTutor = polyTutor;
-    }
-
-    /**
-     * Toggles polytutor.
-     */
-    public void togglePolyTutor() {
-        this.polyTutor = !this.polyTutor;
-    }
-
-    /**
-     * Returns {@code true} if the polytutor is activated on this assignment, false
-     * otherwise.
-     * 
-     * @return {@code true} if polytutor is on.
-     */
-    public boolean isPolyTutorOn() {
-        return this.polyTutor;
     }
 
     /**
@@ -303,6 +268,9 @@ public class Tutorat {
         }
     }
 
+    // ------------------------
+    // Affectation methods
+    // ------------------------
     /**
      * Creates an assignment from 2 lists of students of the object.
      * Steps of the method :
@@ -316,78 +284,18 @@ public class Tutorat {
      * 
      * @see #listArrangeTutor std1 = new Tutor("A", 12.1, 2, 3, 'A');
      */
-    private CalculAffectation<Student> assignment() {
+    private void calculAffectation() {
         this.waitingList.clear();
+        updateAverages();
 
         List<Tutored> tutoredCopy = new ArrayList<>(this.tutored);
         List<Tutor> tutorCopy = new ArrayList<>(this.tutors);
 
         listArrange(tutoredCopy, tutorCopy);
 
-        GrapheNonOrienteValue<Student> graph = getGraph(tutoredCopy, tutorCopy);
+        GrapheNonOrienteValue<Student> graph = Graphs.getGraph(tutoredCopy, tutorCopy, this);
 
-        CalculAffectation<Student> calcul = new CalculAffectation<>(graph, new ArrayList<Student>(tutoredCopy), new ArrayList<Student>(tutorCopy));
-        this.assignmentCost = calcul.getCout();
-
-        return calcul;
-    }
-
-    /**
-     * Returns an undirected weighted graph (bipartite graph) from 2 lists of
-     * students.
-     * 
-     * @return the resulting graph.
-     * 
-     * @see Tutored#getWeight(double, double)
-     * @see Tutor#getWeight(double, double)
-     */
-    private GrapheNonOrienteValue<Student> getGraph(List<Tutored> duplicateTutored, List<Tutor> duplicateTutor) {
-        GrapheNonOrienteValue<Student> graph = new GrapheNonOrienteValue<>();
-
-        addVertices(graph, duplicateTutored);
-        addVertices(graph, duplicateTutor);
-        double weight;
-        double tutorWeight, tutoredWeight;
-        System.out.println(forcedCouples +" "+forbiddenCouples);
-
-        for (Tutored tutoreds : duplicateTutored) {
-            for (Tutor tutor : duplicateTutor) {
-                // Edge duo = new Edge(tutoreds, tutor);
-
-                // if ( this.forcedAssignments.contains(duo)) {
-                if (Couples.exists(this.forcedCouples, tutoreds, tutor)){
-                    System.out.println("Couple forcé");
-                    weight = -1000;
-                } 
-                //else if (this.forbiddenAssignments.contains(duo)){                
-                else if (Couples.exists(this.forbiddenCouples, tutoreds, tutor)){
-                    System.out.println("Couple interdit");
-                    weight = 1000;
-                } 
-                else {
-                    tutoredWeight = tutoreds.getWeight(resource, tutoredGradesAverage, tutoredAbsenceAverage,
-                    teacher.getAverageWeighting(), teacher.getAbsenceWeighting(), teacher.getLevelWeighting());
-                    tutorWeight = tutor.getWeight(resource, tutorGradesAverage, tutorAbsenceAverage,
-                    teacher.getAverageWeighting(), teacher.getAbsenceWeighting(),
-                    teacher.getLevelWeighting());
-                    weight = tutorWeight + tutoredWeight; 
-                }
-                graph.ajouterArete(tutoreds, tutor, weight);
-            }
-        }
-        return graph;
-    }
-
-    /**
-     * Adds all students that are in the list given as nodes in a given graph.
-     * 
-     * @param graph graph to add nodes to.
-     * @param list  students to add to the graph.
-     */
-    private void addVertices(GrapheNonOrienteValue<Student> graph, List<? extends Student> list) {
-        for (Student student : list) {
-            graph.ajouterSommet(student);
-        }
+        this.calculAffectation = new CalculAffectation<>(graph, new ArrayList<Student>(tutoredCopy), new ArrayList<Student>(tutorCopy));
     }
 
     /**
@@ -417,6 +325,16 @@ public class Tutorat {
         }
     }
 
+
+    // ------------------------
+    // Display methods 
+    // ------------------------ 
+    @Override
+    public String toString() {
+        return "Tutorat [Matière: "+ this.resource.getName() +", Enseignant: "+ this.teacher +", Tuteurs: " + this.tutors.size() + ", Tutorés: " + this.tutored.size() + ", Attente: "
+                + this.waitingList.size() + "]";
+    }
+
     /**
      * Method that returns a textual representation of the assignment. Includes a
      * waiting list if there is one.
@@ -425,25 +343,108 @@ public class Tutorat {
      *                 true.
      * @return the assignment as text.
      */
-    public String getTextAssignment() {
+    public String detailedToString() {
         StringBuilder string = new StringBuilder();
         string.append("Arêtes:\t\t " + this.getAssignment().toString().replaceAll("Arete", "") + "\n");
         if (!waitingList.isEmpty()) {
             string.append("En attente:\t " + this.waitingList + "\n");
         }
-        string.append("Coût total:\t " + (double) (((int) (1000 * this.getCost())) / 1000.00) + "\n\n");
+        string.append("Coût total:\t " + (double) (((int) (1000 * this.getAffectationCost())) / 1000.00) + "\n\n");
         return string.toString();
     }
 
+    public void scenarioToString(String id, String title) {
+        System.out.println("\033[4m" + "Cas " + id + " : " + title + "\033[0m");
+        System.out.println(this.detailedToString());
+    }
+  
+    // ------------------------
+    // Delegate Methods : Graph 
+    // ------------------------ 
+
+
+    // ------------------------
+    // Attribute getters & setters 
+    // ------------------------ 
+    public Set<Couple> getForcedCouples() {
+        return forcedCouples;
+    }
+
+    public Set<Couple> getForbiddenCouples() {
+        return forbiddenCouples;
+    }
+
+    public Resource getResource() {
+        return resource;
+    }
+
+    public void setResource(Resource resource) {
+        this.resource = resource;
+    }
+
+    public Teacher getTeacher() {
+        return teacher;
+    }
+
+    public void setTeacher(Teacher teacher) {
+        this.teacher = teacher;
+    }
+
+    public List<Tutored> getTutored() {
+        return List.copyOf(this.tutored);
+    }
+
+    public List<Tutor> getTutors() {
+        return List.copyOf(this.tutors);
+    }
+  
+    /**
+     * Sets whether or not tutors should be split if needed. Default value is true.
+     * 
+     * @param polyTutor true if tutors should be doubled, false otherwise.
+     */
+    public void setPolyTutor(boolean polyTutor) {
+        this.polyTutor = polyTutor;
+    }
+
+    public double getTutoredGradesAverage() {
+        updateAverages();
+        return tutoredGradesAverage;
+    }
+
+    public double getTutorGradesAverage() {
+        updateAverages();
+        return tutorGradesAverage;
+    }
+
+    public double getTutoredAbsenceAverage() {
+        updateAverages();
+        return tutoredAbsenceAverage;
+    }
+
+    public double getTutorAbsenceAverage() {
+        updateAverages();
+        return tutorAbsenceAverage;
+    }
+
+    // Custom    
+    public Tutor getTutor(String name){
+        return (Tutor)Persons.getPerson(name, tutors);
+    }
+
+    public Tutored getTutored(String name){
+        return (Tutored)Persons.getPerson(name, tutored);
+    }
+    
     /**
      * Method that gives acces to an <strong>immutable</strong> copy of a list of
      * edges of students that represent an assignment.
      * 
      * @return a copy of the assignment.
      */
-    public List<Arete<Student>> getAssignment() {        
-        updateAverages();
-        return List.copyOf(this.assignment().getAffectation());
+    public List<Arete<Student>> getAssignment() {  
+        calculAffectation();      
+        return List.copyOf(this.calculAffectation.getAffectation());
     }
 
     /**
@@ -457,43 +458,15 @@ public class Tutorat {
     }
 
     /**
-     * Method that returns a textual representation of the minimal cost of the
-     * assignment.
-     * 
-     * @return minimal cost.
-     */
-    public String getTextCost() {
-        return "cost: " + getCost();
-    }
-
-    /**
      * Returns the minimal cost of the assignment.
      * 
      * @return minimal cost.
      */
-    public double getCost() {
-        return this.assignmentCost % 1000 + (this.assignmentCost % 1000 < 0 ? 1000 : 0);
+    public double getAffectationCost() {
+        return this.calculAffectation.getCout() % 1000 + (this.calculAffectation.getCout() % 1000 < 0 ? 1000 : 0);
     }
-
-    public void printScenario(String id, String title) {
-        System.out.println("\033[4m" + "Cas " + id + " : " + title + "\033[0m");
-        System.out.println(this.getTextAssignment());
-    }
-
-    @Override
-    public String toString() {
-        return "Tutorat [Matière: "+ this.resource.getName() +", Enseignant: "+ this.teacher +", Tuteurs: " + this.tutors.size() + ", Tutorés: " + this.tutored.size() + ", Attente: "
-                + this.waitingList.size() + "]";
-    }
-
-    public Teacher getTeacher() {
-        return teacher;
-    }
-
-    public void setTeacher(Teacher teacher) {
-        this.teacher = teacher;
-    }
-
+  
+    // Static getters & setters
     public static double getMaxWeighting() {
         return maxWeighting;
     }
@@ -502,19 +475,12 @@ public class Tutorat {
         Tutorat.maxWeighting = maxWeighting;
     }
 
-    public List<Tutored> getTutored() {
-        return List.copyOf(this.tutored);
+    public static int getForcedAffectationWeight() {
+        return forcedAffectationWeight;
     }
 
-    public List<Tutor> getTutors() {
-        return List.copyOf(this.tutors);
+    public static void setForcedAffectationWeight(int forcedAffectationWeight) {
+        Tutorat.forcedAffectationWeight = forcedAffectationWeight;
     }
-
-    public Tutor getTutor(String name){
-        return (Tutor)Persons.getPerson(name, tutors);
-    }
-    public Tutored getTutored(String name){
-        return (Tutored)Persons.getPerson(name, tutored);
-    }
-    
 }
+

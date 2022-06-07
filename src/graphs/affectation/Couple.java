@@ -12,26 +12,20 @@ public class Couple{
         this.tutor = tutor;
     }
 
+    @Override
+    public String toString() {
+        return "(" + tutored + ", " + tutor + ")";
+    }    
+
+    // ------------------------
+    // Attribute getters & setters 
+    // ------------------------   
     public Tutored getTutored() {
         return tutored;
-    }
-
-    public void setTutored(Tutored tutored) {
-        this.tutored = tutored;
     }
 
     public Tutor getTutor() {
         return tutor;
     }
 
-    public void setTutor(Tutor tutor) {
-        this.tutor = tutor;
-    }
-
-    @Override
-    public String toString() {
-        return "(" + tutored + ", " + tutor + ")";
-    }    
-
-    
 }

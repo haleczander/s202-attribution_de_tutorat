@@ -124,8 +124,8 @@ public class DepartmentTest {
 
 	@Test
 	void addTutoringTest() {
-		departement.addTutoring(Resource.R101);
-		departement.addTutoring(Resource.R104);
+		departement.newTutoring(Resource.R101);
+		departement.newTutoring(Resource.R104);
 
 		assertTrue(departement.getTutorings().containsKey(Resource.R101));
 		assertTrue(departement.getTutorings().containsKey(Resource.R104));
@@ -140,8 +140,8 @@ public class DepartmentTest {
 		departement.add(t1);
 		departement.add(t3);
 
-		departement.addTutoring(Resource.R103);
-		departement.registerStudents(Resource.R103);
+		departement.newTutoring(Resource.R103);
+		departement.registerStudent(Resource.R103);
 
 		assertFalse(departement.getTutorings().get(Resource.R103).getTutored().contains(u1));
 		assertFalse(departement.getTutorings().get(Resource.R103).getTutored().contains(u2));
@@ -158,8 +158,8 @@ public class DepartmentTest {
 		departement.add(u3);
 		departement.add(t2);
 
-		departement.addTutoring(Resource.R104);
-		departement.registerStudents(Resource.R104, Set.of(u2, u3, t1));
+		departement.newTutoring(Resource.R104);
+		departement.registerStudent(Resource.R104, Set.of(u2, u3, t1));
 
 		assertTrue(departement.getTutorings().get(Resource.R104).getTutored().contains(u2));
 		assertTrue(departement.getTutorings().get(Resource.R104).getTutored().contains(u3));
@@ -174,7 +174,7 @@ public class DepartmentTest {
 		departement.add(u3);
 		departement.add(t2);
 
-		departement.addTutoring(Resource.R102);
+		departement.newTutoring(Resource.R102);
 		departement.registerStudent(Resource.R102, u1);
 		departement.registerStudent(Resource.R102, u2);
 		departement.registerStudent(Resource.R102, t2);
@@ -199,15 +199,15 @@ public class DepartmentTest {
 
 		assertEquals("Departement [Département Informatique, tutorings={}]", departement.toString());
 
-		departement.addTutoring(Resource.R101);
-		departement.addTutoring(Resource.R102);
+		departement.newTutoring(Resource.R101);
+		departement.newTutoring(Resource.R102);
 
 		assertEquals(
 				"Departement [Département Informatique, tutorings={R101: Initiation au développement=[Tuteurs: 0, Tutorés: 0, Attente: 0], R102: Développement d'interfaces web=[Tuteurs: 0, Tutorés: 0, Attente: 0]}]",
 				departement.toString());
 
-		departement.addTutoring(Resource.R103);
-		departement.registerStudents(Resource.R103);
+		departement.newTutoring(Resource.R103);
+		departement.registerStudent(Resource.R103);
 
 		assertEquals(
 				"Departement [Département Informatique, tutorings={R101: Initiation au développement=[Tuteurs: 0, Tutorés: 0, Attente: 0], R102: Développement d'interfaces web=[Tuteurs: 0, Tutorés: 0, Attente: 0], R103: Introduction à l'architecture des ordinateurs=[Tuteurs: 0, Tutorés: 0, Attente: 0]}]",

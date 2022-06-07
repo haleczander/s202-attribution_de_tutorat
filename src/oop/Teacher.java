@@ -12,7 +12,8 @@ public class Teacher extends Person {
 
     private static double defaultWeighting = 1;
 
-    private Map<Coefficient, Double> weights = new EnumMap<>(Coefficient.class);
+    private Map<Coefficient, Double> weightings = new EnumMap<>(Coefficient.class);
+
 
     /**
      * Constructs a Teacher from their name and the resource(s) they teach.
@@ -23,9 +24,9 @@ public class Teacher extends Person {
     public Teacher(String name, List<Resource> resources) {
         super(name, false);
         this.resources = resources;
-        this.weights.put(Coefficient.GRADES, Teacher.defaultWeighting);
-        this.weights.put(Coefficient.ABSENCES, Teacher.defaultWeighting);
-        this.weights.put(Coefficient.LEVEL, Teacher.defaultWeighting);
+        this.weightings.put(Coefficient.GRADES, Teacher.defaultWeighting);
+        this.weightings.put(Coefficient.ABSENCES, Teacher.defaultWeighting);
+        this.weightings.put(Coefficient.LEVEL, Teacher.defaultWeighting);
     }
 
     /**
@@ -58,15 +59,9 @@ public class Teacher extends Person {
         this(name, Resource.valueOf(resourceName));
     }
 
-    /**
-     * Gets an immutable copy of the list of resources the teacher teaches.
-     * 
-     * @return a list of resources.
-     */
-    public List<Resource> getResources() {
-        return List.copyOf(resources);
-    }
-
+    // ------------------------
+    // Class methods
+    // ------------------------
     /**
      * Add a resource to the list of resources a teacher can teach.
      * 
@@ -77,6 +72,47 @@ public class Teacher extends Person {
         return this.resources.add(resource);
     }
 
+    @Override
+    public String toString() {
+        if (Person.shortName) {
+            return super.toString();
+        }
+        return super.toString().substring(0, super.toString().length()-1) + ", matières= "+resources.toString()+"]";
+    }
+
+    // ------------------------
+    // Attribute getters & setters 
+    // ------------------------
+    public Map<Coefficient, Double> getWeightings(){
+        return this.weightings;
+    }
+
+    /**
+     * Gets an immutable copy of the list of resources the teacher teaches.
+     * 
+     * @return a list of resources.
+     */
+    public List<Resource> getResources() {
+        return List.copyOf(resources);
+    }
+    // Custom
+        // Weighting
+    public double getWeighting(Coefficient coefficient){
+        return this.weightings.get(coefficient);
+    }
+
+    public double getLevelWeighting() {
+        return getWeighting(Coefficient.LEVEL);
+    }
+
+    public double getAverageWeighting() {
+        return getWeighting(Coefficient.GRADES);
+    }
+
+    public double getAbsenceWeighting() {
+        return getWeighting(Coefficient.ABSENCES);
+    }
+
     public void setWeighting(Coefficient coefficient, double weighting){  
         double weight = weighting;
         if (weight<0 ) {
@@ -85,10 +121,10 @@ public class Teacher extends Person {
         else if (weight>Tutorat.getMaxWeighting()) {
             weight = Tutorat.getMaxWeighting();
         }
-        this.weights.replace(coefficient, weight);
+        this.weightings.replace(coefficient, weight);
     }
 
-        /**
+    /**
      * Sets the weighting of the average of students for weight computing. Default
      * value is 1.
      * 
@@ -118,26 +154,7 @@ public class Teacher extends Person {
         setWeighting(Coefficient.ABSENCES, weighting);
     }
 
-    public double getWeighting(Coefficient coefficient){
-        return this.weights.get(coefficient);
-    }
-
-    public double getLevelWeighting() {
-        return getWeighting(Coefficient.LEVEL);
-    }
-
-    public double getAverageWeighting() {
-        return getWeighting(Coefficient.GRADES);
-    }
-
-    public double getAbsenceWeighting() {
-        return getWeighting(Coefficient.ABSENCES);
-    }
-
-    public Map<Coefficient, Double> getWeightings(){
-        return this.weights;
-    }
-
+    // Static getters & setters
     public static double getDefaultWeighting() {
         return defaultWeighting;
     }
@@ -146,14 +163,4 @@ public class Teacher extends Person {
         Teacher.defaultWeighting = defaultWeighting;
     }
 
-
-    @Override
-    public String toString() {
-        if (Person.shortName) {
-            return super.toString();
-        }
-        return super.toString().substring(0, super.toString().length()-1) + ", matières= "+resources.toString()+"]";
-    }
-
-    
 }

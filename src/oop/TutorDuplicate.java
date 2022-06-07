@@ -12,6 +12,7 @@ public class TutorDuplicate extends Tutor {
         this(t.getName(), t.getLevel(), t.getAbsences(), t.getMotivation());
     }
 
+
     @Override
     public double getWeight(Resource resource, double gradesAverage, double absencesAverage, double gradesWeight,
             double absencesWeight, double levelWeight) {
@@ -24,6 +25,11 @@ public class TutorDuplicate extends Tutor {
         return true;
     }
 
+    // ------------------------
+    // Attribute getters & setters 
+    // ------------------------   
+
+    // Static getters & setters
     public static double getWeightModifier() {
         return weightModifier;
     }
@@ -39,5 +45,4 @@ public class TutorDuplicate extends Tutor {
     public static void setTutorDuplicateIdentifier(char tutorDuplicateIdentifier) {
         TutorDuplicate.tutorDuplicateIdentifier = tutorDuplicateIdentifier;
     }
-
 }

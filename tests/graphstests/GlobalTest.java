@@ -97,12 +97,12 @@ public class GlobalTest {
         List<Arete<Student>> edges = assignment.getAssignment();
         List<Student> waitingList = assignment.getWaitingList();
          
-        System.out.println(assignment.getTextAssignment());
+        System.out.println(assignment.detailedToString());
         System.out.println(waitingList);
 
         assertEquals(5, edges.size());
         assertEquals(2, waitingList.size());
-        assertEquals(9.242, assignment.getCost(), DELTA);
+        assertEquals(9.242, assignment.getAffectationCost(), DELTA);
     }
 
     @Test
@@ -115,7 +115,7 @@ public class GlobalTest {
 
         assertEquals(edges.size(), 6);
         assertEquals(waitingList.size(), 1);
-        assertEquals(assignment.getCost(), 11.941, DELTA);
+        assertEquals(assignment.getAffectationCost(), 11.941, DELTA);
         assertEquals(waitingList.get(0), u5);
         int olivierCount = 0;
         Pattern pattern = Pattern.compile("olivier", Pattern.CASE_INSENSITIVE);
@@ -155,7 +155,7 @@ public class GlobalTest {
         assertTrue(isEdgeInAssignment);
         assertEquals(edges.size(), 5);
         assertEquals(waitingList, List.of(u5, u2));
-        assertEquals(assignment.getCost(), 7.415, DELTA);
+        assertEquals(assignment.getAffectationCost(), 7.415, DELTA);
 
         assignment.removeForcedAssignment(u1, t2);
         edges = assignment.getAssignment();
@@ -191,7 +191,7 @@ public class GlobalTest {
         }
         assertEquals(edges.size(), 5);
         assertEquals(waitingList, List.of(u5, u2));
-        assertEquals(assignment.getCost(), 9.242, DELTA);
+        assertEquals(assignment.getAffectationCost(), 9.242, DELTA);
 
         assignment.removeForbiddenAssignment(u1, t4);
         edges = assignment.getAssignment();
@@ -224,11 +224,11 @@ public class GlobalTest {
         // assertEquals(t2.getWeight(), 1.456, DELTA);
         // assertNotEquals(t3.getWeight(), 1.141, DELTA);
 
-        System.out.println(assignment.getTextAssignment());
+        System.out.println(assignment.detailedToString());
 
         assertEquals(5, edges.size());
         assertEquals(List.of(u5, u3), waitingList);
-        assertEquals(12.819, assignment.getCost(), DELTA);
+        assertEquals(12.819, assignment.getAffectationCost(), DELTA);
     }
 
     @Test
@@ -249,7 +249,7 @@ public class GlobalTest {
 
         assertEquals(edges.size(), 5);
         assertEquals(waitingList, List.of(u5, u2));
-        assertEquals(assignment.getCost(), 11.342, DELTA);
+        assertEquals(assignment.getAffectationCost(), 11.342, DELTA);
     }
 
     @Test
@@ -274,7 +274,7 @@ public class GlobalTest {
 
         assertEquals(edges.size(), 5);
         assertEquals(waitingList, List.of(u5, u2));
-        assertEquals(assignment.getCost(), 12.471, DELTA);
+        assertEquals(assignment.getAffectationCost(), 12.471, DELTA);
     }
 
     @Test
@@ -293,7 +293,7 @@ public class GlobalTest {
         assertEquals(edges.size(), 4);
         assertEquals(waitingList.size(), 3);
         assertEquals(waitingList, List.of(u5, u2, u3));
-        assertEquals(assignment.getCost(), 7.178, DELTA);
+        assertEquals(assignment.getAffectationCost(), 7.178, DELTA);
     }
 
     @Test
@@ -311,6 +311,6 @@ public class GlobalTest {
         assertEquals(5, edges.size());
         assertEquals(1, waitingList.size());
         assertEquals(List.of(u5), waitingList);
-        assertEquals(9.457, assignment.getCost(), DELTA);
+        assertEquals(9.457, assignment.getAffectationCost(), DELTA);
     }
 }

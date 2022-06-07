@@ -26,4 +26,15 @@ public class Couples {
         }
         return false;
     }
+
+    public static boolean remove(Set<Couple> set, Tutored tutored, Tutor tutor){
+        Couple toRemove = null;
+        for (Couple couple : set) {
+            if (tutored.equals(couple.getTutored()) && tutor.equals(couple.getTutor())){
+                toRemove = couple;
+                break;
+            }
+        }
+        return set.remove(toRemove);
+    }
 }

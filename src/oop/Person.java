@@ -7,6 +7,7 @@ public abstract class Person {
      * A Person is either a Student or a Teacher
      */
     private boolean isStudent;
+
     protected static boolean shortName = true;
 
     /**
@@ -40,6 +41,9 @@ public abstract class Person {
         this.isStudent = isStudent;
     }
 
+    // ------------------------
+    // Class methods
+    // ------------------------
     public boolean isStudent() {
         return this.isStudent;
     }
@@ -83,13 +87,9 @@ public abstract class Person {
         return true;
     }
 
-    public String getName() {
-        if (this.surname == null) {
-            return forename;
-        }
-        return forename + " " + surname;
-    }
-
+    // ------------------------
+    // Attribute getters & setters 
+    // ------------------------
     public String getForename() {
         return forename;
     }
@@ -106,7 +106,17 @@ public abstract class Person {
         this.surname = surname;
     }
 
+    // Custom getters
+    public String getName() {
+        if (this.surname == null) {
+            return forename;
+        }
+        return forename + " " + surname;
+    }
+
+    // Static setters
     public static void setShortName(boolean bool) {
         Person.shortName = bool;
     }
+
 }

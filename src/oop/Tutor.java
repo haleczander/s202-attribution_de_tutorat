@@ -1,5 +1,6 @@
 package oop;
 
+import graphs.affectation.Tutorat;
 import utility.Tools;
 
 /**
@@ -44,33 +45,9 @@ public class Tutor extends Student {
         this(name, level, absences, motivation, 0);
     }
 
-    private void setNbOfTutored(int level, int nbofTutored) {
-        if (level == 3) {
-            if (nbofTutored == 1) {
-                this.nbofTutored = 1;
-            } else {
-                this.nbofTutored = Tutor.defaultNbOfTutoredThirdLevel;
-            }
-        } else {
-            setLevel(Tutor.defaultLevel);
-            this.nbofTutored = Tutor.defaultNbOfTutored;
-        }
-    }
-
-    public int getNbofTutored() {
-        return nbofTutored;
-    }
-
-    public double getWeight(Resource resource, double gradesAverage, double absencesAverage, double gradesWeight,
-            double absencesWeight, double levelWeight) {
-        double grade = (this.grades.get(resource) == 0) ? 0.1 : this.grades.get(resource);
-        return ((gradesAverage / grade) * gradesWeight
-                + (double) (3.0 / this.level) * levelWeight
-                + Math.sqrt((1 + this.absences) / (1 + absencesAverage)) * absencesWeight)
-                * Tools.motivationValue(this.motivation)
-                / 3; // Le tout divisé par le nombre de paramètres pour rester autour de 1
-    }
-
+    // ------------------------
+    // Class methods
+    // ------------------------
     /**
      * Returns {@code true} if the tutor is a duplicate of another (which is never
      * the case).
@@ -103,9 +80,7 @@ public class Tutor extends Student {
         } else {
             return super.toString().substring(0, super.toString().length() - 1) + ", nbOfTutored= "+this.nbofTutored+"]";
         }
-    }
-
-    
+    } 
 
     @Override
     public int hashCode() {
@@ -119,7 +94,49 @@ public class Tutor extends Student {
     public boolean equals(Object obj) {
         return super.equals(obj);
     }
+    
+    // ------------------------
+    // Inherited methods to define 
+    // ------------------------
+    public double getWeight(Resource resource, double gradesAverage, double absencesAverage, double gradesWeight,
+            double absencesWeight, double levelWeight) {
+        double grade = (this.grades.get(resource) == 0) ? 0.1 : this.grades.get(resource);
+        return ((gradesAverage / grade) * gradesWeight
+                + (double) (3.0 / this.level) * levelWeight
+                + Math.sqrt((1 + this.absences) / (1 + absencesAverage)) * absencesWeight)
+                * Tools.motivationValue(this.motivation)
+                / 3; // Le tout divisé par le nombre de paramètres pour rester autour de 1
+    }
+    public double getWeight(Tutorat tutorat){
+        return getWeight(tutorat.getResource(), tutorat.getTutorGradesAverage(), tutorat.getTutorAbsenceAverage(), tutorat.getTeacher().getAverageWeighting(), tutorat.getTeacher().getAbsenceWeighting(), tutorat.getTeacher().getLevelWeighting());
+    }
 
+    // ------------------------
+    // Attribute getters & setters 
+    // ------------------------    
+    public int getNbofTutored() {
+        return nbofTutored;
+    }
+
+    public void setNbOfTutored(int nbOfTutored){
+        setNbOfTutored(this.level, nbOfTutored);
+    }
+
+    // Custom
+    private void setNbOfTutored(int level, int nbofTutored) {
+        if (level == 3) {
+            if (nbofTutored == 1) {
+                this.nbofTutored = 1;
+            } else {
+                this.nbofTutored = Tutor.defaultNbOfTutoredThirdLevel;
+            }
+        } else {
+            setLevel(Tutor.defaultLevel);
+            this.nbofTutored = Tutor.defaultNbOfTutored;
+        }
+    }
+
+    // Static getters & setters
     public static int getDefaultLevel() {
         return defaultLevel;
     }
@@ -143,4 +160,6 @@ public class Tutor extends Student {
     public static void setDefaultNbOfTutoredThirdLevel(int defaultNbOfTutoredThirdLevel) {
         Tutor.defaultNbOfTutoredThirdLevel = defaultNbOfTutoredThirdLevel;
     }
+
+    
 }

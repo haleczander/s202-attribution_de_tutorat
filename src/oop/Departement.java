@@ -24,10 +24,24 @@ public class Departement {
         this.teachers = teachers;
     }
 
-    public Tutorat getTutoring(Resource resource){
-        return tutorings.get(resource);
+    // ------------------------
+    // Class methods
+    // ------------------------
+
+    // Size of Department
+    public int getNbOfStudents() {
+        return this.students.size();
     }
 
+    public int getNbOfteachers() {
+        return this.teachers.size();
+    }
+
+    public int getNbOfTutorings() {
+        return this.tutorings.size();
+    }
+
+    // Adding Persons to the Department
     public boolean addStudent(Student student) {
         return this.students.add(student);
     }
@@ -50,24 +64,49 @@ public class Departement {
         } else {
             return addTeacher((Teacher) person);
         }
+    }    
+    public boolean add(Collection<Person> persons){
+        boolean add = true;
+        for (Person person : persons) {
+            add &= add(person);
+        }
+        return add;
     }
 
-    public void addTutoring(Resource resource) {
+    // Tutoring    
+    public void newTutoring(Resource resource) {
         tutorings.put(resource, new Tutorat(resource));
     }
-    public void addTutoring(Resource resource, Teacher teacher) {
+
+    public void newTutoring(Resource resource, Teacher teacher) {
         tutorings.put(resource, new Tutorat(teacher, resource));
     }
 
-    public void registerStudents(Resource resource) {
+    public Tutorat getTutoring(Resource resource){
+        return tutorings.get(resource);
+    }
+
+    public Teacher getTeacher(Resource resource) {
+        return tutorings.get(resource).getTeacher();
+    }
+    
+    public void setTeacher(Resource resource, Teacher teacher) {
+            if (!teachers.contains(teacher)) {
+                teachers.add(teacher);
+            }
+            tutorings.get(resource).setTeacher(teacher);
+        }
+    
+    // Adding Students to a Tutoring
+    public void registerStudent(Resource resource) {
         for (Student student : students) {
             if (student.grades.containsKey(resource)) {
-                registerStudent(resource, student);
+                checkedRegisterStudent(resource, student);
             }
         }
     }
 
-    public void registerStudents(Resource resource, Collection<Student> students) {
+    public void registerStudent(Resource resource, Collection<Student> students) {
         for (Student student : students) {
             registerStudent(resource, student);
         }
@@ -77,51 +116,39 @@ public class Departement {
         if (!student.grades.containsKey(resource)) {
             student.addGrade(resource, Student.getDefaultGrade());
         }
+        checkedRegisterStudent(resource, student);
+    }
+
+    private void checkedRegisterStudent(Resource resource, Student student){
         tutorings.get(resource).addStudent(student);
     }
 
-    @Override
     public String toString() {
         return "Departement [Département " + name + ", tutorings=" + tutorings + "]";
     }
 
+    // ------------------------
+    // Attribute getters & setters 
+    // ------------------------
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    //  Copy of? plutot faire getCOpyOfTeachers()?
+    public Set<Teacher> getTeachers() {
+        return Set.copyOf(teachers);
     }
 
     public Set<Student> getStudents() {
         return students;
     }
 
-    public int getNbOfStudents() {
-        return this.students.size();
-    }
-
-    public int getNbOfteachers() {
-        return this.teachers.size();
-    }
-
-    public int getNbOfTutorings() {
-        return this.tutorings.size();
-    }
-
-    public Teacher getTeacher(Resource resource) {
-        return tutorings.get(resource).getTeacher();
-    }
-
-    public void setTeacher(Resource resource, Teacher teacher) {
-        if (!teachers.contains(teacher)) {
-            teachers.add(teacher);
-        }
-        tutorings.get(resource).setTeacher(teacher);
-    }
-
-
-    public Set<Teacher> getTeachers() {
-        return Set.copyOf(teachers);
-    }
-
     public Map<Resource, Tutorat> getTutorings() {
         return Map.copyOf(tutorings);
     }
+
 }

@@ -3,6 +3,8 @@ package oop;
 import java.util.EnumMap;
 import java.util.Map;
 
+import graphs.affectation.Tutorat;
+
 /**
  * Abstract class that represents a student.
  * 
@@ -35,6 +37,10 @@ public abstract class Student extends Person {
         setMotivation(motivation);
     }
 
+
+    // ------------------------
+    // Class methods
+    // ------------------------
     public void addGrade(Resource resource, double grade) {
         this.grades.put(resource, grade);
     }
@@ -46,10 +52,9 @@ public abstract class Student extends Person {
         return this.getWeight(resource, Student.defaultGrade, Student.defaultAbsences, Teacher.getDefaultWeighting(),
                 Teacher.getDefaultWeighting(), Teacher.getDefaultWeighting());
     }
-
+    public abstract double getWeight(Tutorat tutorat);
     public abstract double getWeight(Resource resource, double gradesAverage, double absencesAverage, double gradesWeight,
             double absencesWeight, double levelWeight);
-
 
     @Override
     public int hashCode() {
@@ -88,6 +93,33 @@ public abstract class Student extends Person {
                 + this.absences + ", notes= " + this.grades.toString() + ", motivation= " + this.motivation + "]";
     }
 
+    // ------------------------
+    // Attribute getters & setters 
+    // ------------------------
+    protected void setLevel(int level) {
+        if (level < 1 || level > 3) {
+            this.level = Student.defaultLevel;
+        } else {
+            this.level = level;
+        }
+    }
+
+    public void setAbsences(int absences) {
+        if (absences >= 0) {
+            this.absences = absences;
+        } else {
+            this.absences = Student.defaultAbsences;
+        }
+    }
+
+    public void setMotivation(char motivation) {
+        if (motivation != 'A' && motivation != 'B' && motivation != 'C') {
+            this.motivation = defaultMotivation;
+        } else {
+            this.motivation = motivation;
+        }
+    }
+
     public int getLevel() {
         return level;
     }
@@ -104,6 +136,16 @@ public abstract class Student extends Person {
         return this.grades;
     }
 
+    // Custom
+    public double getGrade(Resource resource) {
+        return this.grades.get(resource);
+    }
+
+    public void setGrade(Resource resource, double grade){
+        this.grades.replace(resource, grade);
+    }
+
+    // Static getters & setters
     public static double getDefaultGrade() {
         return defaultGrade;
     }
@@ -134,38 +176,6 @@ public abstract class Student extends Person {
 
     public static void setDefaultAbsences(int defaultAbsences) {
         Student.defaultAbsences = defaultAbsences;
-    }
-
-    public double getGrade(Resource resource) {
-        return this.grades.get(resource);
-    }
-
-    public void setGrade(Resource resource, double grade){
-        this.grades.replace(resource, grade);
-    }
-
-    public void setLevel(int level) {
-        if (level < 1 || level > 3) {
-            this.level = Student.defaultLevel;
-        } else {
-            this.level = level;
-        }
-    }
-
-    public void setAbsences(int absences) {
-        if (absences >= 0) {
-            this.absences = absences;
-        } else {
-            this.absences = Student.defaultAbsences;
-        }
-    }
-
-    public void setMotivation(char motivation) {
-        if (motivation != 'A' && motivation != 'B' && motivation != 'C') {
-            this.motivation = defaultMotivation;
-        } else {
-            this.motivation = motivation;
-        }
     }
 
 }

@@ -1,5 +1,6 @@
 package oop;
 
+import graphs.affectation.Tutorat;
 import utility.Tools;
 
 /**
@@ -31,5 +32,7 @@ public class Tutored extends Student {
                 * Tools.motivationValue(this.motivation)
                 / 2; //Le tout divisé par le nombre de paramètres pour rester autour de 1
     }
-
+    public double getWeight(Tutorat tutorat){
+        return getWeight(tutorat.getResource(), tutorat.getTutoredGradesAverage(), tutorat.getTutoredAbsenceAverage(), tutorat.getTeacher().getAverageWeighting(), tutorat.getTeacher().getAbsenceWeighting(), tutorat.getTeacher().getLevelWeighting());
+    }
 }
