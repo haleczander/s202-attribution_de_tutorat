@@ -9,9 +9,6 @@ import utility.ToolsCSV;
 import utility.ToolsJSON;
 
 public class ScenarioNumberTwo {
-    /**
-     *
-     */
     private static final String SEPARATOR = "\n\t\t-----\n";
     static List<Department> iut = new ArrayList<>();
     static Department department;
@@ -29,10 +26,10 @@ public class ScenarioNumberTwo {
 
     public static void main(String[] args) {
         System.out.println("\nL'I.U.T. de Lille veut mettre en place un système de tutorat");
-        System.out.println("\t>Chaque Département dispose d'une liste d'élèves et de professeurs");
-        System.out.println("\t>Ces élèves disposent ou non de notes pour une matière");
-        System.out.println("\t>Cette note est le critère d'éligibilité au tutorat pour cette matière");
-        System.out.println("\t>Chaque tutorat dispose d'un professeur référent\n");
+        System.out.println("\t> Chaque Département dispose d'une liste d'élèves et de professeurs");
+        System.out.println("\t> Ces élèves disposent ou non de notes pour une matière");
+        System.out.println("\t> Cette note est le critère d'éligibilité au tutorat pour cette matière");
+        System.out.println("\t> Chaque tutorat dispose d'un professeur référent\n");
 
         inscriptionDepartement();
         inscriptionTutorat();

@@ -34,7 +34,6 @@ public final class Scenario {
         mrCarleAimeLImplication();
         unEtudiantManqueDeRespect();
         finDAnnee();
-        
     }
 
     static void bienvenueALIUT() {
@@ -94,10 +93,10 @@ public final class Scenario {
     static void monPremierCouple() {
         System.out.println();
         System.out.println(
-                "Madeleine et Thérèse s'entendent vraiment bien\n");
+                "Mettre les deux Sabine ensemble semble être une bonne\n");
 
-        currentTutoring.addForcedAssignments("Madeleine Barre", "Thérèse Gay");
-        currentTutoring.scenarioToString(String.valueOf(cas++), "Affectation forcée : Madeleine & Thérèse");
+        currentTutoring.addForcedAssignments("Sabine Besnard", "Sabine Leleu");
+        currentTutoring.scenarioToString(String.valueOf(cas++), "Affectation forcée : Sabine & Sabine");
     }
 
     static void mesPremieresAnimosites() {
@@ -149,9 +148,10 @@ public final class Scenario {
         currentTutoring.scenarioToString(String.valueOf(cas++), "Il faut respecter les enseignants !");
     }
 
-    static void finDAnnee(){
+    static void finDAnnee() {
         System.out.println();
-        System.out.println("C'est super, grâce au dévoument de Mr Carle,\nTous le monde a eu une super note au CTP de Web!");
+        System.out.println(
+                "C'est super, grâce au dévoument de Mr Carle,\nTous le monde a eu une super note au CTP de Web!");
         System.out.println();
         System.out.println("Fin du scénario, merci de l'avoir éxécuté!");
     }
