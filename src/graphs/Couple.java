@@ -1,4 +1,4 @@
-package graphs.affectation;
+package graphs;
 
 import oop.Student;
 import oop.Tutor;

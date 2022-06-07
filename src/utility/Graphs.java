@@ -3,7 +3,7 @@ package utility;
 import java.util.List;
 
 import fr.ulille.but.sae2_02.graphes.GrapheNonOrienteValue;
-import graphs.affectation.Tutorat;
+import graphs.Tutoring;
 import oop.Student;
 import oop.Tutor;
 import oop.Tutored;
@@ -24,7 +24,7 @@ public final class Graphs {
      * @see Tutor#getWeight(double, double)
      */
     public static GrapheNonOrienteValue<Student> getGraph(List<Tutored> duplicateTutored, List<Tutor> duplicateTutor,
-            Tutorat tutorat) {
+            Tutoring tutorat) {
         GrapheNonOrienteValue<Student> graph = new GrapheNonOrienteValue<>();
 
         addVertices(graph, duplicateTutored);
@@ -38,12 +38,12 @@ public final class Graphs {
         return graph;
     }
 
-    private static double computeEdgeWeight(Tutored tutored, Tutor tutor, Tutorat tutorat) {
+    private static double computeEdgeWeight(Tutored tutored, Tutor tutor, Tutoring tutorat) {
         if (Couples.containsCouple(tutorat.getForcedCouples(), tutored, tutor)) {
-            return -Tutorat.getForcedAffectationWeight();
+            return -Tutoring.getForcedAffectationWeight();
         }
         if (Couples.containsCouple(tutorat.getForbiddenCouples(), tutored, tutor)) {
-            return Tutorat.getForcedAffectationWeight();
+            return Tutoring.getForcedAffectationWeight();
         }
         return tutored.getWeight(tutorat) + tutor.getWeight(tutorat);
     }

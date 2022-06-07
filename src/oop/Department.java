@@ -6,19 +6,19 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import graphs.affectation.Tutorat;
+import graphs.Tutoring;
 
-public class Departement {
+public class Department {
     private String name;
     private Set<Student> students;
     private Set<Teacher> teachers;
-    private Map<Resource, Tutorat> tutorings = new EnumMap<>(Resource.class);
+    private Map<Resource, Tutoring> tutorings = new EnumMap<>(Resource.class);
 
-    public Departement(String name) {
+    public Department(String name) {
         this(name, new HashSet<>(), new HashSet<>());
     }
 
-    public Departement(String name, Set<Student> students, Set<Teacher> teachers) {
+    public Department(String name, Set<Student> students, Set<Teacher> teachers) {
         this.name = name;
         this.students = students;
         this.teachers = teachers;
@@ -75,14 +75,14 @@ public class Departement {
 
     // Tutoring    
     public void newTutoring(Resource resource) {
-        tutorings.put(resource, new Tutorat(resource));
+        tutorings.put(resource, new Tutoring(resource));
     }
 
     public void newTutoring(Resource resource, Teacher teacher) {
-        tutorings.put(resource, new Tutorat(teacher, resource));
+        tutorings.put(resource, new Tutoring(teacher, resource));
     }
 
-    public Tutorat getTutoring(Resource resource){
+    public Tutoring getTutoring(Resource resource){
         return tutorings.get(resource);
     }
 
@@ -138,8 +138,7 @@ public class Departement {
         this.name = name;
     }
 
-    //  Copy of? plutot faire getCOpyOfTeachers()?
-    public Set<Teacher> getTeachers() {
+    public Set<Teacher> getCopyOfTeachers() {
         return Set.copyOf(teachers);
     }
 
@@ -147,7 +146,7 @@ public class Departement {
         return students;
     }
 
-    public Map<Resource, Tutorat> getTutorings() {
+    public Map<Resource, Tutoring> getTutorings() {
         return Map.copyOf(tutorings);
     }
 

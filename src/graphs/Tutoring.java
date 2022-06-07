@@ -1,4 +1,4 @@
-package graphs.affectation;
+package graphs;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -31,7 +31,7 @@ import utility.Tutors;
  * @see #getAssignment()
  * @see fr.ulille.but.sae2_02.graphes.CalculAffectation
  */
-public class Tutorat {
+public class Tutoring {
     private Resource resource;
 
     private List<Tutored> tutored;
@@ -58,7 +58,7 @@ public class Tutorat {
 
     private CalculAffectation<Student> affectation = null;
 
-    public Tutorat(Resource resource) {
+    public Tutoring(Resource resource) {
         this.resource = resource;
 
         this.tutored = new ArrayList<>();
@@ -84,7 +84,7 @@ public class Tutorat {
      * @param tutors  List of tutor students that will take in charge tutored
      *                students.
      */
-    public Tutorat(List<Tutored> tutored, List<Tutor> tutors, Resource resource) {
+    public Tutoring(List<Tutored> tutored, List<Tutor> tutors, Resource resource) {
         this(resource);
         this.tutored = tutored;
         this.tutors = tutors;
@@ -96,7 +96,7 @@ public class Tutorat {
      * 
      * @param students List of students to dispatch.
      */
-    public Tutorat(Set<Student> students, Resource resource) {
+    public Tutoring(Set<Student> students, Resource resource) {
         this(resource);
         addStudent(students);
     }
@@ -108,7 +108,7 @@ public class Tutorat {
      * @param students List of students to dispatch.
      * @param teacher  Teacher overseeing the tutoring.
      */
-    public Tutorat(Set<Student> students, Teacher teacher, Resource resource) {
+    public Tutoring(Set<Student> students, Teacher teacher, Resource resource) {
         this(students, resource);
         this.teacher = teacher;
     }
@@ -122,7 +122,7 @@ public class Tutorat {
      *                students.
      * @param teacher Teacher overseeing the tutoring.
      */
-    public Tutorat(List<Tutored> tutored, List<Tutor> tutors, Teacher teacher, Resource resource) {
+    public Tutoring(List<Tutored> tutored, List<Tutor> tutors, Teacher teacher, Resource resource) {
         this(tutored, tutors, resource);
         this.teacher = teacher;
     }
@@ -132,7 +132,7 @@ public class Tutorat {
      * 
      * @param teacher Teacher overseeing the tutoring.
      */
-    public Tutorat(Teacher teacher, Resource resource) {
+    public Tutoring(Teacher teacher, Resource resource) {
         this(resource);
         this.teacher = teacher;
     }
@@ -141,11 +141,11 @@ public class Tutorat {
     // Class methods
     // ------------------------
     private void updateAverages() {
-        double[] values = Tutorat.computeAverages(tutored, resource);
+        double[] values = Tutoring.computeAverages(tutored, resource);
         this.tutoredAbsenceAverage = values[0];
         this.tutoredGradesAverage = values[1];
 
-        values = Tutorat.computeAverages(tutors, resource);
+        values = Tutoring.computeAverages(tutors, resource);
         this.tutorAbsenceAverage = values[0];
         this.tutorGradesAverage = values[1];
     }
@@ -465,7 +465,7 @@ public class Tutorat {
     }
 
     public static void setMaxWeighting(double maxWeighting) {
-        Tutorat.maxWeighting = maxWeighting;
+        Tutoring.maxWeighting = maxWeighting;
     }
 
     public static int getForcedAffectationWeight() {
@@ -473,6 +473,6 @@ public class Tutorat {
     }
 
     public static void setForcedAffectationWeight(int forcedAffectationWeight) {
-        Tutorat.forcedAffectationWeight = forcedAffectationWeight;
+        Tutoring.forcedAffectationWeight = forcedAffectationWeight;
     }
 }

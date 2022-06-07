@@ -2,7 +2,7 @@ package utility;
 
 import java.util.Set;
 
-import graphs.affectation.Couple;
+import graphs.Couple;
 import oop.Student;
 import oop.Tutor;
 import oop.Tutored;

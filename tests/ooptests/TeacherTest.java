@@ -10,7 +10,7 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
-import graphs.affectation.Tutorat;
+import graphs.Tutoring;
 import oop.Coefficient;
 import oop.Resource;
 import oop.Teacher;
@@ -68,7 +68,7 @@ public class TeacherTest {
         assertEquals(0, t2.getAbsenceWeighting());
 
         t3.setAverageWeighting(8);
-        assertEquals(Tutorat.getMaxWeighting(), t3.getAverageWeighting());
+        assertEquals(Tutoring.getMaxWeighting(), t3.getAverageWeighting());
     }
 
 }

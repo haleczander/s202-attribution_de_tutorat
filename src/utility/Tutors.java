@@ -3,7 +3,7 @@ package utility;
 import java.util.ArrayList;
 import java.util.List;
 
-import graphs.affectation.Tutorat;
+import graphs.Tutoring;
 import oop.Student;
 import oop.StudentComparator;
 import oop.Tutor;
@@ -32,7 +32,7 @@ public final class Tutors {
      * @see Tutor#compareTo(Student)
      * @see Tutor#duplicate()
      */
-    public static List<Tutor> gapClose(List<Tutor> list, Tutorat tutorat, int diff) {
+    public static List<Tutor> gapClose(List<Tutor> list, Tutoring tutorat, int diff) {
         int difference = diff;
         list.sort(new StudentComparator(tutorat));
         List<Tutor> toAdd = new ArrayList<>();

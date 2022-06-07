@@ -27,7 +27,7 @@ public abstract class Person {
      * 
      * @param name full name in the form : "forename surname".
      */
-    protected Person(String name, boolean isStudent) {
+    protected Person(String name, boolean isAStudent) {
 
         String[] names = name.split(" ");
 
@@ -38,7 +38,7 @@ public abstract class Person {
             this.forename = names[0];
             this.surname = names[1];
         }
-        this.isAStudent = isStudent;
+        this.isAStudent = isAStudent;
     }
 
     // ------------------------

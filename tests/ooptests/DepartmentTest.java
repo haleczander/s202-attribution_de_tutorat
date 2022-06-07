@@ -3,7 +3,6 @@ package ooptests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertSame;
 
 import java.util.List;
 import java.util.Set;
@@ -11,7 +10,7 @@ import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import oop.Departement;
+import oop.Department;
 import oop.Resource;
 import oop.Student;
 import oop.Teacher;
@@ -19,14 +18,14 @@ import oop.Tutor;
 import oop.Tutored;
 
 public class DepartmentTest {
-	Departement departement;
+	Department departement;
 	Tutored u1, u2, u3;
 	Tutor t1, t2, t3;
 	Teacher teacher1, teacher2, teacher3, teacher4, teacher5;
 
 	@BeforeEach
 	public void initialize() {
-		departement = new Departement("Informatique");
+		departement = new Department("Informatique");
 
 		u1 = new Tutored("Anémone", 2, 'B');
 		u1.addGrade(Resource.R101, 8.2);
@@ -94,7 +93,7 @@ public class DepartmentTest {
 		assertTrue(departement.addTeacher(teacher2));
 		assertTrue(departement.addTeacher(teacher3));
 		assertTrue(departement.addTeacher(teacher4));
-		assertEquals(4, departement.getTeachers().size());
+		assertEquals(4, departement.getCopyOfTeachers().size());
 
 		assertFalse(departement.addTeacher(teacher1));
 		assertFalse(departement.addTeacher(teacher2));
@@ -106,13 +105,13 @@ public class DepartmentTest {
 	void addTeacher2Test() {
 		assertTrue(departement.addTeacher(List.of(teacher1, teacher2)));
 		assertTrue(departement.addTeacher(List.of(teacher3)));
-		assertEquals(3, departement.getTeachers().size());
+		assertEquals(3, departement.getCopyOfTeachers().size());
 
 		assertFalse(departement.addTeacher(List.of(teacher1)));
 		assertFalse(departement.addTeacher(List.of(teacher1, teacher2, teacher3)));
 
 		assertTrue(departement.addTeacher(List.of(teacher1, teacher4, teacher5)));
-		assertEquals(5, departement.getTeachers().size());
+		assertEquals(5, departement.getCopyOfTeachers().size());
 		assertFalse(departement.addTeacher(List.of(teacher1, teacher2, teacher3, teacher4, teacher5)));
 	}
 
@@ -130,10 +129,10 @@ public class DepartmentTest {
 		assertTrue(departement.add(teacher1));
 		assertTrue(departement.add(teacher2));
 
-		assertEquals(2, departement.getTeachers().size());
-		assertTrue(departement.getTeachers().contains(teacher1));
-		assertTrue(departement.getTeachers().contains(teacher2));
-		assertFalse(departement.getTeachers().contains(teacher3));
+		assertEquals(2, departement.getCopyOfTeachers().size());
+		assertTrue(departement.getCopyOfTeachers().contains(teacher1));
+		assertTrue(departement.getCopyOfTeachers().contains(teacher2));
+		assertFalse(departement.getCopyOfTeachers().contains(teacher3));
 
 		assertTrue(departement.add(t1));
 		assertTrue(departement.add(t2));

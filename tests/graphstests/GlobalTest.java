@@ -14,7 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import fr.ulille.but.sae2_02.graphes.Arete;
-import graphs.affectation.Tutorat;
+import graphs.Tutoring;
 import oop.Person;
 import oop.Resource;
 import oop.Student;
@@ -43,7 +43,7 @@ public class GlobalTest {
             t4,
             t5;
     private Teacher teacher;
-    private Tutorat assignment;
+    private Tutoring assignment;
     private static final double DELTA = 0.002;
     private static final Resource RESOURCE = Resource.R101;
 
@@ -84,7 +84,7 @@ public class GlobalTest {
             tutorList.get(i).addGrade(RESOURCE, tGrades[i]);
         }
 
-        assignment = new Tutorat(tutoredList, tutorList, RESOURCE);
+        assignment = new Tutoring(tutoredList, tutorList, RESOURCE);
         assignment.setTeacher(teacher);
     }
 

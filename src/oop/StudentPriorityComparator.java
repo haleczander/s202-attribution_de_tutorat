@@ -2,13 +2,13 @@ package oop;
 
 import java.util.Comparator;
 
-import graphs.affectation.Tutorat;
+import graphs.Tutoring;
 import utility.Couples;
 
 public class StudentPriorityComparator implements Comparator<Student> {
-    Tutorat tutorat;
+    Tutoring tutorat;
 
-    public StudentPriorityComparator(Tutorat tutorat){
+    public StudentPriorityComparator(Tutoring tutorat){
         this.tutorat= tutorat;
     }
 

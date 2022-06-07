@@ -1,6 +1,6 @@
 package oop;
 
-import graphs.affectation.Tutorat;
+import graphs.Tutoring;
 import utility.Tools;
 
 /**
@@ -36,7 +36,6 @@ public class Tutor extends Student {
      * level is 2, 2 if level is 3.)
      * 
      * @param name       tutor's name.
-     * @param average    tutor's average, between 0 and 20.
      * @param level      tutor's level, between 1 and 3.
      * @param absences   tutor's absences.
      * @param motivation tutor's motivation, letter A, B or C.
@@ -118,7 +117,7 @@ public class Tutor extends Student {
     }
 
     @Override
-    public double getWeight(Tutorat tutorat) {
+    public double getWeight(Tutoring tutorat) {
         return getWeight(tutorat.getResource(), tutorat.getTutorGradesAverage(), tutorat.getTutorAbsenceAverage(),
                 tutorat.getTeacher().getAverageWeighting(), tutorat.getTeacher().getAbsenceWeighting(),
                 tutorat.getTeacher().getLevelWeighting());

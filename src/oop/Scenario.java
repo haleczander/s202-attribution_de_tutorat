@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import graphs.affectation.Tutorat;
+import graphs.Tutoring;
 import utility.ToolsCSV;
 
 public final class Scenario {
@@ -13,7 +13,7 @@ public final class Scenario {
         throw new UnsupportedOperationException("Utility class cannot be instantiated");
     }
 
-    static List<Departement> iut = new ArrayList<>();
+    static List<Department> iut = new ArrayList<>();
     public static void main(String[] args) {
         /* 
         L'I.U.T. de Lille veut mettre en place un système de tutorat
@@ -31,7 +31,7 @@ public final class Scenario {
         Bienvenue à l'IUT, 
         Cette année nous ne nous intéressons qu'au département informatique !
         */
-        Departement dptInfo = new Departement("Informatique");
+        Department dptInfo = new Department("Informatique");
         iut.add(dptInfo);
 
 
@@ -50,12 +50,12 @@ public final class Scenario {
         Teacher jeanCarle = new Teacher("Jean carle", Resource.R102);
         dptInfo.add(jeanCarle);
         System.out.println("Il y a désormais " + dptInfo.getNbOfteachers() + " enseignant dans le département informatique !");
-        System.out.println(dptInfo.getTeachers());
+        System.out.println(dptInfo.getCopyOfTeachers());
         System.err.println();
 
         Resource web = Resource.R102;
         dptInfo.newTutoring(web, jeanCarle);
-        Tutorat webTutorat = dptInfo.getTutoring(web);
+        Tutoring webTutorat = dptInfo.getTutoring(web);
         System.out.println("Le premier tutorat a été créé !");
         System.out.println(webTutorat);
         System.out.println();
@@ -99,7 +99,7 @@ public final class Scenario {
     }
 
     static void scenario1(){
-        Departement info = new Departement("Info");
+        Department info = new Department("Info");
         iut.add(info);
 
         Set<Student> students = ToolsCSV.importStudents();

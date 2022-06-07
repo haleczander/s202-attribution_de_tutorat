@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import fr.ulille.but.sae2_02.graphes.Arete;
-import graphs.affectation.Tutorat;
+import graphs.Tutoring;
 import oop.Student;
 import oop.StudentPriorityComparator;
 import oop.Tutor;
@@ -21,7 +21,7 @@ import oop.Tutored;
  * 
  * @author Léopold V.
  * @author Alexandre H.
- * @see Tutorat
+ * @see Tutoring
  * 
  */
 public final class Tools {
@@ -42,7 +42,7 @@ public final class Tools {
      * @see Tutored#compareTo(Student)
      * @see Tutor#compareTo(Student)
      */
-    public static List<Student> waitingListBuilder(List<? extends Student> list, Tutorat tutorat, int diff) {
+    public static List<Student> waitingListBuilder(List<? extends Student> list, Tutoring tutorat, int diff) {
         int difference = diff;
         List<Student> waitingList = new ArrayList<>();
         list.sort(new StudentPriorityComparator(tutorat));

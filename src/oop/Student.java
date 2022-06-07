@@ -3,7 +3,7 @@ package oop;
 import java.util.EnumMap;
 import java.util.Map;
 
-import graphs.affectation.Tutorat;
+import graphs.Tutoring;
 
 /**
  * Abstract class that represents a student.
@@ -59,7 +59,7 @@ public abstract class Student extends Person {
                 Teacher.getDefaultWeighting(), Teacher.getDefaultWeighting());
     }
 
-    public abstract double getWeight(Tutorat tutorat);
+    public abstract double getWeight(Tutoring tutorat);
 
     public abstract double getWeight(Resource resource, double gradesAverage, double absencesAverage,
             double gradesWeight,
