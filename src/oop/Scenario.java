@@ -33,7 +33,7 @@ public final class Scenario {
         ilFautAiderCeuxEnDifficulte();
         mrCarleAimeLImplication();
         unEtudiantManqueDeRespect();
-        
+
     }
 
     static void bienvenueALIUT() {
@@ -86,28 +86,28 @@ public final class Scenario {
         System.out.println("\n\t\t-----\n");
         System.out.println("C'est l'heure de réaliser la première affectation !");
         System.out.println();
-        currentTutoring.scenarioToString("" + cas++, "Situation de base");
+        currentTutoring.scenarioToString(String.valueOf(cas++), "Situation de base");
 
     }
 
-    static void monPremierCouple(){
+    static void monPremierCouple() {
         System.out.println();
         System.out.println(
                 "Madeleine et Thérèse s'entendent vraiment bien\n");
 
         currentTutoring.addForcedAssignments("Madeleine Barre", "Thérèse Gay");
-        currentTutoring.scenarioToString("" + cas++, "Affectation forcée : Madeleine & Thérèse");
+        currentTutoring.scenarioToString(String.valueOf(cas++), "Affectation forcée : Madeleine & Thérèse");
     }
 
-    static void mesPremieresAnimosites(){
+    static void mesPremieresAnimosites() {
         System.out.println("Lucas et Martin se peuvent pas se trouver dans la même pièce...\n");
         currentTutoring.addForbiddenAssignments("Lucas Bouchet", "Martin Delmas");
-        currentTutoring.scenarioToString("" + cas++, "Affectation interdite : Lucas & Martin");
+        currentTutoring.scenarioToString(String.valueOf(cas++), "Affectation interdite : Lucas & Martin");
     }
 
-    static void ilFautAiderCeuxEnDifficulte(){
+    static void ilFautAiderCeuxEnDifficulte() {
         System.out.println(
-            "Un nouvel étudiant, Paul Delabible aimerait participer en tant que tutoré\nIl n'a jamais été absent et est très motivé!\nEt ca se comprend, ses notes en web sont désastreuses...");
+                "Un nouvel étudiant, Paul Delabible aimerait participer en tant que tutoré\nIl n'a jamais été absent et est très motivé!\nEt ca se comprend, ses notes en web sont désastreuses...");
         Tutored paul = new Tutored("Paul Delabible", 0, 'A');
         paul.setGrade(currentTutoring.getResource(), 5.42);
         System.out.println("\t>" + currentTutoring);
@@ -117,12 +117,13 @@ public final class Scenario {
         // System.out.println("\t>" + currentTutoring.getTutored());
         System.out.println();
         System.out.println("Relançons l'affectation ! \n");
-        currentTutoring.scenarioToString("" + cas++, "Paul Delabible est mauvais en Web!");
+        currentTutoring.scenarioToString(String.valueOf(cas++), "Paul Delabible est mauvais en Web!");
     }
-    
-    static void mrCarleAimeLImplication(){
+
+    static void mrCarleAimeLImplication() {
         Teacher jean = currentTutoring.getTeacher();
-        System.out.println("Monsieur Carle désire accorder de l'importance aux absences,\nles notes pour lui ne sont d'aucun intérêt");
+        System.out.println(
+                "Monsieur Carle désire accorder de l'importance aux absences,\nles notes pour lui ne sont d'aucun intérêt");
         System.out.println("\t>Départ :\t\t" + jean.getWeightings());
         jean.setAbsenceWeighting(Tutoring.getMaxWeighting());
         System.out.println("\t>Update absences\t" + jean.getWeightings());
@@ -133,18 +134,18 @@ public final class Scenario {
 
         System.out.println();
         System.out.println("Réaffectons ! \n");
-        currentTutoring.scenarioToString(""+cas++, "Modification des poids d'affectation !");
+        currentTutoring.scenarioToString(String.valueOf(cas++), "Modification des poids d'affectation !");
     }
 
-    static void unEtudiantManqueDeRespect(){
+    static void unEtudiantManqueDeRespect() {
         System.out.println();
         System.err.println("Hortense a manqué de respect à Mr Carle,\nelle est exclue du tutorat!");
         System.out.println("\t>" + currentTutoring);
-        currentTutoring.removeStudent((Tutored)Persons.getPerson("Hortense Chauveau", currentTutoring.getTutored()));
+        currentTutoring.removeStudent((Tutored) Persons.getPerson("Hortense Chauveau", currentTutoring.getTutored()));
         System.out.println("\t>" + currentTutoring);
         System.out.println();
         System.out.println("Relançons une affectation !\n");
-        currentTutoring.scenarioToString("" + cas++, "Il faut respecter les enseignants !");
+        currentTutoring.scenarioToString(String.valueOf(cas++), "Il faut respecter les enseignants !");
     }
 
 }

@@ -1,6 +1,7 @@
 package graphs;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -17,6 +18,7 @@ import utility.Couples;
 import utility.Graphs;
 import utility.Persons;
 import utility.Tools;
+import utility.ToolsJSON;
 import utility.Tutors;
 
 /**
@@ -234,7 +236,7 @@ public class Tutoring {
      * 
      * @param students a list of all students to dispatch.
      */
-    public final void addStudent(Set<Student> students) {
+    public final void addStudent(Collection<Student> students) {
         for (Student s : students) {
             addStudent(s);
         }
@@ -259,6 +261,43 @@ public class Tutoring {
             return this.tutored.add((Tutored) student);
         } else {
             return this.tutors.add((Tutor) student);
+        }
+    }
+
+    /**
+     * Filters 
+     * 
+     * @param filters double[] as outputted by readFilters method.
+     * 
+     * @see ToolsJSON#readFilters()
+     */
+    public final void filterStudents(double[] filters) {
+        List<Tutor> tutorToRemove = new ArrayList<>();
+        List<Tutored> tutoredToRemove = new ArrayList<>();
+
+        for (Tutored tutoreds : tutored) {
+            double grade = tutoreds.getGrade(resource);
+            int abs = tutoreds.getAbsences();
+
+            if (grade < filters[0] || grade > filters[1] || abs < filters[2] || abs > filters[3]) {
+                tutoredToRemove.add(tutoreds);
+            }
+        }
+    
+        for (Tutor tutor : tutors) {
+            double grade = tutor.getGrade(resource);
+            int abs = tutor.getAbsences();
+
+            if (grade < filters[4] || grade > filters[5] || abs < filters[6] || abs > filters[7]) {
+                tutorToRemove.add(tutor);
+            }
+        }
+
+        for (Tutored tutoreds : tutoredToRemove) {
+            this.removeStudent(tutoreds);
+        }
+        for (Tutor tutor : tutorToRemove) {
+            this.removeStudent(tutor);
         }
     }
 
