@@ -6,12 +6,12 @@ public enum Motivation {
     private char abbr;
     private double weightModifier;
 
-    private Motivation(char abbr, double weightModifier){
+    private Motivation(char abbr, double weightModifier) {
         this.abbr = abbr;
         this.weightModifier = weightModifier;
     }
 
-    public static Motivation getMotivationByAbbr(char abbr){
+    public static Motivation getMotivationByAbbr(char abbr) {
         for (Motivation m : Motivation.values()) {
             if (m.abbr == abbr) {
                 return m;

@@ -41,9 +41,6 @@ public class Tutorat {
 
     private List<Student> waitingList;
 
-    private Set<Edge> forcedAssignments;
-    private Set<Edge> forbiddenAssignments;
-
     private Set<Couple> forcedCouples = new HashSet<>();
     private Set<Couple> forbiddenCouples = new HashSet<>();
 
@@ -59,9 +56,7 @@ public class Tutorat {
 
     private static int forcedAffectationWeight = 1000;
 
-
     private CalculAffectation<Student> calculAffectation = null;
-
 
     public Tutorat(Resource resource) {
         this.resource = resource;
@@ -72,9 +67,6 @@ public class Tutorat {
         this.polyTutor = true;
 
         this.waitingList = new ArrayList<>();
-
-        this.forcedAssignments = new HashSet<>();
-        this.forbiddenAssignments = new HashSet<>();
 
         this.tutoredGradesAverage = 0;
         this.tutorGradesAverage = 0;
@@ -177,11 +169,12 @@ public class Tutorat {
      * @throws IllegalArgumentException if this duo has already been put in the map.
      */
     public boolean addForcedAssignments(Tutored tutored, Tutor tutor) {
-        this.forcedCouples.add(new Couple(tutored, tutor));
-        return this.forcedAssignments.add(new Edge(tutored, tutor));
+        return this.forcedCouples.add(new Couple(tutored, tutor));
     }
+
     public boolean addForcedAssignments(String tutored, String tutor) {
-        return addForcedAssignments((Tutored)Persons.getPerson(tutored, this.tutored), (Tutor)Persons.getPerson(tutor, this.tutors));
+        return addForcedAssignments((Tutored) Persons.getPerson(tutored, this.tutored),
+                (Tutor) Persons.getPerson(tutor, this.tutors));
     }
 
     /**
@@ -193,11 +186,12 @@ public class Tutorat {
      * @throws IllegalArgumentException if this duo has already been put in the map.
      */
     public boolean addForbiddenAssignments(Tutored tutored, Tutor tutor) {
-        this.forbiddenCouples.add(new Couple(tutored, tutor));
-        return this.forbiddenAssignments.add(new Edge(tutored, tutor));
+        return this.forbiddenCouples.add(new Couple(tutored, tutor));
     }
+
     public boolean addForbiddenAssignments(String tutored, String tutor) {
-        return addForbiddenAssignments((Tutored)Persons.getPerson(tutored, this.tutored), (Tutor)Persons.getPerson(tutor, this.tutors));
+        return addForbiddenAssignments((Tutored) Persons.getPerson(tutored, this.tutored),
+                (Tutor) Persons.getPerson(tutor, this.tutors));
     }
 
     /**
@@ -209,9 +203,9 @@ public class Tutorat {
      *                                  assignment with anyone.
      */
     public boolean removeForcedAssignment(Tutored tutored, Tutor tutor) {
-        Couples.remove(this.forcedCouples, tutored, tutor);
-        return this.forcedAssignments.remove(new Edge(tutored, tutor));
+        return Couples.remove(this.forcedCouples, tutored, tutor);        
     }
+
     /**
      * Removes a forbidden assignment for a tutored student.
      * 
@@ -221,8 +215,7 @@ public class Tutorat {
      *                                  assignment with anyone.
      */
     public boolean removeForbiddenAssignment(Tutored tutored, Tutor tutor) {
-        Couples.remove(this.forbiddenCouples, tutored, tutor);
-        return this.forbiddenAssignments.remove(new Edge(tutored, tutor));
+        return Couples.remove(this.forbiddenCouples, tutored, tutor);
     }
 
     // ------------------------
@@ -244,7 +237,7 @@ public class Tutorat {
     public void addStudent(Set<Student> students) {
         for (Student s : students) {
             addStudent(s);
-        }     
+        }
     }
 
     /**
@@ -296,7 +289,8 @@ public class Tutorat {
 
         GrapheNonOrienteValue<Student> graph = Graphs.getGraph(tutoredCopy, tutorCopy, this);
 
-        this.calculAffectation = new CalculAffectation<>(graph, new ArrayList<Student>(tutoredCopy), new ArrayList<Student>(tutorCopy));
+        this.calculAffectation = new CalculAffectation<>(graph, new ArrayList<Student>(tutoredCopy),
+                new ArrayList<Student>(tutorCopy));
     }
 
     /**
@@ -326,13 +320,13 @@ public class Tutorat {
         }
     }
 
-
     // ------------------------
-    // Display methods 
-    // ------------------------ 
+    // Display methods
+    // ------------------------
     @Override
     public String toString() {
-        return "Tutorat [Matière: "+ this.resource.getName() +", Enseignant: "+ this.teacher +", Tuteurs: " + this.tutors.size() + ", Tutorés: " + this.tutored.size() + ", Attente: "
+        return "Tutorat [Matière: " + this.resource.getName() + ", Enseignant: " + this.teacher + ", Tuteurs: "
+                + this.tutors.size() + ", Tutorés: " + this.tutored.size() + ", Attente: "
                 + this.waitingList.size() + "]";
     }
 
@@ -360,8 +354,8 @@ public class Tutorat {
     }
 
     // ------------------------
-    // Attribute getters & setters 
-    // ------------------------ 
+    // Attribute getters & setters
+    // ------------------------
     public Set<Couple> getForcedCouples() {
         return forcedCouples;
     }
@@ -393,7 +387,7 @@ public class Tutorat {
     public List<Tutor> getTutors() {
         return List.copyOf(this.tutors);
     }
-  
+
     /**
      * Sets whether or not tutors should be split if needed. Default value is true.
      * 
@@ -423,23 +417,23 @@ public class Tutorat {
         return tutorAbsenceAverage;
     }
 
-    // Custom    
-    public Tutor getTutor(String name){
-        return (Tutor)Persons.getPerson(name, tutors);
+    // Custom
+    public Tutor getTutor(String name) {
+        return (Tutor) Persons.getPerson(name, tutors);
     }
 
-    public Tutored getTutored(String name){
-        return (Tutored)Persons.getPerson(name, tutored);
+    public Tutored getTutored(String name) {
+        return (Tutored) Persons.getPerson(name, tutored);
     }
-    
+
     /**
      * Method that gives acces to an <strong>immutable</strong> copy of a list of
      * edges of students that represent an assignment.
      * 
      * @return a copy of the assignment.
      */
-    public List<Arete<Student>> getAssignment() {  
-        calculAffectation();      
+    public List<Arete<Student>> getAssignment() {
+        calculAffectation();
         return List.copyOf(this.calculAffectation.getAffectation());
     }
 
@@ -464,7 +458,7 @@ public class Tutorat {
         }
         return this.calculAffectation.getCout() % 1000 + (this.calculAffectation.getCout() % 1000 < 0 ? 1000 : 0);
     }
-  
+
     // Static getters & setters
     public static double getMaxWeighting() {
         return maxWeighting;
@@ -482,4 +476,3 @@ public class Tutorat {
         Tutorat.forcedAffectationWeight = forcedAffectationWeight;
     }
 }
-
