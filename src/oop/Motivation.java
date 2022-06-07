@@ -3,8 +3,8 @@ package oop;
 public enum Motivation {
     MOTIVATED('A', .9), NEUTRAL('B', 1), NOT_THAT_MUCH('C', 1.1);
 
-    char abbr;
-    double weightModifier;
+    private char abbr;
+    private double weightModifier;
 
     private Motivation(char abbr, double weightModifier){
         this.abbr = abbr;

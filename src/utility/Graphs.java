@@ -1,12 +1,12 @@
-package graphs.affectation;
+package utility;
 
 import java.util.List;
 
 import fr.ulille.but.sae2_02.graphes.GrapheNonOrienteValue;
+import graphs.affectation.Tutorat;
 import oop.Student;
 import oop.Tutor;
 import oop.Tutored;
-import utility.Couples;
 
 public class Graphs {
         /**
@@ -33,10 +33,10 @@ public class Graphs {
     }
 
     private static double computeEdgeWeight(Tutored tutored, Tutor tutor, Tutorat tutorat){
-        if (Couples.exists(tutorat.getForcedCouples(), tutored, tutor)){
+        if (Couples.containsCouple(tutorat.getForcedCouples(), tutored, tutor)){
             return -Tutorat.getForcedAffectationWeight();
         } 
-        if (Couples.exists(tutorat.getForbiddenCouples(), tutored, tutor)){
+        if (Couples.containsCouple(tutorat.getForbiddenCouples(), tutored, tutor)){
             return Tutorat.getForcedAffectationWeight();
         } 
         return tutored.getWeight(tutorat) + tutor.getWeight(tutorat);

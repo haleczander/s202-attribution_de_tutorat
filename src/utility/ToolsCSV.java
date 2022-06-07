@@ -13,7 +13,7 @@ import oop.Tutor;
 import oop.Tutored;
 
 public class ToolsCSV {
-    static String path = "res" + File.separator + "data" + File.separator;
+    private static String path = "res" + File.separator + "data" + File.separator;
     
     public static Set<Student> importStudents(){
         Set<Student> students = new HashSet<>();

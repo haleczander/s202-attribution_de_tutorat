@@ -8,33 +8,34 @@ import oop.Tutor;
 import oop.Tutored;
 
 public class Couples {
-    public static boolean exists(Set<Couple> set, Tutored tutored, Tutor tutor){
-        for (Couple couple : set) {
-            // System.out.println(couple +" --> " + tutored +" & " + tutor + " : " + (tutored.equals(couple.getTutored()) && tutor.equals(couple.getTutor())));
-            if (tutored.equals(couple.getTutored()) && tutor.equals(couple.getTutor())) {
-                return true;
-            }
-        }
-        return false;
+    public static boolean containsCouple(Set<Couple> set, Tutored tutored, Tutor tutor){
+         return Couples.get(set, tutored, tutor) != null ;
     }
 
     public static boolean containsStudent(Set<Couple> set, Student student){
         for (Couple couple : set) {
-            if ( student.equals((Student)couple.getTutor()) || student.equals((Student)couple.getTutored()) ){
+            if ( couple.contains(student) ){
                 return true;
             }
         }
         return false;
     }
 
+
     public static boolean remove(Set<Couple> set, Tutored tutored, Tutor tutor){
-        Couple toRemove = null;
+        return set.remove(Couples.get(set, tutored, tutor));
+    }
+
+    public static boolean remove(Set<Couple> set, Couple couple){
+        return set.remove(couple);
+    }
+
+    public static Couple get(Set<Couple> set, Tutored tutored, Tutor tutor){
         for (Couple couple : set) {
-            if (tutored.equals(couple.getTutored()) && tutor.equals(couple.getTutor())){
-                toRemove = couple;
-                break;
+            if (couple.equals(tutored, tutor)){
+                return couple;
             }
         }
-        return set.remove(toRemove);
+        return null;
     }
 }
