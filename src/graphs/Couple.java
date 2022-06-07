@@ -23,6 +23,9 @@ public class Couple {
     }
 
     public boolean equals(final Tutored tutored, final Tutor tutor) {
+        if (tutored == null || tutor == null) {
+            return false;
+        }
         return this.tutored.equals(tutored) && this.tutor.equals(tutor);
     }
 
