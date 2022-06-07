@@ -357,11 +357,6 @@ public class Tutorat {
         System.out.println("\033[4m" + "Cas " + id + " : " + title + "\033[0m");
         System.out.println(this.detailedToString());
     }
-  
-    // ------------------------
-    // Delegate Methods : Graph 
-    // ------------------------ 
-
 
     // ------------------------
     // Attribute getters & setters 
@@ -463,6 +458,9 @@ public class Tutorat {
      * @return minimal cost.
      */
     public double getAffectationCost() {
+        if (calculAffectation == null) {
+            calculAffectation();
+        }
         return this.calculAffectation.getCout() % 1000 + (this.calculAffectation.getCout() % 1000 < 0 ? 1000 : 0);
     }
   
