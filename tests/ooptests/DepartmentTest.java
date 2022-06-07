@@ -207,11 +207,11 @@ public class DepartmentTest {
 		assertFalse(departement.getTutorings().get(Resource.R102).getTutored().contains(u3));
 		assertTrue(departement.getTutorings().get(Resource.R102).getTutors().contains(t2));
 
-		assertSame(2, departement.getTutorings().get(Resource.R102).getTutored().size());
-		assertSame(Student.getDefaultGrade(),
+		assertEquals(2, departement.getTutorings().get(Resource.R102).getTutored().size());
+		assertEquals(Student.getDefaultGrade(),
 				departement.getTutorings().get(Resource.R102).getTutored().get(0).getGrade(Resource.R102));
-		assertSame(15.3, departement.getTutorings().get(Resource.R102).getTutored().get(1).getGrade(Resource.R102));
-		assertSame(Student.getDefaultGrade(),
+		assertEquals(15.3, departement.getTutorings().get(Resource.R102).getTutored().get(1).getGrade(Resource.R102));
+		assertEquals(Student.getDefaultGrade(),
 				departement.getTutorings().get(Resource.R102).getTutors().get(0).getGrade(Resource.R102));
 	}
 
