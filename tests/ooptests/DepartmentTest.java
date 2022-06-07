@@ -219,20 +219,20 @@ public class DepartmentTest {
 		departement.add(t3);
 		departement.add(teacher4);
 
-		assertEquals("Departement [Département Informatique, tutorings={}]", departement.toString());
+		assertEquals("Departement [ Informatique, étudiants= 1, enseignants= 1, tutorats= []]", departement.toString());
 
 		departement.newTutoring(Resource.R101);
 		departement.newTutoring(Resource.R102);
 
 		assertEquals(
-				"Departement [Département Informatique, tutorings={R101: Initiation au développement=Tutorat [Matière: R101, Enseignant: null, Tuteurs: 0, Tutorés: 0, Attente: 0], R102: Développement d'interfaces web=Tutorat [Matière: R102, Enseignant: null, Tuteurs: 0, Tutorés: 0, Attente: 0]}]",
+				"Departement [ Informatique, étudiants= 1, enseignants= 1, tutorats= [R101: Initiation au développement, R102: Développement d'interfaces web]]",
 				departement.toString());
 
 		departement.newTutoring(Resource.R103);
 		departement.registerStudent(Resource.R103);
 
 		assertEquals(
-				"Departement [Département Informatique, tutorings={R101: Initiation au développement=Tutorat [Matière: R101, Enseignant: null, Tuteurs: 0, Tutorés: 0, Attente: 0], R102: Développement d'interfaces web=Tutorat [Matière: R102, Enseignant: null, Tuteurs: 0, Tutorés: 0, Attente: 0], R103: Introduction à l'architecture des ordinateurs=Tutorat [Matière: R103, Enseignant: null, Tuteurs: 0, Tutorés: 0, Attente: 0]}]",
+				"Departement [ Informatique, étudiants= 1, enseignants= 1, tutorats= [R101: Initiation au développement, R102: Développement d'interfaces web, R103: Introduction à l'architecture des ordinateurs]]",
 				departement.toString());
 	}
 }
