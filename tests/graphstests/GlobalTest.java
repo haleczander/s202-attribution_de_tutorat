@@ -221,8 +221,8 @@ public class GlobalTest {
         System.out.println(assignment.detailedToString());
 
         assertEquals(5, edges.size());
-        assertEquals(List.of(u5, u3), waitingList);
-        assertEquals(12.819, assignment.getAffectationCost(), DELTA);
+        assertEquals(List.of(u5, u2), waitingList);
+        assertEquals(13.155, assignment.getAffectationCost(), DELTA);
     }
 
     @Test
