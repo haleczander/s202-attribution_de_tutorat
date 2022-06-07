@@ -33,7 +33,7 @@ public class Department {
         return this.students.size();
     }
 
-    public int getNbOfteachers() {
+    public int getNbOfTeachers() {
         return this.teachers.size();
     }
 
@@ -124,7 +124,7 @@ public class Department {
     }
 
     public String toString() {
-        return "Departement [Département " + name + ", tutorings=" + tutorings + "]";
+        return "Departement [ " + name + ", étudiants= " + getNbOfStudents() +  ", enseignants= " + getNbOfTeachers() + ", tutorats= " + tutorings.keySet() + "]";
     }
 
     // ------------------------

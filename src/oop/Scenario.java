@@ -2,127 +2,149 @@ package oop;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import graphs.Tutoring;
+import utility.Persons;
 import utility.ToolsCSV;
 
 public final class Scenario {
+    static List<Department> iut = new ArrayList<>();
+    static Department currentDpt;
+    static Tutoring currentTutoring;
+    static int cas = 1;
 
     private Scenario() {
         throw new UnsupportedOperationException("Utility class cannot be instantiated");
     }
 
-    static List<Department> iut = new ArrayList<>();
     public static void main(String[] args) {
-        /* 
-        L'I.U.T. de Lille veut mettre en place un système de tutorat
-        Chaque Département dispose d'une liste d'élèves et de professeurs
-        Ces élèves disposent ou non de notes pour une matière
-        Cette note est le critère d'éligibilité au tutorat pour cette matière
-        Chaque tutorat dispose d'un professeur référent
-        */
-        
+        System.out.println("\nL'I.U.T. de Lille veut mettre en place un système de tutorat");
+        System.out.println("\t>Chaque Département dispose d'une liste d'élèves et de professeurs");
+        System.out.println("\t>Chaque Département dispose d'une liste d'élèves et de professeurs");
+        System.out.println("\t>Ces élèves disposent ou non de notes pour une matière");
+        System.out.println("\t>Cette note est le critère d'éligibilité au tutorat pour cette matière");
+        System.out.println("\t>Chaque tutorat dispose d'un professeur référent");
+
         bienvenueALIUT();
+        monPremierTutorat();
+        maPremiereAffectation();
+        monPremierCouple();
+        mesPremieresAnimosites();
+        ilFautAiderCeuxEnDifficulte();
+        mrCarleAimeLImplication();
+        unEtudiantManqueDeRespect();
+        
     }
 
-    static void bienvenueALIUT(){
-        /*
-        Bienvenue à l'IUT, 
-        Cette année nous ne nous intéressons qu'au département informatique !
-        */
+    static void bienvenueALIUT() {
+        System.out.println();
+        System.out.println(
+                "Bienvenue à l'IUT, \nCette année nous ne nous intéressons qu'au département informatique !");
+
         Department dptInfo = new Department("Informatique");
         iut.add(dptInfo);
+        System.out.println("\t>" + iut + "\n");
+        currentDpt = dptInfo;
 
-
-        /*        
-        La liste des étudiants ne contient que 57 inscrits, 
-        apparemment Parcoursup a encore causé des ennuis...
-        */
+        System.out.println(
+                "La liste des étudiants ne contient que 57 inscrits, \napparemment Parcoursup a encore causé des ennuis...");
         dptInfo.addStudent(ToolsCSV.importStudents());
-        System.out.println("Inscription des " + dptInfo.getNbOfStudents() +" étudiants");        
-        // System.out.println(dptInfo.getStudents().toString());
-
-        /*
-        Monsieur Carle se propose d'organiser du tutorat le samedi matin
-        pour celles et ceux en difficulté en R102.
-        */
-        Teacher jeanCarle = new Teacher("Jean carle", Resource.R102);
-        dptInfo.add(jeanCarle);
-        System.out.println("Il y a désormais " + dptInfo.getNbOfteachers() + " enseignant dans le département informatique !");
-        System.out.println(dptInfo.getCopyOfTeachers());
-        System.err.println();
-
-        Resource web = Resource.R102;
-        dptInfo.newTutoring(web, jeanCarle);
-        Tutoring webTutorat = dptInfo.getTutoring(web);
-        System.out.println("Le premier tutorat a été créé !");
-        System.out.println(webTutorat);
-        System.out.println();
-
-        /*
-        Il faut maintenant inscrire les étudiants éligibles à ce tutorat,
-        Tuteurs comme Tutorés.
-         */
-        dptInfo.registerStudent(web);
-        System.out.println("Inscription des étudiants au tutorat de web !");
-        System.out.println(webTutorat);
-        System.out.println();
-        System.out.println("Voici les tutorés : ");
-        System.out.println(webTutorat.getTutored());
-        System.out.println();
-        System.out.println("Et voici les tuteurs : ");
-        System.out.println(webTutorat.getTutors());
-        System.out.println();
-
-        /*
-        Nous sommes prêts à lancer une première affectation !
-         */
-        webTutorat.scenarioToString("1", "Situation de base");
-        System.out.println();
-        /*
-        Madeleine et Thérèse s'entendent vraiment bien, 
-        mais si Lucas et Martin se trouvent dans la même pièce,
-        il vaut mieux avoir une bonne assurance.
-        */
-        webTutorat.addForcedAssignments("Madeleine Barre", "Thérèse Gay");
-        webTutorat.addForbiddenAssignments("Lucas Bouchet", "Martin Delmas");
-        webTutorat.scenarioToString("2", "Affectation forcée + affectation interdite");
-
-
-        /* */
-
-
-
-
+        System.out.println("\t>" + iut + "\n");
 
     }
 
-    static void scenario1(){
-        Department info = new Department("Info");
-        iut.add(info);
+    static void monPremierTutorat() {
+        System.out.println(
+                "Monsieur Carle se propose d'organiser du tutorat le samedi matin\npour celles et ceux en difficulté en R102.");
+        Teacher jeanCarle = new Teacher("Jean carle", Resource.R102);
+        currentDpt.add(jeanCarle);
+        System.out.println("\t>" + iut);
+        System.out.println("\t>" + currentDpt.getCopyOfTeachers());
 
-        Set<Student> students = ToolsCSV.importStudents();
-        info.addStudent(students);
-        Set<Teacher> teachers = ToolsCSV.importTeachers();
-        info.addTeacher(teachers);
+        Resource web = Resource.R102;
+        currentDpt.newTutoring(web, jeanCarle);
+        Tutoring webTutorat = currentDpt.getTutoring(web);
+        currentTutoring = webTutorat;
+        System.out.println("\t>" + iut);
+        System.out.println("\t>" + currentDpt.getTutorings().values());
 
-        Resource bdd = Resource.R104;        
-        info.newTutoring(bdd);
-        info.registerStudent(bdd);
+        System.out.println();
+        System.out.println("Il faut maintenant inscrire les étudiants éligibles à ce tutorat,\nTuteurs comme Tutorés.");
+        currentDpt.registerStudent(web);
+        System.out.println("\t>" + currentDpt.getTutorings().values());
 
-        /*
-        Il y a pénurie d'enseignants, de jeunes doctorants sont mis à contribution
-         */
-        Teacher corwyn = new Teacher("Corwyn Fèvre");
-        info.setTeacher(bdd, corwyn);
-    };
+        // System.out.println();
+        // System.out.println("Voici les tutorés : ");
+        // System.out.println(webTutorat.getTutored());
+        // System.out.println();
+        // System.out.println("Et voici les tuteurs : ");
+        // System.out.println(webTutorat.getTutors());
+        // System.out.println();
+    }
 
-    static void scenario2(){
-        // TODO
-    };
+    static void maPremiereAffectation() {
+        System.out.println("\n\t\t-----\n");
+        System.out.println("C'est l'heure de réaliser la première affectation !");
+        System.out.println();
+        currentTutoring.scenarioToString("" + cas++, "Situation de base");
 
-    static void scenario3(){
-        // TODO
-    };
+    }
+
+    static void monPremierCouple(){
+        System.out.println();
+        System.out.println(
+                "Madeleine et Thérèse s'entendent vraiment bien\n");
+
+        currentTutoring.addForcedAssignments("Madeleine Barre", "Thérèse Gay");
+        currentTutoring.scenarioToString("" + cas++, "Affectation forcée : Madeleine & Thérèse");
+    }
+
+    static void mesPremieresAnimosites(){
+        System.out.println("Lucas et Martin se peuvent pas se trouver dans la même pièce...\n");
+        currentTutoring.addForbiddenAssignments("Lucas Bouchet", "Martin Delmas");
+        currentTutoring.scenarioToString("" + cas++, "Affectation interdite : Lucas & Martin");
+    }
+
+    static void ilFautAiderCeuxEnDifficulte(){
+        System.out.println(
+            "Un nouvel étudiant, Paul Delabible aimerait participer en tant que tutoré\nIl n'a jamais été absent et est très motivé!\nEt ca se comprend, ses notes en web sont désastreuses...");
+        Tutored paul = new Tutored("Paul Delabible", 0, 'A');
+        paul.setGrade(currentTutoring.getResource(), 5.42);
+        System.out.println("\t>" + currentTutoring);
+        System.out.println("\t>" + paul);
+        currentTutoring.addStudent(paul);
+        System.out.println("\t>" + currentTutoring);
+        // System.out.println("\t>" + currentTutoring.getTutored());
+        System.out.println();
+        System.out.println("Relançons l'affectation ! \n");
+        currentTutoring.scenarioToString("" + cas++, "Paul Delabible est mauvais en Web!");
+    }
+    
+    static void mrCarleAimeLImplication(){
+        Teacher jean = currentTutoring.getTeacher();
+        System.out.println("Monsieur Carle désire accorder de l'importance aux absences,\nles notes pour lui ne sont d'aucun intérêt");
+        System.out.println("\t>Départ :\t\t" + jean.getWeightings());
+        jean.setAbsenceWeighting(Tutoring.getMaxWeighting());
+        System.out.println("\t>Update absences\t" + jean.getWeightings());
+        jean.setLevelWeighting(0);
+        System.out.println("\t>Update niveau\t\t" + jean.getWeightings());
+        jean.setAverageWeighting(0);
+        System.out.println("\t>Update moyenne\t\t" + jean.getWeightings());
+
+        System.out.println();
+        System.out.println("Réaffectons ! \n");
+        currentTutoring.scenarioToString(""+cas++, "Modification des poids d'affectation !");
+    }
+
+    static void unEtudiantManqueDeRespect(){
+        System.out.println();
+        System.err.println("Hortense a manqué de respect à Mr Carle,\nelle est exclue du tutorat!");
+        System.out.println("\t>" + currentTutoring);
+        currentTutoring.removeStudent((Tutored)Persons.getPerson("Hortense Chauveau", currentTutoring.getTutored()));
+        System.out.println("\t>" + currentTutoring);
+        System.out.println();
+        System.out.println("Relançons une affectation !\n");
+        currentTutoring.scenarioToString("" + cas++, "Il faut respecter les enseignants !");
+    }
+
 }

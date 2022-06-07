@@ -150,7 +150,12 @@ public abstract class Student extends Person {
     }
 
     public void setGrade(Resource resource, double grade) {
-        this.grades.replace(resource, grade);
+        if (this.grades.containsKey(resource)){            
+            this.grades.replace(resource, grade);
+        }
+        else {
+            this.grades.put(resource, grade);
+        }
     }
 
     // Static getters & setters
