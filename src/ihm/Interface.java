@@ -6,6 +6,7 @@ import java.util.Random;
 import graphs.Couple;
 import graphs.Tutoring;
 import ihm.events.AffectationHandler;
+import ihm.events.SelectedStudentListener;
 import ihm.events.StudentHandler;
 import ihm.popup.Log;
 import ihm.popup.Login;
@@ -47,6 +48,7 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import oop.Coefficient;
 import oop.Resource;
+import oop.Student;
 import oop.Tutor;
 import oop.Tutored;
 
@@ -85,6 +87,7 @@ public class Interface extends Application {
 
     public ListView<Tutor> tutors = new ListView<>();
     public ListView<Tutored> tutored = new ListView<>();
+    public Student selectedStudent;
 
     public ListView<Couple> aretes = new ListView<>();
 
@@ -145,6 +148,9 @@ public class Interface extends Application {
         }
 
     }
+
+
+
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -236,6 +242,8 @@ public class Interface extends Application {
 
     HBox initListes() {
         HBox listes = new HBox();
+        tutors.getSelectionModel().getSelectedItems().addListener(new SelectedStudentListener(this));
+        tutored.getSelectionModel().getSelectedItems().addListener(new SelectedStudentListener(this));
 
         listes.getChildren().addAll(tutored, WidgetUtils.spacer(150), aretes, WidgetUtils.spacer(150), tutors);
         listes.setAlignment(Pos.CENTER);
