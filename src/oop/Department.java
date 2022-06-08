@@ -42,38 +42,82 @@ public class Department {
     }
 
     // Adding Persons to the Department
+
+    /**
+     * Adds a student to the department if they aren't already listed.
+     * 
+     * @param student the student to add.
+     * @return {@code true} if this department did not already contain the specified
+     *         student.
+     */
     public boolean addStudent(Student student) {
         return this.students.add(student);
     }
 
+    /**
+     * Adds a collection of student to the department if they aren't already listed.
+     * 
+     * @param students group of students to add.
+     * @return true if this department's list of students changed as a result of the
+     *         call.
+     */
     public boolean addStudent(Collection<Student> students) {
         return this.students.addAll(students);
     }
 
+    /**
+     * Adds a teacher to the department if they aren't already listed.
+     * 
+     * @param teacher the teacher to add.
+     * @return {@code true} if this department did not already contain the specified
+     *         teacher.
+     */
     public boolean addTeacher(Teacher teacher) {
         return this.teachers.add(teacher);
     }
 
+    /**
+     * Adds a collection of teachers to the department if they aren't already
+     * listed.
+     * 
+     * @param teachers group of teachers to add.
+     * @return true if this department's list of teachers changed as a result of the
+     *         call.
+     */
     public boolean addTeacher(Collection<Teacher> teachers) {
         return this.teachers.addAll(teachers);
     }
 
+    /**
+     * Adds a person to the department if they aren't already listed.
+     * 
+     * @param person any person to add.
+     * @return {@code true} if this department did not already contain the specified
+     *         person.
+     */
     public boolean add(Person person) {
         if (person.isStudent()) {
             return addStudent((Student) person);
         } else {
             return addTeacher((Teacher) person);
         }
-    }    
-    public boolean add(Collection<Person> persons){
+    }
+
+    /**
+     * Adds a collection of people to the department if they aren't already listed.
+     * 
+     * @param people group of persons to add.
+     * @return true if this department's lists changed as a result of the call.
+     */
+    public boolean add(Collection<Person> people) {
         boolean add = true;
-        for (Person person : persons) {
+        for (Person person : people) {
             add &= add(person);
         }
         return add;
     }
 
-    // Tutoring    
+    // Tutoring
     public void newTutoring(Resource resource) {
         tutorings.put(resource, new Tutoring(resource));
     }
@@ -82,21 +126,21 @@ public class Department {
         tutorings.put(resource, new Tutoring(teacher, resource));
     }
 
-    public Tutoring getTutoring(Resource resource){
+    public Tutoring getTutoring(Resource resource) {
         return tutorings.get(resource);
     }
 
     public Teacher getTeacher(Resource resource) {
         return tutorings.get(resource).getTeacher();
     }
-    
+
     public void setTeacher(Resource resource, Teacher teacher) {
-            if (!teachers.contains(teacher)) {
-                teachers.add(teacher);
-            }
-            tutorings.get(resource).setTeacher(teacher);
+        if (!teachers.contains(teacher)) {
+            teachers.add(teacher);
         }
-    
+        tutorings.get(resource).setTeacher(teacher);
+    }
+
     // Adding Students to a Tutoring
     public void registerStudent(Resource resource) {
         for (Student student : students) {
@@ -119,16 +163,18 @@ public class Department {
         checkedRegisterStudent(resource, student);
     }
 
-    private void checkedRegisterStudent(Resource resource, Student student){
+    private void checkedRegisterStudent(Resource resource, Student student) {
         tutorings.get(resource).addStudent(student);
     }
 
+    @Override
     public String toString() {
-        return "Departement [ " + name + ", étudiants= " + getNbOfStudents() +  ", enseignants= " + getNbOfTeachers() + ", tutorats= " + tutorings.keySet() + "]";
+        return "Departement [ " + name + ", étudiants= " + getNbOfStudents() + ", enseignants= " + getNbOfTeachers()
+                + ", tutorats= " + tutorings.keySet() + "]";
     }
 
     // ------------------------
-    // Attribute getters & setters 
+    // Attribute getters & setters
     // ------------------------
     public String getName() {
         return name;

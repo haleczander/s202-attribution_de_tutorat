@@ -26,6 +26,7 @@ public enum Resource {
         
     }
 
+    @Override
     public String toString() {
         if (Resource.shortName) { 
             return this.getName();

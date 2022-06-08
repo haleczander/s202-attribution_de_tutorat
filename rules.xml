@@ -206,7 +206,7 @@ Documentation * configurer pour que ça réponde aux exigences pour le projet
 <rule ref="category/java/errorprone.xml/AvoidCallingFinalize"/>
 <rule ref="category/java/errorprone.xml/AvoidCatchingNPE"/>
 <rule ref="category/java/errorprone.xml/AvoidCatchingThrowable"/>
-<rule ref="category/java/errorprone.xml/AvoidDuplicateLiterals"/>
+<!-- <rule ref="category/java/errorprone.xml/AvoidDuplicateLiterals"/> -->
 <rule ref="category/java/errorprone.xml/AvoidFieldNameMatchingMethodName"/>
 <rule ref="category/java/errorprone.xml/AvoidFieldNameMatchingTypeName"/>
 <rule ref="category/java/errorprone.xml/AvoidInstanceofChecksInCatchClause"/>

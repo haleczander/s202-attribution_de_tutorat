@@ -15,7 +15,7 @@ public abstract class Person {
      * 
      * @param forename  forename of the person.
      * @param surname   surname of the person.
-     * @param isStudent defines if the person is a student or not
+     * @param isStudent defines whether the person is a student or not.
      */
     protected Person(String forename, String surname, boolean isStudent) {
         this(forename + " " + surname, isStudent);
@@ -25,7 +25,8 @@ public abstract class Person {
      * Constructs a Person from a full name (forename and surname separated by a
      * space).
      * 
-     * @param name full name in the form : "forename surname".
+     * @param name       full name in the form of : "forename surname".
+     * @param isAStudent defines whether the person is a student or not.
      */
     protected Person(String name, boolean isAStudent) {
 
@@ -88,7 +89,7 @@ public abstract class Person {
     }
 
     // ------------------------
-    // Attribute getters & setters 
+    // Attribute getters & setters
     // ------------------------
     public String getForename() {
         return forename;

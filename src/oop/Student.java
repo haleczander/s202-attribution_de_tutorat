@@ -40,6 +40,13 @@ public abstract class Student extends Person {
     // ------------------------
     // Class methods
     // ------------------------
+
+    /**
+     * Adds a grade to the student's grade Map based on a resource.
+     * 
+     * @param resource the resource to add the grade to.
+     * @param grade    the grade to add.
+     */
     public void addGrade(Resource resource, double grade) {
         if (grade < 0) {
             this.grades.put(resource, 0.0);
@@ -50,6 +57,12 @@ public abstract class Student extends Person {
         }
     }
 
+    /**
+     * Adds a grade to the student's grade Map based on the name of a resource.
+     * 
+     * @param resource the name of the resource to add the grade to.
+     * @param grade    the grade to add.
+     */
     public void addGrade(String resource, double grade) {
         addGrade(Resource.valueOf(resource), grade);
     }
@@ -62,8 +75,7 @@ public abstract class Student extends Person {
     public abstract double getWeight(Tutoring tutorat);
 
     public abstract double getWeight(Resource resource, double gradesAverage, double absencesAverage,
-            double gradesWeight,
-            double absencesWeight, double levelWeight);
+            double gradesWeight, double absencesWeight, double levelWeight);
 
     @Override
     public int hashCode() {
@@ -145,15 +157,21 @@ public abstract class Student extends Person {
     }
 
     // Custom
+
+    /**
+     * Gets the grade of a specified resource.
+     * 
+     * @param resource the resource.
+     * @return the grade associated with the resource.
+     */
     public double getGrade(Resource resource) {
         return this.grades.get(resource);
     }
 
     public void setGrade(Resource resource, double grade) {
-        if (this.grades.containsKey(resource)){            
+        if (this.grades.containsKey(resource)) {
             this.grades.replace(resource, grade);
-        }
-        else {
+        } else {
             this.grades.put(resource, grade);
         }
     }

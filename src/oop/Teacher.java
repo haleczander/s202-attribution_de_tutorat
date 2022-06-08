@@ -15,11 +15,11 @@ public class Teacher extends Person {
 
     private Map<Coefficient, Double> weightings = new EnumMap<>(Coefficient.class);
 
-
     /**
-     * Constructs a Teacher from their name and the resource(s) they teach.
+     * Constructs a Teacher from their name and a collection of resource(s) they
+     * teach.
      * 
-     * @param name teacher's name.
+     * @param name      teacher's name.
      * @param resources resources the teacher teaches.
      */
     public Teacher(String name, Collection<Resource> resources) {
@@ -44,7 +44,7 @@ public class Teacher extends Person {
     /**
      * Construct a Teacher from their name and one resource they teach.
      * 
-     * @param name teacher's name.
+     * @param name     teacher's name.
      * @param resource resource the teacher teaches.
      */
     public Teacher(String name, Resource resource) {
@@ -55,7 +55,7 @@ public class Teacher extends Person {
     /**
      * Construct a Teacher from their name and the name of one resource they teach.
      * 
-     * @param name teacher's name.
+     * @param name         teacher's name.
      * @param resourceName name of a resource the teacher teaches.
      */
     public Teacher(String name, String resourceName) {
@@ -80,13 +80,14 @@ public class Teacher extends Person {
         if (Person.shortName) {
             return super.toString();
         }
-        return super.toString().substring(0, super.toString().length()-1) + ", matières= "+resources.toString()+"]";
+        return super.toString().substring(0, super.toString().length() - 1) + ", matières= " + resources.toString()
+                + "]";
     }
 
     // ------------------------
-    // Attribute getters & setters 
+    // Attribute getters & setters
     // ------------------------
-    public Map<Coefficient, Double> getWeightings(){
+    public Map<Coefficient, Double> getWeightings() {
         return this.weightings;
     }
 
@@ -98,9 +99,10 @@ public class Teacher extends Person {
     public List<Resource> getResources() {
         return List.copyOf(resources);
     }
+
     // Custom
-        // Weighting
-    public double getWeighting(Coefficient coefficient){
+    // Weighting
+    public double getWeighting(Coefficient coefficient) {
         return this.weightings.get(coefficient);
     }
 
@@ -116,12 +118,11 @@ public class Teacher extends Person {
         return getWeighting(Coefficient.ABSENCES);
     }
 
-    public void setWeighting(Coefficient coefficient, double weighting){  
+    public void setWeighting(Coefficient coefficient, double weighting) {
         double weight = weighting;
-        if (weight<0 ) {
+        if (weight < 0) {
             weight = 0;
-        }
-        else if (weight>Tutoring.getMaxWeighting()) {
+        } else if (weight > Tutoring.getMaxWeighting()) {
             weight = Tutoring.getMaxWeighting();
         }
         this.weightings.replace(coefficient, weight);
