@@ -46,6 +46,8 @@ public class Tutoring {
     private Set<Couple> forcedCouples = new HashSet<>();
     private Set<Couple> forbiddenCouples = new HashSet<>();
 
+    public Set<Couple> affectations = new HashSet<>();
+
     private double tutoredGradesAverage;
     private double tutorGradesAverage;
 
@@ -474,6 +476,16 @@ public class Tutoring {
     public List<Arete<Student>> getAssignment() {
         calculAffectation();
         return List.copyOf(this.affectation.getAffectation());
+    }
+
+    public void affectations(){
+        calculAffectation();
+        this.affectations.clear();
+        Couple c;
+        for (Arete<Student> arete : this.affectation.getAffectation()) {
+            c = new Couple((Tutored)arete.getExtremite1(), (Tutor)arete.getExtremite2());
+            affectations.add(c);
+        }
     }
 
     /**
