@@ -14,7 +14,7 @@ import oop.Tutored;
 /**
  * Utility class that regroups multiple static methods useful for list
  * optimisation, assignments, and retrieving information. Those method were
- * seperated from the {@code Assignment.java} class for multiple reasons :
+ * seperated from the {@code Tutoring.java} class for multiple reasons :
  * methods might be reused later in the application, and these methods do not
  * fundamentally work with the graph itself, they only help with data
  * processing.

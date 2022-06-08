@@ -20,6 +20,8 @@ Théo Franos
 
 - Nous avons également laissé le fichier `rules.xml` pour que vous puissiez voir toutes les règles que nous avons suivies (et nous avons laissé celles non suivies en commentaire).
 
+- Enfin, vous trouverez dans le dossier res l'UML au complet et zoomable, si celui présent sur le compte rendu n'était pas assez lisible.
+
 ## Doc des libraires fournies
 
 - [Données de test](https://moodle.univ-lille.fr/pluginfile.php/2449761/mod_resource/content/2/doc/fr/ulille/but/sae2_02/donnees/DonneesPourTester.html)

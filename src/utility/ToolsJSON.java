@@ -19,9 +19,7 @@ public final class ToolsJSON {
      * 
      * @return array
      */
-    public static double[] readFilters(String fileName) {
-        File file = new File(fileName);
-        String stringJson = fileToString(file);
+    public static double[] readFilters(String stringJson) {
         double[] tab = new double[8];
 
         JSONObject json = new JSONObject(stringJson);
@@ -38,8 +36,13 @@ public final class ToolsJSON {
         return tab;
     }
 
+    public static double[] readFilters(File file) {
+        String stringJson = fileToString(file);
+        return readFilters(stringJson);
+    }
+
     public static double[] readFilters() {
-        return readFilters("." + slash + "res" + slash + "data" + slash + "filters.json");
+        return readFilters(new File("." + slash + "res" + slash + "data" + slash + "filters.json"));
     }
 
     private static String fileToString(File file) {
@@ -65,8 +68,6 @@ public final class ToolsJSON {
     }
 
     public static void main(String[] args) {
-        for (double d : readFilters()) {
-            System.out.println(d);
-        }
+        System.out.println(fileToString(new File("." + slash + "res" + slash + "tests" + slash + "filtersTest.json")));
     }
 }
