@@ -18,7 +18,7 @@ Théo Franos
 
 - Nous avons laissé notre le fichier lib contenant les librairies nécessaires au bon fonctionnement de projet, ainsi que le fichier contenant les ressources.
 
-- Nous avons également laissé le fichier `rules.xml` pour que vous puissiez voir toutes les règles que nous avons suivi (et nous avons laissé celles non suivies en commentaire).
+- Nous avons également laissé le fichier `rules.xml` pour que vous puissiez voir toutes les règles que nous avons suivies (et nous avons laissé celles non suivies en commentaire).
 
 ## Doc des libraires fournies
 
