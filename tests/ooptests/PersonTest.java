@@ -2,7 +2,10 @@ package ooptests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -10,6 +13,7 @@ import oop.Person;
 import oop.Teacher;
 import oop.Tutor;
 import oop.Tutored;
+import utility.Persons;
 
 public class PersonTest {
     Person p1 = new Tutored("Antoine", 0, 'A');
@@ -89,5 +93,35 @@ public class PersonTest {
         assertEquals("Corwyn Fèvre", p5.toString());
         assertEquals("Iovka", p6.toString());
         assertEquals("Patricia Everaere(D)", p7.toString());
+    }
+
+    @Test
+    public void personsGetPersonTest() {
+        Person p = Persons.getPerson("antoine", List.of(persons));
+        assertEquals(p1, p);
+
+        p = Persons.getPerson("jean carle", List.of(persons));
+        assertEquals(p2, p);
+
+        p = Persons.getPerson("Jean", List.of(persons));
+        assertNull(p);
+
+        p = Persons.getPerson("DELPHINE", List.of(persons));
+        assertEquals(p3, p);
+
+        p = Persons.getPerson("patricia Everaere", List.of(persons));
+        assertEquals(p4, p);
+
+        p = Persons.getPerson("Patricia", List.of(persons));
+        assertNull(p);
+
+        p = Persons.getPerson("CORWYN Fèvre", List.of(persons));
+        assertEquals(p5, p);
+
+        p = Persons.getPerson("iOVKA", List.of(persons));
+        assertEquals(p6, p);
+
+        p = Persons.getPerson("patricia everaere(d)", List.of(persons));
+        assertEquals(p7, p);
     }
 }

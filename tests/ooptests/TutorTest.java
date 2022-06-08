@@ -6,11 +6,19 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import graphs.Tutoring;
+import oop.Resource;
+import oop.Teacher;
 import oop.Tutor;
 import oop.TutorDuplicate;
+import oop.Tutored;
+import utility.Tutors;
 
 public class TutorTest {
     Tutor t1, t2, t3, t4, t5;
@@ -22,7 +30,9 @@ public class TutorTest {
         t2 = new Tutor("Benjamin", 2, 1, 'B', 2);
         t3 = new Tutor("Charles", 3, 2, 'B', 1);
         t4 = new Tutor("David", 3, 6, 'A');
+        t4.addGrade(Resource.R101, 10);
         t5 = new Tutor("Etienne", 3, 1, 'C');
+        t5.addGrade(Resource.R101, 12);
         d1 = new TutorDuplicate(t4);
     }
 
@@ -80,5 +90,35 @@ public class TutorTest {
         d2 = t4.duplicate();
         assertEquals(1, d1.getNbofTutored());
         assertEquals(1, d2.getNbofTutored());
+    }
+
+    @Test
+    public void tutorsGapCloseTest() {
+        Teacher teacher = new Teacher("Teacher", Resource.R101);
+        Tutoring t = new Tutoring(teacher, Resource.R101);
+        Tutored u = new Tutored("Benjamin", 2, 'B');
+        u.addGrade(Resource.R101, 3);
+        t.addStudent(u);
+        
+        List<Tutor> toChange = new ArrayList<>();
+        toChange.add(t4);
+        toChange.add(t5);
+        t.addStudent(toChange);
+
+        List<Tutor> newList = Tutors.gapClose(toChange, t, 1);
+        assertEquals(3, newList.size());
+        assertTrue(newList.contains(t4));
+        assertTrue(newList.contains(t5));
+        assertTrue(newList.contains(t5.duplicate()));
+
+        toChange = new ArrayList<>();
+        toChange.add(t4);
+        toChange.add(t5);
+        newList = Tutors.gapClose(toChange, t, 2);
+        assertEquals(4, newList.size());
+        assertTrue(newList.contains(t4));
+        assertTrue(newList.contains(t5));
+        assertTrue(newList.contains(t5.duplicate()));
+        assertTrue(newList.contains(d1));
     }
 }

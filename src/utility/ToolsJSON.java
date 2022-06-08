@@ -19,8 +19,8 @@ public final class ToolsJSON {
      * 
      * @return array
      */
-    public static double[] readFilters() {
-        File file = new File("." + slash + "res" + slash + "data" + slash + "filters.json");
+    public static double[] readFilters(String fileName) {
+        File file = new File(fileName);
         String stringJson = fileToString(file);
         double[] tab = new double[8];
 
@@ -36,6 +36,10 @@ public final class ToolsJSON {
         tab[7] = json.getJSONObject("tutor").getJSONObject("absences").getDouble("maxAbsences");
 
         return tab;
+    }
+
+    public static double[] readFilters() {
+        return readFilters("." + slash + "res" + slash + "data" + slash + "filters.json");
     }
 
     private static String fileToString(File file) {

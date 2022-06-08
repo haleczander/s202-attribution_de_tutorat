@@ -236,7 +236,7 @@ public class Tutoring {
      * 
      * @param students a list of all students to dispatch.
      */
-    public final void addStudent(Collection<Student> students) {
+    public final void addStudent(Collection<? extends Student> students) {
         for (Student s : students) {
             addStudent(s);
         }

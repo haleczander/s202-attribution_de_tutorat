@@ -1,6 +1,6 @@
 package utility;
 
-import java.util.Set;
+import java.util.Collection;
 
 import graphs.Couple;
 import oop.Student;
@@ -13,12 +13,12 @@ public final class Couples {
         throw new UnsupportedOperationException("Cannot instantiate utility class.");
     }
 
-    public static boolean containsCouple(Set<Couple> set, Tutored tutored, Tutor tutor) {
-        return Couples.get(set, tutored, tutor) != null;
+    public static boolean containsCouple(Collection<Couple> sets, Tutored tutored, Tutor tutor) {
+        return Couples.get(sets, tutored, tutor) != null;
     }
 
-    public static boolean containsStudent(Set<Couple> set, Student student) {
-        for (Couple couple : set) {
+    public static boolean containsStudent(Collection<Couple> couples, Student student) {
+        for (Couple couple : couples) {
             if (couple.contains(student)) {
                 return true;
             }
@@ -26,16 +26,16 @@ public final class Couples {
         return false;
     }
 
-    public static boolean remove(Set<Couple> set, Tutored tutored, Tutor tutor) {
-        return set.remove(Couples.get(set, tutored, tutor));
+    public static boolean remove(Collection<Couple> couples, Tutored tutored, Tutor tutor) {
+        return couples.remove(Couples.get(couples, tutored, tutor));
     }
 
-    public static boolean remove(Set<Couple> set, Couple couple) {
-        return set.remove(couple);
+    public static boolean remove(Collection<Couple> couples, Couple couple) {
+        return couples.remove(couple);
     }
 
-    public static Couple get(Set<Couple> set, Tutored tutored, Tutor tutor) {
-        for (Couple couple : set) {
+    public static Couple get(Collection<Couple> couples, Tutored tutored, Tutor tutor) {
+        for (Couple couple : couples) {
             if (couple.equals(tutored, tutor)) {
                 return couple;
             }

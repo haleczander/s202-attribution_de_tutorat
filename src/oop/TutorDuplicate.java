@@ -10,6 +10,7 @@ public class TutorDuplicate extends Tutor {
 
     public TutorDuplicate(Tutor tutor) {
         this(tutor.getName(), tutor.getLevel(), tutor.getAbsences(), tutor.getMotivation());
+        this.grades.putAll(tutor.getGrades());
     }
 
     @Override
@@ -43,5 +44,9 @@ public class TutorDuplicate extends Tutor {
 
     public static void setTutorDuplicateIdentifier(char tutorDuplicateIdentifier) {
         TutorDuplicate.tutorDuplicateIdentifier = tutorDuplicateIdentifier;
+    }
+
+    public String getRealName() {
+        return getName().substring(0, getName().length() - 2);
     }
 }

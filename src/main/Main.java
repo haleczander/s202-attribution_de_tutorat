@@ -38,7 +38,7 @@ public final class Main {
             e.printStackTrace();
 
         } finally {
-            System.out.println("Merci d'avoir pris le temps de tester notre application. A une prochaine fois.");
+            System.out.println("\nMerci d'avoir pris le temps de tester notre application. A une prochaine fois.");
         }
     }
 }
