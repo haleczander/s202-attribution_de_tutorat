@@ -14,29 +14,29 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-public class Login extends Log{
-    
-    static boolean loggingIn = false;
+public class Login extends PopUp {
+    public static boolean loggedIn = false;
+    public static String account;
+    public static int sizeX = 300;
+    public static int sizeY = 100;
 
     PasswordField mdpTf = new PasswordField();
     TextField idTf = new TextField();
     Label erreur = new Label();
 
-    public Login (Interface parent) {
-        super (parent);   
-        this.parent = parent;
+    public Login(Interface parent) {
+        super(parent);
         start(stage);
     }
 
-    private class LoginChecker implements EventHandler<ActionEvent>{
+    private class LoginChecker implements EventHandler<ActionEvent> {
         public void handle(ActionEvent e) {
-            Log.loggedIn = idTf.getText().equals("root") && mdpTf.getText().equals("root");
-            if (!Log.loggedIn){
+            Login.loggedIn = idTf.getText().equals("root") && mdpTf.getText().equals("root");
+            if (!Login.loggedIn) {
                 erreur.setText("⚠ Login ou Mot de passe erroné !");
                 erreur.setTextFill(Color.RED);
-            }
-            else {
-                Log.account = idTf.getText();
+            } else {
+                Login.account = idTf.getText();
                 parent.updateSession();
                 stage.close();
             }
@@ -44,11 +44,11 @@ public class Login extends Log{
     }
 
     public void start(Stage stage) {
-        stage.setOnCloseRequest(e-> parent.updateSession());
+        stage.setOnCloseRequest(e -> parent.updateSession());
         VBox root = new VBox();
         stage.setTitle("Connexion");
-        Scene scene = new Scene(root, sizeX, sizeY); 
-        stage.setScene(scene); 
+        Scene scene = new Scene(root, sizeX, sizeY);
+        stage.setScene(scene);
         stage.setResizable(false);
 
         Label idLb = new Label("Identifiant");
@@ -62,13 +62,12 @@ public class Login extends Log{
         // mdpTf.setFocusTraversable(false);
         HBox mdp = new HBox(mdpLb, WidgetUtils.spacer(), mdpTf);
 
-
         Button btn = new Button("Se connecter");
         btn.setOnAction(new LoginChecker());
         root.getChildren().addAll(erreur, id, mdp, btn);
 
         root.requestFocus();
 
-        stage.show();        
+        stage.show();
     }
 }

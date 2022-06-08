@@ -15,7 +15,6 @@ public class AffectationHandler implements EventHandler<ActionEvent> {
     public void handle(ActionEvent e) {
         iface.aretes.getItems().clear();
         iface.dpt.currentTutoring.affectations();
-        System.out.println(iface.dpt.currentTutoring.affectations);
         iface.aretes.getItems().addAll(iface.dpt.currentTutoring.affectations);
          
     }

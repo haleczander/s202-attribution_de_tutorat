@@ -421,11 +421,20 @@ public class Tutoring {
         this.teacher = teacher;
     }
 
-    public List<Tutored> getTutored() {
+    public List<Tutored> getTutoredCopy() {
         return List.copyOf(this.tutored);
     }
 
+    public List<Tutored> getTutored() {
+        return this.tutored;
+    }
+
     public List<Tutor> getTutors() {
+        return this.tutors;
+    }
+
+
+    public List<Tutor> getTutorsCopy() {
         return List.copyOf(this.tutors);
     }
 

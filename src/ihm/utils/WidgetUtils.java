@@ -10,6 +10,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 
 public class WidgetUtils {
     public static Region spacer(){
@@ -25,7 +26,7 @@ public class WidgetUtils {
     
     static Region filler(double size){
         Region filler = new Region();
-        filler.setMinWidth(size);
+        filler.setMinSize(size, size);
         return filler;
     }
     
@@ -33,21 +34,41 @@ public class WidgetUtils {
         return filler(10);
     }
 
+    public static HBox labelButton(String label, String button, String button2, EventHandler<ActionEvent> handler, String tooltip, String tooltip2){
+        HBox box = new HBox();        
+        box.setAlignment(Pos.CENTER);
+
+        Label lb = new Label(label);        
+        VBox btns = new VBox(toolButton(button2, handler, tooltip2, 2), toolButton(button, handler, tooltip, 2));
+
+
+        box.getChildren().addAll(lb, WidgetUtils.spacer(), btns);
+        return box;
+    }
+
     public static HBox labelButton(String label, String button, EventHandler<ActionEvent> handler, String tooltip){
         HBox box = new HBox();        
         box.setAlignment(Pos.CENTER);
 
-        Label lb = new Label(label);
+        Label lb = new Label(label);        
 
+        box.getChildren().addAll(lb, WidgetUtils.spacer(), toolButton(button, handler, tooltip));
+        return box;
+    }
+
+    static Button toolButton(String button, EventHandler<ActionEvent> handler,String tooltip){
+        return toolButton( button,  handler, tooltip, 1);
+    }
+
+    static Button toolButton(String button, EventHandler<ActionEvent> handler,String tooltip, int n){
         Button bt = new Button(button);
         bt.setOnAction(handler);
-        bt.setStyle("-fx-font-size : 15;");
         bt.setTooltip(new Tooltip(tooltip));
+        bt.getTooltip().setStyle("-fx-font-size : 15;");
+        bt.setStyle("-fx-font-size : " + (int) (15/n) + ";");
         bt.setPadding(new Insets(0));
-        bt.setPrefSize(20, 20);
-
-        box.getChildren().addAll(lb, WidgetUtils.spacer(), bt);
-        return box;
+        bt.setPrefSize((int) (20/n), (int) (20/n));
+        return bt;
     }
 
 }

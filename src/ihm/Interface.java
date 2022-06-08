@@ -5,18 +5,18 @@ import java.util.Random;
 
 import graphs.Couple;
 import graphs.Tutoring;
+import ihm.events.AddStudentHandler;
 import ihm.events.AffectationHandler;
+import ihm.events.AuthentificationHandler;
+import ihm.events.RemoveStudentHandler;
 import ihm.events.SelectedStudentListener;
+import ihm.events.SliderListener;
+import ihm.events.SortListHandler;
 import ihm.events.StudentHandler;
-import ihm.popup.Log;
 import ihm.popup.Login;
 import ihm.utils.TutoringUtils;
 import ihm.utils.WidgetUtils;
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -31,9 +31,11 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TitledPane;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
@@ -58,11 +60,16 @@ public class Interface extends Application {
     Scene scene;
     public IHMDepartment dpt = new IHMDepartment();
 
-    //Waiting for tutoring
+    // list filter
+    public boolean filterTutored = true;
+
+    // Waiting for tutoring
     VBox etudiantsControls;
     VBox triControls;
     Button btAffect;
     MenuItem affecter;
+    MenuItem ajouter;
+    MenuItem supprimer;
 
     // Login controls
     Button sessionBt = new Button();
@@ -71,12 +78,15 @@ public class Interface extends Application {
     MenuItem login = new MenuItem("Se connecter");
     MenuItem logout = new MenuItem("Se déconnecter");
     Circle sessionPhoto = new Circle(50);
-   
+
     public ComboBox<Resource> cbMatieres = new ComboBox<>();
     ComboBox<String> cbSession = new ComboBox<>();
 
     //
     final double TOOLBAR_HEIGHT = 55;
+    final String ASC = "Tri croissant";
+    final String DESC = "Tri décroissant";
+
 
     int slMin = 0;
     int slMax = 5;
@@ -94,63 +104,6 @@ public class Interface extends Application {
     // Padding
     final Insets PAD_MIN = new Insets(5);
     final Insets PAD_BTN = new Insets(5, 9, 5, 9);
-
-    private class OrderListHandler implements EventHandler<ActionEvent> {
-        public void handle(ActionEvent e) {
-            Button bt = ((Button) e.getTarget());
-            if (bt.getText().equals("↓")) {
-                bt.setText("↑");
-                bt.getTooltip().setText("Tri décroissant");
-            } else {
-                bt.setText("↓");
-                bt.getTooltip().setText("Tri croissant");
-            }
-        }
-    }
-
-    private class AuthentificationHandler implements EventHandler<ActionEvent> {
-        public void handle(ActionEvent e) {
-            dispatchEvent();
-        }
-
-        private void dispatchEvent() {
-            if (!Login.loggedIn) {
-                new Login(Interface.this);
-            } else {
-                Alert alert = new Alert(AlertType.CONFIRMATION,
-                        "Vous allez vous déconnecter. Êtes-vous certain(e)?",
-                        ButtonType.YES, ButtonType.CANCEL);
-                alert.headerTextProperty().set("");
-                Optional<ButtonType> result = alert.showAndWait();
-                if (result.get() == ButtonType.YES) {
-                    Log.loggedIn = false;
-                    Log.account = null;
-                    Interface.this.updateSession();
-                }
-            }
-        }
-
-    }
-
-    public class SliderListener implements ChangeListener<Number> {
-        Slider slider;
-        Coefficient coef;
-
-        SliderListener(Slider slider, Coefficient coef) {
-            this.slider = slider;
-            this.coef = coef;
-        }
-
-        @Override
-        public void changed(ObservableValue<? extends Number> obs, Number oldVal, Number newVal) {
-            slider.setValue(Math.ceil((double) newVal * 2) / 2.0d);
-            dpt.teacher.setWeighting(coef, (double) newVal);
-        }
-
-    }
-
-
-
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -172,7 +125,20 @@ public class Interface extends Application {
         root.setBottom(initFooter());
         root.setLeft(initListControls());
 
+        keyBoardShortcuts();
+
         waitingForTutoring(true);
+    }
+
+    void keyBoardShortcuts() {
+        scene.setOnKeyPressed(e -> {
+            switch (e.getCode()) {
+                case MINUS, D, DELETE -> new RemoveStudentHandler(this);
+                case PLUS, N -> new AddStudentHandler(this);
+
+            }
+
+        });
     }
 
     VBox initMain() {
@@ -198,54 +164,76 @@ public class Interface extends Application {
     TitledPane initEtudiantsControls() {
         etudiantsControls = new VBox();
 
-        HBox add = WidgetUtils.labelButton("Ajouter", "+", new StudentHandler(this), "Ajouter un étudiant");
-        HBox del = WidgetUtils.labelButton("Supprimer", "‒", new StudentHandler(this), "Supprimer un étudiant");
+        HBox add = WidgetUtils.labelButton("Ajouter", "+", new AddStudentHandler(this), "Ajouter un étudiant");
+        HBox del = WidgetUtils.labelButton("Supprimer", "‒", new RemoveStudentHandler(this), "Supprimer un étudiant");
         HBox union = WidgetUtils.labelButton("Forcer", "🔗", new StudentHandler(this), "Forcer une affectation");
-        HBox disUnion = WidgetUtils.labelButton("Interdire", "⦸", new StudentHandler(this), "Interdire une affectation");
+        HBox disUnion = WidgetUtils.labelButton("Interdire", "⦸", new StudentHandler(this),
+                "Interdire une affectation");
 
         etudiantsControls.getChildren().addAll(add, del, union, disUnion);
         return new TitledPane("Etudiants", etudiantsControls);
     }
 
-    public void waitingForTutoring(boolean bool){
-        for ( Node box : etudiantsControls.getChildren()) {
-            ((Button)((HBox)box).getChildren().get(2)).setDisable(bool);
+    public void waitingForTutoring(boolean bool) {
+        for (Node box : etudiantsControls.getChildren()) {
+            ((Button) ((HBox) box).getChildren().get(2)).setDisable(bool);
         }
-        for ( Node box : triControls.getChildren()) {
-            ((Button)((HBox)box).getChildren().get(2)).setDisable(bool);
+        for (Node box : triControls.getChildren()) {
+            for (Node bt : ((VBox)((HBox)box).getChildren().get(2)).getChildren()){
+                
+                ((Button) bt).setDisable(bool);
+            }
         }
         btAffect.setDisable(bool);
         affecter.setDisable(bool);
+        ajouter.setDisable(bool);
+        supprimer.setDisable(bool);
     }
 
-    TitledPane initOrderControls() {
-        triControls = new VBox(); 
+    TitledPane initSortingControls() {
 
-        HBox alpha = WidgetUtils.labelButton("Nom", "↓", new OrderListHandler(), "Tri croissant");
-        HBox avg = WidgetUtils.labelButton("Moyenne", "↓", new OrderListHandler(), "Tri croissant");
-        HBox abs = WidgetUtils.labelButton("Absences", "↓", new OrderListHandler(), "Tri croissant");
-        HBox motiv = WidgetUtils.labelButton("Motivation", "↓", new OrderListHandler(), "Tri croissant");
+        ToggleGroup tg = new ToggleGroup();
+        tg.selectedToggleProperty().addListener((obs, old, newv) -> filterTutored = ((RadioButton)newv).getText().equals("Tutorés"));
+        RadioButton tutorFilter = new RadioButton("Tuteurs");
+        tutorFilter.setToggleGroup(tg);
+        RadioButton tutoredFilter = new RadioButton("Tutorés");
+        tutoredFilter.setToggleGroup(tg);
+        tutoredFilter.setSelected(true);
 
-        triControls.getChildren().addAll(alpha, avg, abs, motiv);
-        return new TitledPane("Trier par", triControls);
+        HBox filterGroup = new HBox(tutoredFilter, WidgetUtils.filler(), tutorFilter);
+
+        triControls = new VBox();
+        HBox nom = WidgetUtils.labelButton("Nom", "▼", "▲", new SortListHandler(this, "nom"), ASC, DESC);
+        HBox prenom = WidgetUtils.labelButton("Prénom", "▼", "▲", new SortListHandler(this, "pre"), ASC, DESC);
+        HBox avg = WidgetUtils.labelButton("Moyenne", "▼", "▲", new SortListHandler(this, "avg"), ASC, DESC);
+        HBox abs = WidgetUtils.labelButton("Absences", "▼", "▲", new SortListHandler(this, "abs"), ASC, DESC);
+        HBox motiv = WidgetUtils.labelButton("Motivation", "▼", "▲", new SortListHandler(this, "mot"), ASC, DESC);
+
+        triControls.getChildren().addAll(nom, prenom, avg, abs, motiv);
+        triControls.setSpacing(5);
+
+        VBox triGroup = new VBox(filterGroup, WidgetUtils.filler(), triControls);
+        return new TitledPane("Trier par", triGroup);
     }
+
 
     VBox initListControls() {
         VBox listControls = new VBox();
         listControls.setPadding(PAD_MIN);
-        listControls.setPrefWidth(150);
+        listControls.setPrefWidth(175);
 
-        listControls.getChildren().addAll(initEtudiantsControls(), initOrderControls());
+        listControls.getChildren().addAll(initEtudiantsControls(), WidgetUtils.filler(), initSortingControls());
 
         return listControls;
     }
 
     HBox initListes() {
         HBox listes = new HBox();
+
         tutors.getSelectionModel().getSelectedItems().addListener(new SelectedStudentListener(this));
         tutored.getSelectionModel().getSelectedItems().addListener(new SelectedStudentListener(this));
 
-        listes.getChildren().addAll(tutored, WidgetUtils.spacer(150), aretes, WidgetUtils.spacer(150), tutors);
+        listes.getChildren().addAll(new VBox (new Label("Tutorés"), tutored), WidgetUtils.spacer(150), aretes, WidgetUtils.spacer(150), new VBox (new Label("Tuteurs"), tutors));
         listes.setAlignment(Pos.CENTER);
 
         listes.setPadding(PAD_MIN);
@@ -273,24 +261,10 @@ public class Interface extends Application {
         btAffect.setOnAction(new AffectationHandler(this));
         btAffect.setDisable(true);
 
-
-
         tb.setPadding(PAD_MIN);
         tb.getStyleClass().clear();
         tb.getItems().addAll(btAffect);
         return new TitledPane("Affectation", tb);
-    }
-
-    HBox initToolListes() {
-        HBox tb = new HBox();
-        HBox.setHgrow(tb, Priority.ALWAYS);
-        Label lbOrdre = new Label("Tri des noms :");
-        Button btOrder = new Button("↓");
-        Button btRemoveStudent = new Button("‒");
-        Button btAddStudent = new Button("+");
-
-        tb.getChildren().addAll(lbOrdre, btOrder, new Label("\t"), btAddStudent, btRemoveStudent);
-        return tb;
     }
 
     TitledPane initToolCoefs() {
@@ -302,9 +276,9 @@ public class Interface extends Application {
             slider.setMajorTickUnit(1);
             slider.setShowTickLabels(true);
         }
-        slAvg.valueProperty().addListener(new SliderListener(slAvg, Coefficient.GRADES));
-        slAbs.valueProperty().addListener(new SliderListener(slAbs, Coefficient.ABSENCES));
-        slLvl.valueProperty().addListener(new SliderListener(slLvl, Coefficient.LEVEL));
+        slAvg.valueProperty().addListener(new SliderListener(this, slAvg, Coefficient.GRADES));
+        slAbs.valueProperty().addListener(new SliderListener(this, slAbs, Coefficient.ABSENCES));
+        slLvl.valueProperty().addListener(new SliderListener(this, slLvl, Coefficient.LEVEL));
 
         Label labelAvg = new Label("Moyenne");
         Label labelAbs = new Label("Absences");
@@ -312,11 +286,11 @@ public class Interface extends Application {
 
         Button resetCoef = new Button("↺");
         resetCoef.setTooltip(new Tooltip("Réinitialiser les coefficients"));
-        resetCoef.setOnAction(e-> setCoefs());
+        resetCoef.setOnAction(e -> setCoefs());
 
         Button btShuffle = new Button("🔀");
         btShuffle.setTooltip(new Tooltip("Randomiser les coefficients"));
-        btShuffle.setOnAction(e-> setCoefs(1));
+        btShuffle.setOnAction(e -> setCoefs(1));
 
         coefs.getChildren().addAll(labelAvg, slAvg, labelAbs, slAbs, labelLvl, slLvl, resetCoef, btShuffle);
         return new TitledPane("Coefficients", coefs);
@@ -353,7 +327,7 @@ public class Interface extends Application {
         ;
         sessionBt.setOnMouseExited(e -> ((Button) e.getTarget()).setTextFill(Color.BLACK));
         ;
-        sessionBt.setOnAction(new AuthentificationHandler());
+        sessionBt.setOnAction(new AuthentificationHandler(this));
         footer.getChildren().addAll(sessionBt);
         return footer;
     }
@@ -380,15 +354,16 @@ public class Interface extends Application {
         exporter.setDisable(true);
         MenuItem importer = new MenuItem("Importer");
         importer.setDisable(true);
-        MenuItem save = new MenuItem("Sauvegarder");
+        MenuItem save = new MenuItem("Sauvegarder");        
+        save.setDisable(true);
         MenuItem quit = new MenuItem("Quitter");
         fichier.getItems().addAll(exporter, importer, new SeparatorMenuItem(), login, logout, new SeparatorMenuItem(),
                 save, quit);
 
         // exporter.setOnAction(e->exporter());
         // importer.setOnAction(e->importer());
-        login.setOnAction(new AuthentificationHandler());
-        // logout.setOnAction(e->logout());
+        login.setOnAction(new AuthentificationHandler(this));
+        logout.setOnAction(new AuthentificationHandler(this));
         // save.setOnAction(e->save());
         quit.setOnAction(e -> close());
 
@@ -409,18 +384,24 @@ public class Interface extends Application {
 
     Menu initMenuListes() {
         Menu listes = new Menu("Listes");
-        MenuItem ajouter = new MenuItem("Exporter");
-        MenuItem supprimer = new MenuItem("Importer");
-        MenuItem triAlpha = new MenuItem("Tri alphabétique");
-        MenuItem triNotes = new MenuItem("Tri par moyennes");
-        MenuItem triAbs = new MenuItem("Tri par absences");
-        listes.getItems().addAll(ajouter, supprimer, new SeparatorMenuItem(), triAlpha, triNotes, triAbs);
+        ajouter = new MenuItem("Ajouter un étudiant");
+        supprimer = new MenuItem("Supprimer l'étudiant");
+        MenuItem separator = new MenuItem("Trier par :");
+        separator.setDisable(true);
+        MenuItem triNom = new MenuItem("\tnom");
+        MenuItem triPrenom = new MenuItem("\tprénom");
+        MenuItem triNotes = new MenuItem("\tmoyennes");
+        MenuItem triAbs = new MenuItem("\tabsences");
+        MenuItem triMot = new MenuItem("\tmotivation");
+        listes.getItems().addAll(ajouter, supprimer, new SeparatorMenuItem(), separator, triNom, triPrenom, triNotes, triAbs, triMot);
 
-        // ajouter.setOnAction(e->ajouter());
-        // supprimer.setOnAction(e->supprimer());
-        // triAlpha.setOnAction(e->trier("alpha"));
-        // triNotes.setOnAction(e->trier("avg"));
-        // triAbs.setOnAction(e->trier("abs"));
+        ajouter.setOnAction(new AddStudentHandler(this));
+        supprimer.setOnAction(new RemoveStudentHandler(this));
+        triNom.setOnAction(new SortListHandler(this, "nom"));
+        triPrenom.setOnAction(new SortListHandler(this, "pre"));
+        triNotes.setOnAction(new SortListHandler(this, "avg"));
+        triAbs.setOnAction(new SortListHandler(this, "abs"));
+        triMot.setOnAction(new SortListHandler(this, "mot"));
 
         return listes;
     }
@@ -490,12 +471,12 @@ public class Interface extends Application {
     }
 
     public void updateSession() {
-        if (Log.loggedIn) {
-            sessionBt.setText(logged + Log.account);
+        if (Login.loggedIn) {
+            sessionBt.setText(logged + Login.account);
             login.setDisable(true);
             logout.setDisable(false);
             setProfilPhoto("file:res/img/root.jpg");
-            cbSession.setPromptText(Log.account);
+            cbSession.setPromptText(Login.account);
         } else {
             sessionBt.setText(notLogged);
             login.setDisable(false);
