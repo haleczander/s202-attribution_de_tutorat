@@ -30,6 +30,8 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.ScrollBar;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TitledPane;
@@ -60,6 +62,9 @@ public class Interface extends Application {
     // list filter
     public boolean filterTutored = true;
 
+    public ScrollBar scrollBarOne;
+    public ScrollBar scrollBarTwo;
+
     // Waiting for tutoring
     VBox etudiantsControls;
     VBox triControls;
@@ -79,7 +84,6 @@ public class Interface extends Application {
 
     public ComboBox<Resource> cbMatieres = new ComboBox<>();
     ComboBox<String> cbSession = new ComboBox<>();
-
 
     public Student draggedStudent;
     public boolean dragging;
@@ -119,6 +123,13 @@ public class Interface extends Application {
         stage.setTitle("Tutorat du département " + this.dpt.getName());
         stage.setScene(scene);
         stage.show();
+
+        synchronizeScrollBars();
+    }
+
+    void synchronizeScrollBars(){
+        scrollBarOne = (ScrollBar) tutored.lookup(".scroll-bar:vertical");
+        scrollBarTwo = (ScrollBar) tutors.lookup(".scroll-bar:vertical");
     }
 
     void initInterface() {
@@ -153,9 +164,13 @@ public class Interface extends Application {
     }
 
     VBox initMain() {
-        VBox main = new VBox();
-        main.getChildren().addAll(initListes());
+        HBox titres = new HBox(WidgetUtils.spacer(), new Label("Tutorés"), WidgetUtils.spacer(200), new Label("Tuteurs"), WidgetUtils.spacer());
+
+        VBox main=new VBox(titres, initListes());
+        main.setPadding(PAD_MIN);
+
         return main;
+
     }
 
     VBox initTop() {
@@ -240,20 +255,23 @@ public class Interface extends Application {
         return listControls;
     }
 
+
+
     HBox initListes() {
         HBox listes = new HBox();
 
-        // tutors.getSelectionModel().getSelectedItems().addListener(new SelectedStudentListener(this));
-        // tutored.getSelectionModel().getSelectedItems().addListener(new SelectedStudentListener(this));
-       
+        // tutors.getSelectionModel().getSelectedItems().addListener(new
+        // SelectedStudentListener(this));
+        // tutored.getSelectionModel().getSelectedItems().addListener(new
+        // SelectedStudentListener(this));
+
+
         tutored.setCellFactory(new ListCellFactory(this));
         tutors.setCellFactory(new ListCellFactory(this));
-        
 
-        listes.getChildren().addAll(new VBox(new Label("Tutorés"), tutored), WidgetUtils.spacer(150), aretes,
-                WidgetUtils.spacer(150), new VBox(new Label("Tuteurs"), tutors));
+        listes.getChildren().addAll(tutored, tutors);
         listes.setAlignment(Pos.CENTER);
-
+        listes.setSpacing(25);
         listes.setPadding(PAD_MIN);
         return listes;
     }
@@ -273,7 +291,7 @@ public class Interface extends Application {
     TitledPane initToolAffect() {
         ToolBar tb = new ToolBar();
         tb.setPrefHeight(TOOLBAR_HEIGHT);
-        
+
         btAffect = new Button("Affecter !");
         btAffect.setTooltip(new Tooltip("Lancer l'affectation"));
         btAffect.setOnAction(e -> Events.AffectationHandler(this));

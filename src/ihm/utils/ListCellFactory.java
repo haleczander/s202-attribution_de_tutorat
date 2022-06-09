@@ -9,6 +9,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import oop.Student;
+import oop.Tutor;
 import utility.Couples;
 
 public class ListCellFactory implements Callback<ListView<Student>,ListCell<Student>> {
@@ -47,7 +48,12 @@ public class ListCellFactory implements Callback<ListView<Student>,ListCell<Stud
                         }
                     }
                     else {
-                        setTextFill(Color.BLACK);
+                        if (!item.isTutored() && ((Tutor)item).isDuplicate()){
+                            setTextFill(Color.PURPLE);
+                        }
+                        else {
+                            setTextFill(Color.BLACK);
+                        }
                     }
                     
                     setText(item.getName());

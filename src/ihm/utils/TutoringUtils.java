@@ -13,10 +13,13 @@ public class TutoringUtils {
         iface.tutors.getItems().clear();
         iface.tutored.getItems().clear();
         if (iface.dpt.currentTutoring.affectations.size() ==0 ){
+            iface.scrollBarOne.valueProperty().unbindBidirectional(iface.scrollBarTwo.valueProperty());
             iface.tutors.getItems().addAll(iface.dpt.currentTutoring.getTutors()); 
             iface.tutored.getItems().addAll(iface.dpt.currentTutoring.getTutored());
         }
         else {
+            
+            iface.scrollBarOne.valueProperty().bindBidirectional(iface.scrollBarTwo.valueProperty());
             for (Couple couple : iface.dpt.currentTutoring.affectations){
                 iface.tutored.getItems().add(couple.getTutored());
                 iface.tutors.getItems().add(couple.getTutor());
@@ -24,9 +27,11 @@ public class TutoringUtils {
             for (Student student : iface.dpt.currentTutoring.getWaitingList()){
                 if (student.isTutored()){
                     iface.tutored.getItems().add(student);
+                    iface.tutors.getItems().add(null);
                 }
                 else {
                     iface.tutors.getItems().add(student);
+                    iface.tutored.getItems().add(null);
                 }
             }
             
