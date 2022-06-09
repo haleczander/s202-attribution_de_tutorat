@@ -128,6 +128,15 @@ public class Teacher extends Person {
         this.weightings.replace(coefficient, weight);
     }
 
+    public void setWeighting(Double[] coefs){
+        if (coefs.length != 3){
+            return;
+        }
+        setAverageWeighting(coefs[0]);
+        setAbsenceWeighting(coefs[1]);
+        setLevelWeighting(coefs[2]);
+    }
+
     /**
      * Sets the weighting of the average of students for weight computing. Default
      * value is 1.

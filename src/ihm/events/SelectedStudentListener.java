@@ -21,7 +21,6 @@ public class SelectedStudentListener implements ListChangeListener<Student> {
 
     @Override
     public void onChanged(Change<? extends Student> changed) {
-        // TODO Auto-generated method stub
         if (changed.getList().size()>0){
             iface.selectedStudent=changed.getList().get(0);
          }

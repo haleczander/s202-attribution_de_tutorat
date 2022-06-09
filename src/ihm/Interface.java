@@ -25,6 +25,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
@@ -51,6 +52,7 @@ import javafx.stage.Stage;
 import oop.Coefficient;
 import oop.Resource;
 import oop.Student;
+import oop.Teacher;
 
 public class Interface extends Application {
     // Glob
@@ -73,6 +75,8 @@ public class Interface extends Application {
     MenuItem ajouter;
     MenuItem supprimer;
     public CheckBox polyTutoring;
+    Button coefResetBtn;
+    Button coefShuffleBtn;
 
     // Tutoring infos;
     public Label tutoringTeacherLb = new Label();
@@ -96,6 +100,14 @@ public class Interface extends Application {
     MenuItem logout = new MenuItem("Se déconnecter");
     Circle sessionPhoto = new Circle(50);
 
+    // RightClickMenu
+    ContextMenu rightClickMenu;
+    public MenuItem rightClickMenuInfo = new MenuItem("Informations");
+    public MenuItem rightClickMenuForce = new MenuItem("Forcer une affectation");
+    public MenuItem rightClickMenuForbid = new MenuItem("Interdire une affectation");  
+    public MenuItem rightClickMenuRemove = new MenuItem("Retirer du tutorat");
+    public MenuItem rightClickMenuAdd = new MenuItem("Ajouter un étudiant");
+
     public ComboBox<Resource> cbMatieres = new ComboBox<>();
     ComboBox<String> cbSession = new ComboBox<>();
 
@@ -110,6 +122,10 @@ public class Interface extends Application {
 
     int slMin = 0;
     int slMax = 5;
+
+    // Undo redo coefs
+    public Button redoCoef;
+    public Button undoCoef;
 
     Slider slAvg = new Slider(slMin, slMax, 1);
     Slider slAbs = new Slider(slMin, slMax, 1);
@@ -184,12 +200,32 @@ public class Interface extends Application {
                 new HBox(new Label("Tuteurs ("), tutoringTutorNbLb, new Label(")")),
                 WidgetUtils.spacer());
 
-        VBox main = new VBox(titres, initListes());
+        VBox main = new VBox(titres, studentListsWidget());
         main.setPadding(PAD_MIN);
 
         return main;
 
     }
+
+    ContextMenu rightClickMenu (){
+        ContextMenu menu = new ContextMenu(
+            rightClickMenuInfo,
+            new SeparatorMenuItem(),
+            rightClickMenuForce,
+            rightClickMenuForbid,            
+            new SeparatorMenuItem(),
+            rightClickMenuRemove,
+            rightClickMenuAdd
+            );
+
+        // rightClickMenuInfo.setOnAction(e -> StudentInformationHandler(this));
+        rightClickMenuForce.setOnAction(e -> Events.AddForcedAffectationHandler(this, false));
+        rightClickMenuForbid.setOnAction(e -> Events.AddForcedAffectationHandler(this, true));
+        rightClickMenuRemove.setOnAction(e -> Events.RemoveStudentHandler(this));
+        rightClickMenuAdd.setOnAction(e -> Events.AddStudentHandler(this));
+        return menu;
+    }
+
 
     VBox initTop() {
         return new VBox(initMenu(), initHeader(), horizontalToolbar());
@@ -205,7 +241,7 @@ public class Interface extends Application {
 
     }
 
-    TitledPane listeEtudiantsControls() {
+    TitledPane listStudentControls() {
         etudiantsControls = new VBox();
 
         HBox add = WidgetUtils.labelButton("Ajouter", "+", e -> Events.AddStudentHandler(this), "Ajouter un étudiant");
@@ -234,9 +270,14 @@ public class Interface extends Application {
         ajouter.setDisable(bool);
         supprimer.setDisable(bool);
         polyTutoring.setDisable(bool);
+        coefResetBtn.setDisable(bool);
+        coefShuffleBtn.setDisable(bool);
+        slAbs.setDisable(bool);
+        slAvg.setDisable(bool);
+        slLvl.setDisable(bool);
     }
 
-    TitledPane initSortingControls() {
+    TitledPane listSortingControls() {
 
         ToggleGroup tg = new ToggleGroup();
         tg.selectedToggleProperty()
@@ -268,25 +309,29 @@ public class Interface extends Application {
         listControls.setPadding(PAD_MIN);
         listControls.setPrefWidth(175);
 
-        listControls.getChildren().addAll(listeEtudiantsControls(), WidgetUtils.filler(), initSortingControls());
+        listControls.getChildren().addAll(listStudentControls(), WidgetUtils.filler(), listSortingControls());
 
         return listControls;
     }
 
-    HBox initListes() {
+    HBox studentListsWidget() {
         HBox listes = new HBox();
+
+        rightClickMenu = rightClickMenu();
 
         tutors.getSelectionModel().getSelectedItems().addListener(new
         SelectedStudentListener(this));
         tutored.getSelectionModel().getSelectedItems().addListener(new
         SelectedStudentListener(this));
 
+        tutored.setContextMenu(rightClickMenu);
+        tutors.setContextMenu(rightClickMenu);
+
         tutored.setCellFactory(new ListCellFactory(this));
         tutors.setCellFactory(new ListCellFactory(this));
 
         listes.getChildren().addAll(tutored, tutors);
         listes.setAlignment(Pos.CENTER);
-        listes.setSpacing(25);
         listes.setPadding(PAD_MIN);
         return listes;
     }
@@ -296,8 +341,8 @@ public class Interface extends Application {
         options.setSpacing(10);
         options.getChildren().addAll(coefficientWidgets(), affectationWidgets(), tutoringWidgets());
 
-        coefficientContainer.prefHeightProperty().bindBidirectional(affectationContainer.prefHeightProperty());
-        tutoringContainer.prefHeightProperty().bindBidirectional(affectationContainer.prefHeightProperty());
+        // coefficientContainer.prefHeightProperty().bindBidirectional(affectationContainer.prefHeightProperty());
+        // tutoringContainer.prefHeightProperty().bindBidirectional(affectationContainer.prefHeightProperty());
 
         for (Node n : options.getChildren()) {
             Pane p = ((Pane) ((TitledPane) n).getContent());
@@ -332,7 +377,9 @@ public class Interface extends Application {
                 polyTutoring,
                 affectations);
         tutoringContainer.setSpacing(10);
-        return new TitledPane("Informations sur le tutorat", tutoringContainer);
+        TitledPane retour = new TitledPane("Informations sur le tutorat", tutoringContainer);
+        retour.setExpanded(false);
+        return retour;
     }
 
     TitledPane affectationWidgets() {
@@ -366,16 +413,24 @@ public class Interface extends Application {
         Label slAbsLb = new Label("Absences");
         Label slLblLb = new Label("Motivation");
 
-        Button coefResetBtn = new Button("↺");
+        coefResetBtn = new Button("↺");
         coefResetBtn.setTooltip(new Tooltip("Réinitialiser les coefficients"));
         coefResetBtn.setOnAction(e -> setCoefs());
 
-        Button coefShuffleBtn = new Button("🔀");
+        coefShuffleBtn = new Button("🔀");
         coefShuffleBtn.setTooltip(new Tooltip("Randomiser les coefficients"));
         coefShuffleBtn.setOnAction(e -> setCoefs(1));
 
+        undoCoef = new Button("Undo");
+        undoCoef.setOnAction(e -> SliderListener.restoreCoefs(this, dpt.currentTutoring.getTeacher()));
+        undoCoef.setDisable(true);
+
+        redoCoef = new Button("Redo");
+        redoCoef.setOnAction(e -> SliderListener.reEditCoefs(this, dpt.currentTutoring.getTeacher()));
+        redoCoef.setDisable(true);
+
         coefficientContainer.getChildren().addAll(slAvgLb, slAvg, slAbsLb, slAbs, slLblLb, slLvl, coefResetBtn,
-                coefShuffleBtn);
+                coefShuffleBtn);//, undoCoef, redoCoef);
 
         coefficientContainer.setAlignment(Pos.CENTER);
         return new TitledPane("Coefficients", coefficientContainer);
@@ -518,10 +573,17 @@ public class Interface extends Application {
         slAvg.setValue(avg);
         slAbs.setValue(abs);
         slLvl.setValue(lvl);
+        if (!(avg == 1 && avg == abs && avg == lvl)){
+            SliderListener.saveCoefs(dpt.currentTutoring.getTeacher());
+        }
     }
 
     void setCoefs() {
         setCoefs(1, 1, 1);
+    }
+
+    public void setCoefs(Teacher teacher){
+        setCoefs(teacher.getAverageWeighting(), teacher.getAbsenceWeighting(), teacher.getLevelWeighting());
     }
 
     void setCoefs(int n) {

@@ -4,10 +4,12 @@ import ihm.Interface;
 import ihm.events.Events;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
+import oop.Resource;
 import oop.Student;
 import oop.Tutor;
 import utility.Couples;
@@ -16,6 +18,9 @@ public class ListCellFactory implements Callback<ListView<Student>,ListCell<Stud
     Interface iface;
     public static boolean dragging = false;
     public static Student draggedStudent = null;
+    public static boolean hovered = false;
+    public static Student hoveredStudent = null;
+
 
     public ListCellFactory(Interface iface) {
         this.iface = iface;
@@ -30,6 +35,15 @@ public class ListCellFactory implements Callback<ListView<Student>,ListCell<Stud
         StudentColorier(Interface iface){
             this.iface = iface;
         }
+
+        String lineSeparator(String str){
+            StringBuilder sb = new StringBuilder();
+            for (int i =0 ; i< str.length() ; i++){
+                sb.append("﹘");
+            }
+            return sb.toString();
+        }
+
         @Override
         public void updateItem(Student item, boolean empty) {
             super.updateItem(item, empty);
@@ -38,6 +52,17 @@ public class ListCellFactory implements Callback<ListView<Student>,ListCell<Stud
                     setOnMouseReleased(e -> {if (!cursorContained(e, iface)) draggedStudent = null; });
                     setOnMouseEntered(e -> {if (draggedStudent != null) Events.DragNDropHandler(iface, item, e.getButton() == MouseButton.SECONDARY);});
 
+                    Resource resource=iface.dpt.currentTutoring.getResource();
+                    setTooltip(new Tooltip(
+                        item.getName() + "\t(" + (item.isTutored()? "Tutoré" : "Tuteur") + ")"
+                        + " \n" + 
+                        lineSeparator(item.getName() + "\t(" + (item.isTutored()? "Tutoré" : "Tuteur") + ")")
+                        + " \nNotes de " + resource.getName() + " :\t" + item.getGrade(resource)  
+                        + " \nAbsences :\t\t" + item.getAbsences()
+                        + " \nAnnée :\t\t\t" + item.getLevel() 
+                        + " \nMotivation :\t\t" + item.getMotivation()
+                    ));
+                    getTooltip().setStyle("-fx-font-size : 15;");
 
                     if (item.isTutored() &&  iface.dpt.currentTutoring.affectations.size()>0) {
                         if (Couples.containsStudent(iface.dpt.currentTutoring.affectations, item)){
