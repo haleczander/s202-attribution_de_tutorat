@@ -5,14 +5,11 @@ import java.util.Random;
 
 import graphs.Couple;
 import graphs.Tutoring;
-import ihm.events.AddStudentHandler;
-import ihm.events.AffectationHandler;
 import ihm.events.AuthentificationHandler;
-import ihm.events.RemoveStudentHandler;
+import ihm.events.Events;
 import ihm.events.SelectedStudentListener;
 import ihm.events.SliderListener;
 import ihm.events.SortListHandler;
-import ihm.events.StudentHandler;
 import ihm.popup.Login;
 import ihm.utils.TutoringUtils;
 import ihm.utils.WidgetUtils;
@@ -51,8 +48,6 @@ import javafx.stage.Stage;
 import oop.Coefficient;
 import oop.Resource;
 import oop.Student;
-import oop.Tutor;
-import oop.Tutored;
 
 public class Interface extends Application {
     // Glob
@@ -82,11 +77,15 @@ public class Interface extends Application {
     public ComboBox<Resource> cbMatieres = new ComboBox<>();
     ComboBox<String> cbSession = new ComboBox<>();
 
+
+    public Student draggedStudent;
+    public boolean dragging;
+    public boolean draggingTarget = false;
+
     //
     final double TOOLBAR_HEIGHT = 55;
     final String ASC = "Tri croissant";
     final String DESC = "Tri décroissant";
-
 
     int slMin = 0;
     int slMax = 5;
@@ -95,8 +94,8 @@ public class Interface extends Application {
     Slider slAbs = new Slider(slMin, slMax, 1);
     Slider slLvl = new Slider(slMin, slMax, 1);
 
-    public ListView<Tutor> tutors = new ListView<>();
-    public ListView<Tutored> tutored = new ListView<>();
+    public ListView<Student> tutors = new ListView<>();
+    public ListView<Student> tutored = new ListView<>();
     public Student selectedStudent;
 
     public ListView<Couple> aretes = new ListView<>();
@@ -126,6 +125,8 @@ public class Interface extends Application {
         root.setLeft(initListControls());
 
         keyBoardShortcuts();
+        // scene.setOnMouseReleased(e->System.out.println("REEASED"));
+        // scene.setOnMouseMoved(e->System.out.println("MOOVIT"));
 
         waitingForTutoring(true);
     }
@@ -133,12 +134,16 @@ public class Interface extends Application {
     void keyBoardShortcuts() {
         scene.setOnKeyPressed(e -> {
             switch (e.getCode()) {
-                case MINUS, D, DELETE -> new RemoveStudentHandler(this);
-                case PLUS, N -> new AddStudentHandler(this);
-
+                case MINUS, SUBTRACT, D, DELETE -> Events.RemoveStudentHandler(this);
+                case PLUS, N -> Events.AddStudentHandler(this);
+                case F5 -> Events.AffectationHandler(this);
+                case default -> nothing();
             }
 
         });
+    }
+
+    void nothing() {
     }
 
     VBox initMain() {
@@ -164,10 +169,11 @@ public class Interface extends Application {
     TitledPane initEtudiantsControls() {
         etudiantsControls = new VBox();
 
-        HBox add = WidgetUtils.labelButton("Ajouter", "+", new AddStudentHandler(this), "Ajouter un étudiant");
-        HBox del = WidgetUtils.labelButton("Supprimer", "‒", new RemoveStudentHandler(this), "Supprimer un étudiant");
-        HBox union = WidgetUtils.labelButton("Forcer", "🔗", new StudentHandler(this), "Forcer une affectation");
-        HBox disUnion = WidgetUtils.labelButton("Interdire", "⦸", new StudentHandler(this),
+        HBox add = WidgetUtils.labelButton("Ajouter", "+", e -> Events.AddStudentHandler(this), "Ajouter un étudiant");
+        HBox del = WidgetUtils.labelButton("Supprimer", "‒", e -> Events.RemoveStudentHandler(this),
+                "Supprimer un étudiant");
+        HBox union = WidgetUtils.labelButton("Forcer", "🔗", null, "Forcer une affectation");
+        HBox disUnion = WidgetUtils.labelButton("Interdire", "⦸", null,
                 "Interdire une affectation");
 
         etudiantsControls.getChildren().addAll(add, del, union, disUnion);
@@ -179,8 +185,8 @@ public class Interface extends Application {
             ((Button) ((HBox) box).getChildren().get(2)).setDisable(bool);
         }
         for (Node box : triControls.getChildren()) {
-            for (Node bt : ((VBox)((HBox)box).getChildren().get(2)).getChildren()){
-                
+            for (Node bt : ((VBox) ((HBox) box).getChildren().get(2)).getChildren()) {
+
                 ((Button) bt).setDisable(bool);
             }
         }
@@ -193,7 +199,8 @@ public class Interface extends Application {
     TitledPane initSortingControls() {
 
         ToggleGroup tg = new ToggleGroup();
-        tg.selectedToggleProperty().addListener((obs, old, newv) -> filterTutored = ((RadioButton)newv).getText().equals("Tutorés"));
+        tg.selectedToggleProperty()
+                .addListener((obs, old, newv) -> filterTutored = ((RadioButton) newv).getText().equals("Tutorés"));
         RadioButton tutorFilter = new RadioButton("Tuteurs");
         tutorFilter.setToggleGroup(tg);
         RadioButton tutoredFilter = new RadioButton("Tutorés");
@@ -216,7 +223,6 @@ public class Interface extends Application {
         return new TitledPane("Trier par", triGroup);
     }
 
-
     VBox initListControls() {
         VBox listControls = new VBox();
         listControls.setPadding(PAD_MIN);
@@ -232,8 +238,10 @@ public class Interface extends Application {
 
         tutors.getSelectionModel().getSelectedItems().addListener(new SelectedStudentListener(this));
         tutored.getSelectionModel().getSelectedItems().addListener(new SelectedStudentListener(this));
+        
 
-        listes.getChildren().addAll(new VBox (new Label("Tutorés"), tutored), WidgetUtils.spacer(150), aretes, WidgetUtils.spacer(150), new VBox (new Label("Tuteurs"), tutors));
+        listes.getChildren().addAll(new VBox(new Label("Tutorés"), tutored), WidgetUtils.spacer(150), aretes,
+                WidgetUtils.spacer(150), new VBox(new Label("Tuteurs"), tutors));
         listes.setAlignment(Pos.CENTER);
 
         listes.setPadding(PAD_MIN);
@@ -258,7 +266,7 @@ public class Interface extends Application {
         btAffect = new Button("Affecter !");
 
         btAffect.setTooltip(new Tooltip("Lancer l'affectation"));
-        btAffect.setOnAction(new AffectationHandler(this));
+        btAffect.setOnAction(e -> Events.AffectationHandler(this));
         btAffect.setDisable(true);
 
         tb.setPadding(PAD_MIN);
@@ -354,7 +362,7 @@ public class Interface extends Application {
         exporter.setDisable(true);
         MenuItem importer = new MenuItem("Importer");
         importer.setDisable(true);
-        MenuItem save = new MenuItem("Sauvegarder");        
+        MenuItem save = new MenuItem("Sauvegarder");
         save.setDisable(true);
         MenuItem quit = new MenuItem("Quitter");
         fichier.getItems().addAll(exporter, importer, new SeparatorMenuItem(), login, logout, new SeparatorMenuItem(),
@@ -393,10 +401,11 @@ public class Interface extends Application {
         MenuItem triNotes = new MenuItem("\tmoyennes");
         MenuItem triAbs = new MenuItem("\tabsences");
         MenuItem triMot = new MenuItem("\tmotivation");
-        listes.getItems().addAll(ajouter, supprimer, new SeparatorMenuItem(), separator, triNom, triPrenom, triNotes, triAbs, triMot);
+        listes.getItems().addAll(ajouter, supprimer, new SeparatorMenuItem(), separator, triNom, triPrenom, triNotes,
+                triAbs, triMot);
 
-        ajouter.setOnAction(new AddStudentHandler(this));
-        supprimer.setOnAction(new RemoveStudentHandler(this));
+        ajouter.setOnAction(e -> Events.AddStudentHandler(this));
+        supprimer.setOnAction(e -> Events.RemoveStudentHandler(this));
         triNom.setOnAction(new SortListHandler(this, "nom"));
         triPrenom.setOnAction(new SortListHandler(this, "pre"));
         triNotes.setOnAction(new SortListHandler(this, "avg"));
@@ -417,7 +426,7 @@ public class Interface extends Application {
         affectation.getItems().addAll(affecter, new SeparatorMenuItem(), coefRst, coefRng, new SeparatorMenuItem(),
                 coefAvg, coefAbs, coefLvl);
 
-        affecter.setOnAction(new AffectationHandler(this));
+        affecter.setOnAction(e -> Events.AffectationHandler(this));
         affecter.setDisable(true);
         coefRst.setOnAction(e -> setCoefs());
         coefAvg.setOnAction(e -> setCoefs(2, .5, .5));

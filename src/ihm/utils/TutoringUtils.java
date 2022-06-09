@@ -5,39 +5,24 @@ import java.util.ArrayList;
 import ihm.Interface;
 import ihm.events.TutoringSelectorListener;
 import javafx.geometry.Pos;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
-import javafx.util.Callback;
 import oop.Resource;
 import oop.Tutor;
 import oop.Tutored;
 
 public class TutoringUtils {  
 
-    static class ColorRectCell extends ListCell<Tutored> {
-        @Override
-        public void updateItem(Tutored item, boolean empty) {
-          super.updateItem(item, empty);
-          if (item != null ) {
-            setText(item.getName());
-          }
-        }
-      }
+    public static void updateLists(Interface iface){
+        updateLists(iface, false);
+    }
 
-    public static void updateLists(Interface iface) {
+    public static void updateLists(Interface iface, boolean color) {
         iface.tutors.getItems().clear();
         iface.tutors.getItems().addAll(new ArrayList<Tutor>(iface.dpt.currentTutoring.getTutors()));
-        
-        iface.tutored.setCellFactory(new Callback<ListView<Tutored>,ListCell<Tutored>>() {
 
-            @Override
-            public ListCell<Tutored> call(ListView<Tutored> arg0) {
-                // TODO Auto-generated method stub
-                return new ColorRectCell();
-            }
-            
-        });
+        iface.tutored.setCellFactory(new StudentListColorier(iface));
+        iface.tutors.setCellFactory(new StudentListColorier(iface));
+        
 
         iface.tutored.getItems().clear();
         iface.tutored.getItems().addAll(new ArrayList<Tutored>(iface.dpt.currentTutoring.getTutored()));
