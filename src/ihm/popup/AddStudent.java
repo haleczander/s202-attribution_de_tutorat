@@ -3,8 +3,12 @@ package ihm.popup;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
+import graphs.Couple;
 import ihm.Interface;
+import ihm.events.Events;
+import ihm.utils.ListCellFactory;
 import ihm.utils.TutoringUtils;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -22,11 +26,13 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import oop.Motivation;
 import oop.Student;
+import utility.Couples;
 
 public class AddStudent extends PopUp {
     List<Student> students;
@@ -35,11 +41,21 @@ public class AddStudent extends PopUp {
     Student selected;
     Button ajouterFresh;
     Button ajouterList;
+    Boolean interdite;
+    TabPane root;
 
     private class AddingChecker implements EventHandler<ActionEvent>{
         @Override
         public void handle(ActionEvent e) {
-            if ((Button)e.getTarget() == ajouterList){
+            Button target = (Button)e.getTarget();
+            if (interdite != null){                
+                ListCellFactory.draggedStudent = parent.selectedStudent;
+                Events.DragNDropHandler(parent, selected, interdite);
+                stage.close();
+            }
+            else {                
+                if ( target != ajouterList){
+                }
                 confirm();
             }
             
@@ -89,9 +105,33 @@ public class AddStudent extends PopUp {
         
     }
 
+    public AddStudent(Interface parent, boolean interdite){
+        super(parent);
+        this.interdite = interdite;
+        Set<Couple> containedIn;
+        if (parent.affectationInterdite) {
+            containedIn = Couples.containedIn(parent.dpt.currentTutoring.getForbiddenCouples(), parent.selectedStudent);
+        }
+        else {
+            containedIn = Couples.containedIn(parent.dpt.currentTutoring.getForcedCouples(), parent.selectedStudent);
+        }
+        
+        if (parent.selectedStudent.isTutored()) {
+            students = new ArrayList<>(parent.dpt.currentTutoring.getTutors());
+            students.removeAll(Couples.getTutors(containedIn));
+        }
+        else {
+            students = new ArrayList<>(parent.dpt.currentTutoring.getTutored());
+            students.removeAll(Couples.getTutored(containedIn));
+        }
+
+        start(stage);
+        stage.setTitle((interdite ? "Interdire" : "Forcer")+" une affectation");
+        root.getTabs().remove(0);
+    }
+
     public AddStudent(Interface parent) {
         super(parent);
-
         alreadyThere = new ArrayList<>(parent.dpt.currentTutoring.getTutored());
         alreadyThere.addAll(parent.dpt.currentTutoring.getTutors());
         students = new ArrayList<>(parent.dpt.getStudents());
@@ -102,9 +142,10 @@ public class AddStudent extends PopUp {
 
     @Override
     public void start(Stage stage) {
-        TabPane root = new TabPane();
+        root = new TabPane();
 
         root.getTabs().addAll(fresh(), fromList());
+        root.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 
         Scene scene = new Scene(root, 200, 200);
         stage.setScene(scene);

@@ -7,6 +7,7 @@ import graphs.Couple;
 import graphs.Tutoring;
 import ihm.events.AuthentificationHandler;
 import ihm.events.Events;
+import ihm.events.SelectedStudentListener;
 import ihm.events.SliderListener;
 import ihm.events.SortListHandler;
 import ihm.popup.Login;
@@ -31,17 +32,16 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollBar;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.control.ToolBar;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -74,6 +74,20 @@ public class Interface extends Application {
     MenuItem supprimer;
     public CheckBox polyTutoring;
 
+    // Tutoring infos;
+    public Label tutoringTeacherLb = new Label();
+    public Label tutoringAffectedLb = new Label();
+    public Label tutoringForcedLb = new Label();
+    public Label tutoringForbiddenLb = new Label();
+    public Label tutoringAwaitingLb = new Label();
+    public Label tutoringTutorNbLb = new Label();
+    public Label tutoringTutoredNbLb = new Label();
+
+    // Toolbar
+    HBox affectationContainer = new HBox();
+    HBox coefficientContainer = new HBox();
+    VBox tutoringContainer = new VBox();
+
     // Login controls
     Button sessionBt = new Button();
     final String notLogged = "Non connecté";
@@ -85,7 +99,7 @@ public class Interface extends Application {
     public ComboBox<Resource> cbMatieres = new ComboBox<>();
     ComboBox<String> cbSession = new ComboBox<>();
 
-    public Student draggedStudent;
+    public Student selectedStudent;
     public boolean dragging;
     public boolean draggingTarget = false;
 
@@ -104,8 +118,6 @@ public class Interface extends Application {
     public ListView<Student> tutors = new ListView<>();
     public ListView<Student> tutored = new ListView<>();
 
-    public Student selectedStudent;
-    public boolean doubleSelect = false;
     public boolean affectationInterdite;
 
     public ListView<Couple> aretes = new ListView<>();
@@ -127,14 +139,14 @@ public class Interface extends Application {
         synchronizeScrollBars();
     }
 
-    void synchronizeScrollBars(){
+    void synchronizeScrollBars() {
         scrollBarOne = (ScrollBar) tutored.lookup(".scroll-bar:vertical");
         scrollBarTwo = (ScrollBar) tutors.lookup(".scroll-bar:vertical");
     }
 
     void initInterface() {
         root = new BorderPane();
-        scene = new Scene(root, 850, 600);
+        scene = new Scene(root, 850, 800);
 
         root.setTop(initTop());
         root.setCenter(initMain());
@@ -152,8 +164,9 @@ public class Interface extends Application {
         scene.setOnKeyPressed(e -> {
             switch (e.getCode()) {
                 case MINUS, SUBTRACT, D, DELETE -> Events.RemoveStudentHandler(this);
-                case PLUS, N -> Events.AddStudentHandler(this);
-                case F5 -> Events.AffectationHandler(this);
+                case ADD, PLUS, N -> Events.AddStudentHandler(this);
+                case F5, ENTER -> Events.AffectationHandler(this);
+                case ESCAPE -> close();
                 case default -> nothing();
             }
 
@@ -164,9 +177,14 @@ public class Interface extends Application {
     }
 
     VBox initMain() {
-        HBox titres = new HBox(WidgetUtils.spacer(), new Label("Tutorés"), WidgetUtils.spacer(200), new Label("Tuteurs"), WidgetUtils.spacer());
+        HBox titres = new HBox(
+                WidgetUtils.spacer(),
+                new HBox(new Label("Tutorés ("), tutoringTutoredNbLb, new Label(")")),
+                WidgetUtils.spacer(200),
+                new HBox(new Label("Tuteurs ("), tutoringTutorNbLb, new Label(")")),
+                WidgetUtils.spacer());
 
-        VBox main=new VBox(titres, initListes());
+        VBox main = new VBox(titres, initListes());
         main.setPadding(PAD_MIN);
 
         return main;
@@ -174,7 +192,7 @@ public class Interface extends Application {
     }
 
     VBox initTop() {
-        return new VBox(initMenu(), initHeader(), initOptions());
+        return new VBox(initMenu(), initHeader(), horizontalToolbar());
     }
 
     void initData() {
@@ -187,14 +205,14 @@ public class Interface extends Application {
 
     }
 
-    TitledPane initEtudiantsControls() {
+    TitledPane listeEtudiantsControls() {
         etudiantsControls = new VBox();
 
         HBox add = WidgetUtils.labelButton("Ajouter", "+", e -> Events.AddStudentHandler(this), "Ajouter un étudiant");
         HBox del = WidgetUtils.labelButton("Supprimer", "‒", e -> Events.RemoveStudentHandler(this),
                 "Supprimer un étudiant");
-        HBox union = WidgetUtils.labelButton("Forcer", "🔗", null, "Forcer une affectation");
-        HBox disUnion = WidgetUtils.labelButton("Interdire", "⦸", null,
+        HBox union = WidgetUtils.labelButton("Forcer", "🔗", e -> Events.AddForcedAffectationHandler(this, false), "Forcer une affectation");
+        HBox disUnion = WidgetUtils.labelButton("Interdire", "⦸", e -> Events.AddForcedAffectationHandler(this, true),
                 "Interdire une affectation");
 
         etudiantsControls.getChildren().addAll(add, del, union, disUnion);
@@ -250,21 +268,18 @@ public class Interface extends Application {
         listControls.setPadding(PAD_MIN);
         listControls.setPrefWidth(175);
 
-        listControls.getChildren().addAll(initEtudiantsControls(), WidgetUtils.filler(), initSortingControls());
+        listControls.getChildren().addAll(listeEtudiantsControls(), WidgetUtils.filler(), initSortingControls());
 
         return listControls;
     }
 
-
-
     HBox initListes() {
         HBox listes = new HBox();
 
-        // tutors.getSelectionModel().getSelectedItems().addListener(new
-        // SelectedStudentListener(this));
-        // tutored.getSelectionModel().getSelectedItems().addListener(new
-        // SelectedStudentListener(this));
-
+        tutors.getSelectionModel().getSelectedItems().addListener(new
+        SelectedStudentListener(this));
+        tutored.getSelectionModel().getSelectedItems().addListener(new
+        SelectedStudentListener(this));
 
         tutored.setCellFactory(new ListCellFactory(this));
         tutors.setCellFactory(new ListCellFactory(this));
@@ -276,40 +291,67 @@ public class Interface extends Application {
         return listes;
     }
 
-    HBox initOptions() {
+    HBox horizontalToolbar() {
         HBox options = new HBox();
+        options.setSpacing(10);
+        options.getChildren().addAll(coefficientWidgets(), affectationWidgets(), tutoringWidgets());
 
-        options.getChildren().addAll(initToolCoefs(), WidgetUtils.filler(), initToolAffect());
+        coefficientContainer.prefHeightProperty().bindBidirectional(affectationContainer.prefHeightProperty());
+        tutoringContainer.prefHeightProperty().bindBidirectional(affectationContainer.prefHeightProperty());
+
+        for (Node n : options.getChildren()) {
+            Pane p = ((Pane) ((TitledPane) n).getContent());
+            p.setMinHeight(TOOLBAR_HEIGHT);
+            p.setPadding(PAD_MIN);
+        }
+
         options.setPadding(PAD_MIN);
-        options.setMaxHeight(Double.MIN_VALUE);
-        options.setAlignment(Pos.TOP_LEFT);
+        // options.setMaxHeight(Double.MIN_VALUE);
+        // options.setAlignment(Pos.TOP_LEFT);
         options.setStyle(
                 "-fx-background-color: #EFEFEF;-fx-effect: dropshadow(gaussian, rgba(125,125,125,0.8), 2, 0, 0, 1);");
         return options;
     }
 
-    TitledPane initToolAffect() {
-        ToolBar tb = new ToolBar();
-        tb.setPrefHeight(TOOLBAR_HEIGHT);
+    TitledPane tutoringWidgets() {
 
-        btAffect = new Button("Affecter !");
-        btAffect.setTooltip(new Tooltip("Lancer l'affectation"));
-        btAffect.setOnAction(e -> Events.AffectationHandler(this));
-        btAffect.setDisable(true);
+        TutoringUtils.updateTutoringInfos(this);
 
         polyTutoring = new CheckBox("Polytutorat");
         polyTutoring.setTooltip(new Tooltip("Les tuteurs s'occupent de plusieurs tutorés."));
         polyTutoring.selectedProperty().addListener((a, o, n) -> dpt.currentTutoring.setPolyTutor(n));
 
-        tb.setPadding(PAD_MIN);
-        tb.getStyleClass().clear();
-        tb.getItems().addAll(btAffect, WidgetUtils.filler(), polyTutoring);
-        return new TitledPane("Affectation", tb);
+        VBox affectations = new VBox(
+                new Label("Affectations : "),
+                new HBox(WidgetUtils.filler(15), new Label("Affectés"), WidgetUtils.spacer(), tutoringAffectedLb),
+                new HBox(WidgetUtils.filler(15), new Label("En attente"), WidgetUtils.spacer(), tutoringAwaitingLb),
+                new HBox(WidgetUtils.filler(15), new Label("Forcées"), WidgetUtils.spacer(), tutoringForcedLb),
+                new HBox(WidgetUtils.filler(15), new Label("Interdites"), WidgetUtils.spacer(), tutoringForbiddenLb));
+        tutoringContainer.getChildren().addAll(
+                new HBox(new Label("Responsable : "), tutoringTeacherLb),
+                polyTutoring,
+                affectations);
+        tutoringContainer.setSpacing(10);
+        return new TitledPane("Informations sur le tutorat", tutoringContainer);
     }
 
-    TitledPane initToolCoefs() {
-        HBox coefs = new HBox();
-        coefs.setPrefHeight(TOOLBAR_HEIGHT);
+    TitledPane affectationWidgets() {
+        btAffect = new Button("Affecter !");
+        btAffect.setTooltip(new Tooltip("Lancer l'affectation"));
+        btAffect.setOnAction(e -> Events.AffectationHandler(this));
+        btAffect.setDisable(true);
+
+        affectationContainer.setPadding(PAD_MIN);
+        affectationContainer.getStyleClass().clear();
+        affectationContainer.getChildren().addAll(btAffect);
+
+        affectationContainer.setAlignment(Pos.CENTER);
+
+        return new TitledPane("Affectation", affectationContainer);
+    }
+
+    TitledPane coefficientWidgets() {
+
         Slider[] sliders = { slAvg, slAbs, slLvl };
         for (Slider slider : sliders) {
             slider.setMaxWidth(75);
@@ -320,20 +362,23 @@ public class Interface extends Application {
         slAbs.valueProperty().addListener(new SliderListener(this, slAbs, Coefficient.ABSENCES));
         slLvl.valueProperty().addListener(new SliderListener(this, slLvl, Coefficient.LEVEL));
 
-        Label labelAvg = new Label("Moyenne");
-        Label labelAbs = new Label("Absences");
-        Label labelLvl = new Label("Motivation");
+        Label slAvgLb = new Label("Moyenne");
+        Label slAbsLb = new Label("Absences");
+        Label slLblLb = new Label("Motivation");
 
-        Button resetCoef = new Button("↺");
-        resetCoef.setTooltip(new Tooltip("Réinitialiser les coefficients"));
-        resetCoef.setOnAction(e -> setCoefs());
+        Button coefResetBtn = new Button("↺");
+        coefResetBtn.setTooltip(new Tooltip("Réinitialiser les coefficients"));
+        coefResetBtn.setOnAction(e -> setCoefs());
 
-        Button btShuffle = new Button("🔀");
-        btShuffle.setTooltip(new Tooltip("Randomiser les coefficients"));
-        btShuffle.setOnAction(e -> setCoefs(1));
+        Button coefShuffleBtn = new Button("🔀");
+        coefShuffleBtn.setTooltip(new Tooltip("Randomiser les coefficients"));
+        coefShuffleBtn.setOnAction(e -> setCoefs(1));
 
-        coefs.getChildren().addAll(labelAvg, slAvg, labelAbs, slAbs, labelLvl, slLvl, resetCoef, btShuffle);
-        return new TitledPane("Coefficients", coefs);
+        coefficientContainer.getChildren().addAll(slAvgLb, slAvg, slAbsLb, slAbs, slLblLb, slLvl, coefResetBtn,
+                coefShuffleBtn);
+
+        coefficientContainer.setAlignment(Pos.CENTER);
+        return new TitledPane("Coefficients", coefficientContainer);
     }
 
     HBox initHeader() {
@@ -416,8 +461,8 @@ public class Interface extends Application {
         MenuItem interdire = new MenuItem("Interdire l'affection");
         selection.getItems().addAll(forcer, interdire);
 
-        // forcer.setOnAction(e->forcer());
-        // interdire.setOnAction(e->interdire());
+        forcer.setOnAction(e-> Events.AddForcedAffectationHandler(this, false));
+        interdire.setOnAction(e->Events.AddForcedAffectationHandler(this, true));
 
         return selection;
     }
@@ -449,7 +494,7 @@ public class Interface extends Application {
 
     Menu initMenuAffectation() {
         Menu affectation = new Menu("Affectation");
-        affecter = new MenuItem("Affecter");
+        affecter = new MenuItem("Lancer l'affectation");
         MenuItem coefRst = new MenuItem("Réinitialiser les coefficients");
         MenuItem coefAvg = new MenuItem("Maximiser la moyenne");
         MenuItem coefAbs = new MenuItem("Maximiser les absences");

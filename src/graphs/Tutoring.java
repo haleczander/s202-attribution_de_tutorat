@@ -259,6 +259,7 @@ public class Tutoring {
             return false;
         }
 
+        this.waitingList.add(student);
         if (student.getLevel() == 1) {
             return this.tutored.add((Tutored) student);
         } else {

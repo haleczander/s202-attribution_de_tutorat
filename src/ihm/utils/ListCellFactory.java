@@ -2,9 +2,9 @@ package ihm.utils;
 
 import ihm.Interface;
 import ihm.events.Events;
-import ihm.events.SelectedStudentListener;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
@@ -14,7 +14,8 @@ import utility.Couples;
 
 public class ListCellFactory implements Callback<ListView<Student>,ListCell<Student>> {
     Interface iface;
-
+    public static boolean dragging = false;
+    public static Student draggedStudent = null;
 
     public ListCellFactory(Interface iface) {
         this.iface = iface;
@@ -33,10 +34,9 @@ public class ListCellFactory implements Callback<ListView<Student>,ListCell<Stud
         public void updateItem(Student item, boolean empty) {
             super.updateItem(item, empty);
                 if (item != null) {
-                    setOnMouseClicked( e -> new SelectedStudentListener(iface));
-                    setOnMousePressed(e -> iface.draggedStudent = item);
-                    setOnMouseReleased(e -> {if (!cursorContained(e, iface)) iface.draggedStudent=null;});
-                    setOnMouseEntered(e -> {if (iface.draggedStudent!=null) Events.DragNDropHandler(e, iface, item);});
+                    setOnDragDetected(e -> {draggedStudent=item;});
+                    setOnMouseReleased(e -> {if (!cursorContained(e, iface)) draggedStudent = null; });
+                    setOnMouseEntered(e -> {if (draggedStudent != null) Events.DragNDropHandler(iface, item, e.getButton() == MouseButton.SECONDARY);});
 
 
                     if (item.isTutored() &&  iface.dpt.currentTutoring.affectations.size()>0) {

@@ -24,7 +24,7 @@ public class WidgetUtils {
         return spacer;
     }
     
-    static Region filler(double size){
+    public static Region filler(double size){
         Region filler = new Region();
         filler.setMinSize(size, size);
         return filler;
