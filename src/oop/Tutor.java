@@ -173,4 +173,8 @@ public class Tutor extends Student {
         Tutor.defaultNbOfTutoredThirdLevel = defaultNbOfTutoredThirdLevel;
     }
 
+    public boolean isTutored(){
+        return false;
+    }
+
 }

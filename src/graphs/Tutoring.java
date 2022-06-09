@@ -447,6 +447,10 @@ public class Tutoring {
         this.polyTutor = polyTutor;
     }
 
+    public boolean IsPolyTutor(){
+        return this.polyTutor;
+    }
+
     public double getTutoredGradesAverage() {
         updateAverages();
         return tutoredGradesAverage;

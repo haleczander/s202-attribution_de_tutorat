@@ -113,6 +113,7 @@ public abstract class Student extends Person {
                 + this.absences + ", notes= " + this.grades.toString() + ", motivation= " + this.motivation + "]";
     }
 
+    public abstract boolean isTutored();
     // ------------------------
     // Attribute getters & setters
     // ------------------------

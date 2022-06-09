@@ -38,4 +38,8 @@ public class Tutored extends Student {
                 tutorat.getTeacher().getAverageWeighting(), tutorat.getTeacher().getAbsenceWeighting(),
                 tutorat.getTeacher().getLevelWeighting());
     }
+
+    public boolean isTutored(){
+        return true;
+    }
 }

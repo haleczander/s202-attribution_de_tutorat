@@ -11,6 +11,7 @@ import ihm.events.SelectedStudentListener;
 import ihm.events.SliderListener;
 import ihm.events.SortListHandler;
 import ihm.popup.Login;
+import ihm.utils.ListCellFactory;
 import ihm.utils.TutoringUtils;
 import ihm.utils.WidgetUtils;
 import javafx.application.Application;
@@ -22,6 +23,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -51,6 +53,7 @@ import oop.Student;
 
 public class Interface extends Application {
     // Glob
+    public BorderPane root;
     Stage stage;
     Scene scene;
     public IHMDepartment dpt = new IHMDepartment();
@@ -65,6 +68,7 @@ public class Interface extends Application {
     MenuItem affecter;
     MenuItem ajouter;
     MenuItem supprimer;
+    public CheckBox polyTutoring;
 
     // Login controls
     Button sessionBt = new Button();
@@ -96,7 +100,10 @@ public class Interface extends Application {
 
     public ListView<Student> tutors = new ListView<>();
     public ListView<Student> tutored = new ListView<>();
+
     public Student selectedStudent;
+    public boolean doubleSelect = false;
+    public boolean affectationInterdite;
 
     public ListView<Couple> aretes = new ListView<>();
 
@@ -116,7 +123,7 @@ public class Interface extends Application {
     }
 
     void initInterface() {
-        BorderPane root = new BorderPane();
+        root = new BorderPane();
         scene = new Scene(root, 850, 600);
 
         root.setTop(initTop());
@@ -172,8 +179,8 @@ public class Interface extends Application {
         HBox add = WidgetUtils.labelButton("Ajouter", "+", e -> Events.AddStudentHandler(this), "Ajouter un étudiant");
         HBox del = WidgetUtils.labelButton("Supprimer", "‒", e -> Events.RemoveStudentHandler(this),
                 "Supprimer un étudiant");
-        HBox union = WidgetUtils.labelButton("Forcer", "🔗", null, "Forcer une affectation");
-        HBox disUnion = WidgetUtils.labelButton("Interdire", "⦸", null,
+        HBox union = WidgetUtils.labelButton("Forcer", "🔗", e -> Events.ForcedAffectationHandler(this, false), "Forcer une affectation");
+        HBox disUnion = WidgetUtils.labelButton("Interdire", "⦸", e -> Events.ForcedAffectationHandler(this, false),
                 "Interdire une affectation");
 
         etudiantsControls.getChildren().addAll(add, del, union, disUnion);
@@ -194,6 +201,7 @@ public class Interface extends Application {
         affecter.setDisable(bool);
         ajouter.setDisable(bool);
         supprimer.setDisable(bool);
+        polyTutoring.setDisable(bool);
     }
 
     TitledPane initSortingControls() {
@@ -236,8 +244,11 @@ public class Interface extends Application {
     HBox initListes() {
         HBox listes = new HBox();
 
-        tutors.getSelectionModel().getSelectedItems().addListener(new SelectedStudentListener(this));
-        tutored.getSelectionModel().getSelectedItems().addListener(new SelectedStudentListener(this));
+        // tutors.getSelectionModel().getSelectedItems().addListener(new SelectedStudentListener(this));
+        // tutored.getSelectionModel().getSelectedItems().addListener(new SelectedStudentListener(this));
+       
+        tutored.setCellFactory(new ListCellFactory(this));
+        tutors.setCellFactory(new ListCellFactory(this));
         
 
         listes.getChildren().addAll(new VBox(new Label("Tutorés"), tutored), WidgetUtils.spacer(150), aretes,
@@ -263,15 +274,19 @@ public class Interface extends Application {
     TitledPane initToolAffect() {
         ToolBar tb = new ToolBar();
         tb.setPrefHeight(TOOLBAR_HEIGHT);
+        
         btAffect = new Button("Affecter !");
-
         btAffect.setTooltip(new Tooltip("Lancer l'affectation"));
         btAffect.setOnAction(e -> Events.AffectationHandler(this));
         btAffect.setDisable(true);
 
+        polyTutoring = new CheckBox("Polytutorat");
+        polyTutoring.setTooltip(new Tooltip("Les tuteurs s'occupent de plusieurs tutorés."));
+        polyTutoring.selectedProperty().addListener((a, o, n) -> dpt.currentTutoring.setPolyTutor(n));
+
         tb.setPadding(PAD_MIN);
         tb.getStyleClass().clear();
-        tb.getItems().addAll(btAffect);
+        tb.getItems().addAll(btAffect, WidgetUtils.filler(), polyTutoring);
         return new TitledPane("Affectation", tb);
     }
 

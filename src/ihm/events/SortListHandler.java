@@ -26,7 +26,6 @@ public class SortListHandler implements EventHandler<ActionEvent> {
 
     public void handle(ActionEvent e) {
         List<? extends Student> list = (iface.filterTutored) ? iface.dpt.currentTutoring.getTutored() : iface.dpt.currentTutoring.getTutors();
-        System.out.println("Filter tutored :" + iface.filterTutored);
         switch(filter){
             case "nom" :
                 list.sort(new StudentSurnameComparator());

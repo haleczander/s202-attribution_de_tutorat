@@ -1,21 +1,36 @@
 package ihm.events;
 
 import ihm.Interface;
-import javafx.collections.ListChangeListener;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import oop.Student;
+import oop.Tutor;
+import oop.Tutored;
 
-public class SelectedStudentListener implements ListChangeListener<Student> {
+public class SelectedStudentListener implements EventHandler<ActionEvent> {
     Interface iface;
 
     public SelectedStudentListener(Interface iface) {
         this.iface = iface;
     }
 
-    public void onChanged(Change<? extends Student> c) {
-        if (c.getList().size()>0) {
-            iface.selectedStudent = c.getList().get(0);
+
+    @Override
+    public void handle(ActionEvent e) {
+        Student student = (Student)e.getTarget();
+        if (iface.doubleSelect) {
+            if (iface.selectedStudent.isTutored() != student.isTutored()){
+                if (iface.selectedStudent.isTutored()){
+                    Events.ForcedAffectationHandler(iface, (Tutored) iface.selectedStudent, (Tutor) student, iface.affectationInterdite);
+                }
+                else {
+                    Events.ForcedAffectationHandler(iface, (Tutored) student, (Tutor) iface.selectedStudent, iface.affectationInterdite);
+                }
+            }
         }
-        
+        else{
+            iface.selectedStudent = student;
+        }
     }
 
 }

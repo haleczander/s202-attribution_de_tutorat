@@ -8,9 +8,9 @@ public class StudentForenameComparator implements Comparator<Student> {
 
     @Override
     public int compare(Student o1, Student o2) {
-        int diff = o1.getForename().compareTo(o2.getForename());
+        int diff = o1.getForename().toUpperCase().compareTo(o2.getForename().toUpperCase());
         if ( diff == 0 ) {
-            return o1.getSurname().compareTo(o2.getSurname());
+            return o1.getSurname().toUpperCase().compareTo(o2.getSurname().toUpperCase());
         }
         return diff;
     }
