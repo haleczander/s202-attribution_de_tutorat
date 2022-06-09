@@ -170,8 +170,8 @@ public class Interface extends Application {
         root.setLeft(initListControls());
 
         keyBoardShortcuts();
-        // scene.setOnMouseReleased(e->System.out.println("REEASED"));
-        // scene.setOnMouseMoved(e->System.out.println("MOOVIT"));
+        scene.setOnMouseReleased(e->System.out.println("REEASED"));
+        scene.setOnMouseMoved(e->System.out.println("MOOVIT"));
 
         waitingForTutoring(true);
     }
