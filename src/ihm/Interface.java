@@ -141,24 +141,24 @@ public class Interface extends Application {
         root.setBottom(initFooter());
         root.setLeft(initListControls());
 
-        keyBoardShortcuts();
+        // keyBoardShortcuts();
         // scene.setOnMouseReleased(e->System.out.println("REEASED"));
         // scene.setOnMouseMoved(e->System.out.println("MOOVIT"));
 
         waitingForTutoring(true);
     }
 
-    void keyBoardShortcuts() {
-        scene.setOnKeyPressed(e -> {
-            switch (e.getCode()) {
-                case MINUS, SUBTRACT, D, DELETE -> Events.RemoveStudentHandler(this);
-                case PLUS, N -> Events.AddStudentHandler(this);
-                case F5 -> Events.AffectationHandler(this);
-                case default -> nothing();
-            }
+    // void keyBoardShortcuts() {
+    //     scene.setOnKeyPressed(e -> {
+    //         switch (e.getCode()) {
+    //             case MINUS, SUBTRACT, D, DELETE -> Events.RemoveStudentHandler(this);
+    //             case PLUS, N -> Events.AddStudentHandler(this);
+    //             case F5 -> Events.AffectationHandler(this);
+    //             case default -> nothing();
+    //         }
 
-        });
-    }
+    //     });
+    // }
 
     void nothing() {
     }
