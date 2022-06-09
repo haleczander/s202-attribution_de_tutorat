@@ -1,9 +1,11 @@
 package ihm.events;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import ihm.Interface;
+import ihm.comparators.AffectationComparator;
 import ihm.comparators.StudentAbsencesComparator;
 import ihm.comparators.StudentAverageComparator;
 import ihm.comparators.StudentForenameComparator;
@@ -17,7 +19,11 @@ import oop.Student;
 
 public class SortListHandler implements EventHandler<ActionEvent> {
     Interface iface;
-    String filter;
+    String filter ="nom";
+
+    public SortListHandler(Interface iface){
+        this(iface, "nom");
+    }
 
     public SortListHandler(Interface iface, String filter) {
         this.iface = iface;
@@ -25,28 +31,43 @@ public class SortListHandler implements EventHandler<ActionEvent> {
     }
 
     public void handle(ActionEvent e) {
-        List<? extends Student> list = (iface.filterTutored) ? iface.dpt.currentTutoring.getTutored() : iface.dpt.currentTutoring.getTutors();
-        switch(filter){
-            case "nom" :
-                list.sort(new StudentSurnameComparator());
-                break;
-            case "pre" :
-                list.sort(new StudentForenameComparator());
-                break;
-            case "avg" :
-                list.sort(new StudentAverageComparator(iface.dpt.currentTutoring.getResource()));
-                break;
-            case "abs" :
-                list.sort(new StudentAbsencesComparator());
-                break;
-            case "mot" :
-                list.sort(new StudentMotivationComparator());
-                break;
+        boolean reverse = ((Button) e.getTarget()).getText().equals("▲");
+
+        if (iface.dpt.currentTutoring.affectations.size() == 0){
+            firstSorting(reverse);
         }
-        if (((Button) e.getTarget()).getText().equals("▲")){
-            Collections.reverse(list);
+        else {
+            affectationSorting(reverse);
         }
+        
         TutoringUtils.updateLists(iface);
         
+    }
+
+    private void affectationSorting(boolean reverse){
+        Collections.sort(iface.dpt.currentTutoring.affectations, new AffectationComparator(iface, getComparator(iface, filter)));
+        if (reverse) {
+            Collections.reverse(iface.dpt.currentTutoring.affectations);
+        }
+    }
+
+    private void firstSorting(boolean reverse){
+        List<? extends Student> list = (iface.filterTutored) ? iface.dpt.currentTutoring.getTutored() : iface.dpt.currentTutoring.getTutors();
+        list.sort(SortListHandler.getComparator(iface, filter));
+        if (reverse){
+            Collections.reverse(list);
+        }
+    }
+
+    private static Comparator<Student> getComparator(Interface iface, String str){    
+        return  
+        switch (str) {
+            case "nom" -> new StudentSurnameComparator();
+            case "pre" -> new StudentForenameComparator();
+            case "avg" -> new StudentAverageComparator(iface.dpt.currentTutoring.getResource());
+            case "abs" -> new StudentAbsencesComparator();
+            case "mot" -> new StudentMotivationComparator();           
+            default -> null;
+        };
     }
 }

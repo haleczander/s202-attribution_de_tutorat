@@ -46,7 +46,7 @@ public class Tutoring {
     private Set<Couple> forcedCouples = new HashSet<>();
     private Set<Couple> forbiddenCouples = new HashSet<>();
 
-    public Set<Couple> affectations = new HashSet<>();
+    public List<Couple> affectations = new ArrayList<>();
 
     private double tutoredGradesAverage;
     private double tutorGradesAverage;

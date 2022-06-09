@@ -7,7 +7,6 @@ import graphs.Couple;
 import graphs.Tutoring;
 import ihm.events.AuthentificationHandler;
 import ihm.events.Events;
-import ihm.events.SelectedStudentListener;
 import ihm.events.SliderListener;
 import ihm.events.SortListHandler;
 import ihm.popup.Login;
@@ -179,8 +178,8 @@ public class Interface extends Application {
         HBox add = WidgetUtils.labelButton("Ajouter", "+", e -> Events.AddStudentHandler(this), "Ajouter un étudiant");
         HBox del = WidgetUtils.labelButton("Supprimer", "‒", e -> Events.RemoveStudentHandler(this),
                 "Supprimer un étudiant");
-        HBox union = WidgetUtils.labelButton("Forcer", "🔗", e -> Events.ForcedAffectationHandler(this, false), "Forcer une affectation");
-        HBox disUnion = WidgetUtils.labelButton("Interdire", "⦸", e -> Events.ForcedAffectationHandler(this, false),
+        HBox union = WidgetUtils.labelButton("Forcer", "🔗", null, "Forcer une affectation");
+        HBox disUnion = WidgetUtils.labelButton("Interdire", "⦸", null,
                 "Interdire une affectation");
 
         etudiantsControls.getChildren().addAll(add, del, union, disUnion);

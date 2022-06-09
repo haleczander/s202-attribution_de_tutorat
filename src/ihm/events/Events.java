@@ -54,6 +54,7 @@ public class Events {
         iface.dpt.currentTutoring.affectations();
         iface.aretes.getItems().addAll(iface.dpt.currentTutoring.affectations);
         TutoringUtils.updateLists(iface);
+
     }
 
     public static void DragNDropHandler(MouseEvent e, Interface iface, Student student) {
