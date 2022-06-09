@@ -23,4 +23,8 @@ public enum Motivation {
     public double getWeightModifier() {
         return weightModifier;
     }
+
+    public char getAbbr() {
+        return abbr;
+    }
 }
