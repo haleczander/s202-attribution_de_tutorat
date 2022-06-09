@@ -1,10 +1,12 @@
 package ihm.utils;
 
 import graphs.Couple;
+import graphs.Tutoring;
 import ihm.Interface;
 import ihm.events.TutoringSelectorListener;
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 import oop.Resource;
 import oop.Student;
 
@@ -37,6 +39,7 @@ public class TutoringUtils {
             
 
         }
+        updateTutoringInfos(iface);
     }
 
     public static HBox initMatieres(Interface iface) {
@@ -51,5 +54,33 @@ public class TutoringUtils {
 
         matieres.getChildren().addAll(iface.cbMatieres);
         return matieres;
+    }
+
+    public static void updateTutoringInfos(Interface iface){
+        if (iface.dpt.currentTutoring == null){
+            iface.tutoringTeacherLb.setText(null); 
+            iface.tutoringAffectedLb.setText(null); 
+            iface.tutoringForcedLb.setText(null); 
+            iface.tutoringForbiddenLb.setText(null); 
+            iface.tutoringAwaitingLb.setText(null); 
+            iface.tutoringTutorNbLb.setText("?");             
+            iface.tutoringTutoredNbLb.setText("?"); 
+
+        }
+        else {
+            Tutoring tut = iface.dpt.currentTutoring;
+            iface.tutoringTeacherLb.setText(tut.getTeacher().toString());
+            int ratio = (int) (100.00*( (double)tut.affectations.size() / tut.getTutored().size()));
+            iface.tutoringAffectedLb.setText(ratio + "%");
+            iface.tutoringAffectedLb.setTextFill( ratio == 100 ? Color.GREEN : Color.BLACK);
+            int att = tut.getTutored().size() - tut.affectations.size();
+            iface.tutoringForcedLb.setText(""+tut.getForcedCouples().size());
+            iface.tutoringForbiddenLb.setText(""+tut.getForbiddenCouples().size());
+            iface.tutoringAwaitingLb.setText(""+att); 
+            iface.tutoringAwaitingLb.setTextFill(att > 0 ? Color.RED : Color.BLACK);
+            iface.tutoringTutorNbLb.setText(""+tut.getTutors().size());             
+            iface.tutoringTutoredNbLb.setText(""+tut.getTutored().size());
+        }
+        
     }
 }

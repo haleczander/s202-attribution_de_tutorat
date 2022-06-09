@@ -16,7 +16,6 @@ public class TutoringSelectorListener implements ChangeListener<Resource> {
         iface.dpt.currentTutoring = iface.dpt.getTutoring(newVal);
         iface.polyTutoring.setSelected(iface.dpt.currentTutoring.IsPolyTutor());
         TutoringUtils.updateLists(iface);
-
     }
 
 }

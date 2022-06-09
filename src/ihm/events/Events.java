@@ -4,11 +4,10 @@ import java.util.Optional;
 
 import ihm.Interface;
 import ihm.popup.AddStudent;
+import ihm.utils.ListCellFactory;
 import ihm.utils.TutoringUtils;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.control.ButtonType;
 import oop.Student;
 import oop.Tutor;
@@ -20,6 +19,7 @@ public class Events {
         if (iface.dpt.currentTutoring == null) {
             return;
         }
+        System.out.println(iface.selectedStudent);
         if (iface.selectedStudent != null) {
             Alert alert = new Alert(AlertType.WARNING,
                     "Vous allez supprimer " + iface.selectedStudent.getName() + ". Êtes-vous certain(e)?",
@@ -37,6 +37,15 @@ public class Events {
                 TutoringUtils.updateLists(iface);
             }
         }
+    }
+
+    public static void AddForcedAffectationHandler(Interface iface, boolean interdite){
+        System.out.println(interdite);
+        if (iface.dpt.currentTutoring == null || iface.selectedStudent == null) {
+            System.out.println("null");
+            return;
+        }
+        new AddStudent(iface, interdite);
     }
 
     public static void AddStudentHandler(Interface iface) {
@@ -57,36 +66,20 @@ public class Events {
 
     }
 
-    public static void DragNDropHandler(MouseEvent e, Interface iface, Student student) {
-        if (!student.getClass().equals(iface.draggedStudent.getClass())) {
-            boolean interdite = e.getButton() == MouseButton.SECONDARY;
-            if (iface.draggedStudent.isTutored()) {
-                ForcedAffectationHandler(iface, (Tutored) iface.draggedStudent, (Tutor) student, interdite);
+    public static void DragNDropHandler(Interface iface, Student entered, boolean interdite) {
+        if (ListCellFactory.draggedStudent == null){
+        } else if ((!entered.isTutored() && ((Tutor)entered).isDuplicate()) 
+            |(entered.getClass().equals(ListCellFactory.draggedStudent.getClass()))){
+        }
+        else {
+            if (ListCellFactory.draggedStudent.isTutored()) {
+                ForcedAffectationHandler(iface, (Tutored) ListCellFactory.draggedStudent, (Tutor) entered, interdite);
             } else {
-                ForcedAffectationHandler(iface, (Tutored) student, (Tutor) iface.draggedStudent, interdite);
+                ForcedAffectationHandler(iface, (Tutored) entered, (Tutor) ListCellFactory.draggedStudent, interdite);
             }
         }
-        iface.draggedStudent = null;
-    }
+        ListCellFactory.draggedStudent = null;
 
-    public static void ForcedAffectationHandler(Interface iface, boolean interdite) {
-        if (iface.selectedStudent == null) {
-            return;
-        }
-        Alert alert = new Alert(AlertType.INFORMATION,
-                "Pour " + (interdite ? "interdire" : "forcer") + " l'affectation avec " + iface.selectedStudent.getName()
-                        + ", choisissez un second étudiant.",
-                ButtonType.YES, ButtonType.CANCEL);
-        alert.headerTextProperty().set("");
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == ButtonType.YES) {
-            iface.affectationInterdite = interdite;
-            iface.doubleSelect = true;
-        }
-        else{
-            iface.selectedStudent = null;
-            iface.doubleSelect =false;
-        }
     }
 
     public static void ForcedAffectationHandler(Interface iface, Tutored tutored, Tutor tutor, boolean interdite) {
@@ -103,7 +96,5 @@ public class Events {
                 iface.dpt.currentTutoring.addForcedAssignments(tutored, tutor);
             }
         }
-        iface.selectedStudent = null;
-        iface.doubleSelect = false;
     }
 }

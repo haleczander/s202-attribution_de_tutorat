@@ -1,6 +1,8 @@
 package utility;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import graphs.Couple;
 import oop.Student;
@@ -18,12 +20,7 @@ public final class Couples {
     }
 
     public static boolean containsStudent(Collection<Couple> couples, Student student) {
-        for (Couple couple : couples) {
-            if (couple.contains(student)) {
-                return true;
-            }
-        }
-        return false;
+        return containedIn(couples, student).size()>0;
     }
 
     public static boolean remove(Collection<Couple> couples, Tutored tutored, Tutor tutor) {
@@ -41,5 +38,30 @@ public final class Couples {
             }
         }
         return null;
+    }
+
+    public static Set<Couple> containedIn(Collection<Couple> couples, Student student){
+        Set<Couple> retour = new HashSet<>();
+        for (Couple couple : couples) {
+            if (couple.contains(student)) {
+                retour.add(couple);
+            }
+        }
+        return retour;
+    }
+
+    public static Set<Student> getTutors(Collection<Couple> couples){
+        Set<Student> retour = new HashSet<>();
+        for (Couple couple : couples) {
+            retour.add(couple.getTutor());
+        }
+        return retour;
+    }
+    public static Set<Student> getTutored(Collection<Couple> couples){
+        Set<Student> retour = new HashSet<>();
+        for (Couple couple : couples) {
+            retour.add(couple.getTutor());
+        }
+        return retour;
     }
 }

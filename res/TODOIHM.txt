@@ -36,12 +36,11 @@ V diversité des méthodes pour une même action
 
 
 TODO:
-> INdicateurs tutorat
-> Affectation forcée IFACE
+
 > MISE EN PAGE AJOUT (ajouter année étudiant + note)
-> BUG double select
+
 > DARKMODE?
-> ALIGNER
 > SAVE OLD COEFS
 > RIGHT click etu menu
 > infos etu survol
+> REMPLACER TUTEUR
