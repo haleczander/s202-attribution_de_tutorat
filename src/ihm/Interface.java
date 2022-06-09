@@ -170,8 +170,8 @@ public class Interface extends Application {
                 case default -> nothing();
             }
 
-    //     });
-    // }
+        });
+    }
 
     void nothing() {
     }
