@@ -41,6 +41,6 @@ TODO:
 
 > DARKMODE?
 > SAVE OLD COEFS
-> RIGHT click etu menu
-> infos etu survol
+
 > REMPLACER TUTEUR
+> disable les menus
