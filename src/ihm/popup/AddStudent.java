@@ -10,6 +10,7 @@ import ihm.Interface;
 import ihm.events.Events;
 import ihm.utils.ListCellFactory;
 import ihm.utils.TutoringUtils;
+import ihm.utils.WidgetUtils;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -24,6 +25,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Spinner;
@@ -44,9 +46,8 @@ import utility.Couples;
 
 public class AddStudent extends PopUp {
     List<Student> students;
-    List<Student> alreadyThere;
     ListView<Student> searchList = new ListView<>();
-    Student selected;
+    Student selectedStudent;
     Button ajouterFresh;
     Button ajouterList;
     Boolean interdite;
@@ -55,34 +56,64 @@ public class AddStudent extends PopUp {
     Spinner<Integer> niveau;
     TabPane root;
 
-    private class AddingChecker implements EventHandler<ActionEvent>{
+    Tutored toReaffect;
+    Tutor toRemove;
+    boolean replacing = false;
+
+    TextField searchListTf = new TextField();
+
+    CheckBox tutoredCb = new CheckBox("Tutorés");
+    CheckBox tutorCb = new CheckBox("Tuteurs");
+    HBox listCb = new HBox(tutoredCb, WidgetUtils.filler(25), tutorCb);
+
+    private class AddingChecker implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent e) {
-            Button target = (Button)e.getTarget();
-            if (interdite != null){                
+            Button target = (Button) e.getTarget();
+            if (replacing) {
+                confirmReplace();
+            } else if (interdite != null) {
                 ListCellFactory.draggedStudent = parent.selectedStudent;
-                Events.DragNDropHandler(parent, selected, interdite);
+                Events.DragNDropHandler(parent, selectedStudent, interdite);
                 stage.close();
-            }
-            else if (target == ajouterFresh){   
+            } else if (target == ajouterFresh) {
                 if (checkInputs()) {
                     createAndAddStudent();
                 }
             } else {
                 confirm();
             }
-            
+
         }
 
-        void confirm(){
+        void confirmReplace() {
             Alert alert = new Alert(AlertType.CONFIRMATION,
-                    "Vous allez ajouter " + selected.getName() + ". Êtes-vous certain(e)?",
+                    "Vous allez remplacer " + toRemove.getName() + " par " + selectedStudent.getName()
+                            + ". Êtes-vous certain(e)?",
                     ButtonType.YES, ButtonType.CANCEL);
             alert.headerTextProperty().set("");
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.YES) {
-                selected.addGrade(parent.dpt.currentTutoring.getResource(), Student.getDefaultGrade());
-                parent.dpt.currentTutoring.addStudent(selected);                
+                selectedStudent.addGrade(parent.dpt.currentTutoring.getResource(), Student.getDefaultGrade());
+                parent.dpt.currentTutoring.addStudent(selectedStudent);
+                if (toReaffect != null) {
+                    parent.dpt.currentTutoring.addForcedAssignments(toReaffect, (Tutor) selectedStudent);
+                }
+                parent.dpt.currentTutoring.removeStudent(toRemove);
+                TutoringUtils.updateLists(parent);
+                stage.close();
+            }
+        }
+
+        void confirm() {
+            Alert alert = new Alert(AlertType.CONFIRMATION,
+                    "Vous allez ajouter " + selectedStudent.getName() + ". Êtes-vous certain(e)?",
+                    ButtonType.YES, ButtonType.CANCEL);
+            alert.headerTextProperty().set("");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.YES) {
+                selectedStudent.addGrade(parent.dpt.currentTutoring.getResource(), Student.getDefaultGrade());
+                parent.dpt.currentTutoring.addStudent(selectedStudent);
                 TutoringUtils.updateLists(parent);
                 stage.close();
             }
@@ -105,7 +136,7 @@ public class AddStudent extends PopUp {
             }
 
             try {
-                Double.parseDouble(moyenne.getText());
+                Double.parseDouble(moyenne.getText().replace(",", "."));
             } catch (NumberFormatException e) {
                 errorMessage.append("La moyenne doit être une valeur numérique.\n");
                 isOk = false;
@@ -134,8 +165,8 @@ public class AddStudent extends PopUp {
             int niveauInt = niveau.getValue();
 
             Alert alert = new Alert(AlertType.CONFIRMATION,
-                "Vous allez ajouter " + nomString + " " + prenomString + ". Êtes-vous certain(e)?",
-                ButtonType.YES, ButtonType.CANCEL);
+                    "Vous allez ajouter " + nomString + " " + prenomString + ". Êtes-vous certain(e)?",
+                    ButtonType.YES, ButtonType.CANCEL);
             alert.headerTextProperty().set("");
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.CANCEL) {
@@ -145,80 +176,119 @@ public class AddStudent extends PopUp {
             if (niveauInt == 1) {
                 Tutored student = new Tutored(prenomString + " " + nomString, absencesInt, motivationValue.getAbbr());
                 student.addGrade(parent.dpt.currentTutoring.getResource(), moyenneDouble);
-                parent.dpt.currentTutoring.addStudent(student);                
+                parent.dpt.currentTutoring.addStudent(student);
                 TutoringUtils.updateLists(parent);
                 stage.close();
             } else {
-                Tutor student = new Tutor(prenomString + " " + nomString, niveauInt, absencesInt, motivationValue.getAbbr());
+                Tutor student = new Tutor(prenomString + " " + nomString, niveauInt, absencesInt,
+                        motivationValue.getAbbr());
                 student.addGrade(parent.dpt.currentTutoring.getResource(), moyenneDouble);
-                parent.dpt.currentTutoring.addStudent(student);                
+                parent.dpt.currentTutoring.addStudent(student);
                 TutoringUtils.updateLists(parent);
                 stage.close();
             }
         }
     }
 
-    private class SearchStudentListener implements ChangeListener<String> {
-        public void changed(ObservableValue<? extends String> arg0, String arg1, String newV) {
-            List<Student> found = new ArrayList<>();
-            ajouterList.setDisable(true);
-            for (Student student : students) {
-                if (student.getName().toUpperCase().contains(newV.toUpperCase())){
+    private class CheckBoxListener implements ChangeListener<Boolean> {
+
+        public void changed(ObservableValue<? extends Boolean> obs, Boolean o, Boolean n) {
+            updateSearchList(searchListTf.getText());
+        }
+    }
+
+    private void updateSearchList(String str) {
+        List<Student> found = new ArrayList<>();
+        ajouterList.setDisable(true);
+        for (Student student : students) {
+            if (student.getName().toUpperCase().contains(str.toUpperCase())) {
+                if ((tutorCb.isSelected() && !student.isTutored())
+                        || (tutoredCb.isSelected() && student.isTutored())) {
                     found.add(student);
                 }
             }
-            populateList(found);          
         }
-        
+        populateList(found);
+    }
+
+    private class SearchStudentListener implements ChangeListener<String> {
+        public void changed(ObservableValue<? extends String> arg0, String arg1, String newV) {
+            updateSearchList(newV);
+        }
+
     }
 
     private class SearchListListener implements ListChangeListener<Student> {
 
         public void onChanged(Change<? extends Student> c) {
-            if (c.getList().size()>0){                
-                selected = c.getList().get(0);
+            if (c.getList().size() > 0) {
+                selectedStudent = c.getList().get(0);
                 ajouterList.setDisable(false);
-            }
-            else {
+            } else {
                 ajouterList.setDisable(true);
             }
         }
-        
+
     }
 
-    public AddStudent(Interface parent, boolean interdite){
+    public AddStudent(Interface parent, boolean interdite) {
         super(parent);
         this.interdite = interdite;
-        Set<Couple> containedIn;
+        List<Couple> containedIn;
+
         if (parent.affectationInterdite) {
             containedIn = Couples.containedIn(parent.dpt.currentTutoring.getForbiddenCouples(), parent.selectedStudent);
-        }
-        else {
+        } else {
             containedIn = Couples.containedIn(parent.dpt.currentTutoring.getForcedCouples(), parent.selectedStudent);
         }
-        
+
         if (parent.selectedStudent.isTutored()) {
             students = new ArrayList<>(parent.dpt.currentTutoring.getTutors());
             students.removeAll(Couples.getTutors(containedIn));
-        }
-        else {
+
+        } else {
             students = new ArrayList<>(parent.dpt.currentTutoring.getTutored());
             students.removeAll(Couples.getTutored(containedIn));
         }
 
         start(stage);
-        stage.setTitle((interdite ? "Interdire" : "Forcer")+" une affectation");
+        stage.setTitle((interdite ? "Interdire" : "Forcer") + " une affectation");
         root.getTabs().remove(0);
+    }
+
+    public AddStudent(Interface parent, Tutor toRemove) {
+        super(parent);
+        replacing = true;
+        this.toRemove = toRemove;
+        students = new ArrayList<>();
+        for (Student student : parent.dpt.getStudents()) {
+            if (!student.isTutored()) {
+                students.add(student);
+            }
+        }
+        students.remove(toRemove);
+        listCb.setDisable(true);
+        Set<Couple> forcees = parent.dpt.currentTutoring.getForcedCouples();
+        if (!forcees.isEmpty()) {
+            toReaffect = Couples.containedIn(forcees, toRemove).get(0)
+                    .getTutored();
+            students.removeAll(Couples
+                    .getTutors(Couples.containedIn(parent.dpt.currentTutoring.getForbiddenCouples(), toReaffect)));
+        }
+
+        start(stage);
+        stage.setTitle("Remplacer " + toRemove.getName());
+        root.getTabs().remove(0);
+
     }
 
     public AddStudent(Interface parent) {
         super(parent);
-        alreadyThere = new ArrayList<>(parent.dpt.currentTutoring.getTutored());
-        alreadyThere.addAll(parent.dpt.currentTutoring.getTutors());
+
         students = new ArrayList<>(parent.dpt.getStudents());
-        students.removeAll(alreadyThere);
+        students.removeAll(parent.dpt.currentTutoring.getTutored());
+        students.removeAll(parent.dpt.currentTutoring.getTutors());
         stage.setTitle("Ajouter un étudiant");
-        stage.setResizable(false);
 
         start(stage);
     }
@@ -235,7 +305,7 @@ public class AddStudent extends PopUp {
         stage.show();
     }
 
-    Tab fresh (){
+    Tab fresh() {
         HBox nameBox = new HBox();
         nameBox.setAlignment(Pos.CENTER_LEFT);
         nameBox.setPadding(new Insets(5));
@@ -243,7 +313,7 @@ public class AddStudent extends PopUp {
         Label nameLabel = new Label("Nom :");
         nom = new TextField();
         nom.setPromptText("Nom");
-        HBox.setMargin(nom, new Insets(0,75,0,0));
+        HBox.setMargin(nom, new Insets(0, 75, 0, 0));
         Region nameSpacer = new Region();
         HBox.setHgrow(nameSpacer, Priority.ALWAYS);
         nameBox.getChildren().addAll(nameLabel, nameSpacer, nom);
@@ -255,7 +325,7 @@ public class AddStudent extends PopUp {
         Label prenomLabel = new Label("Prénom :");
         prenom = new TextField();
         prenom.setPromptText("Prénom");
-        HBox.setMargin(prenom, new Insets(0,75,0,0));
+        HBox.setMargin(prenom, new Insets(0, 75, 0, 0));
         Region prenomSpacer = new Region();
         HBox.setHgrow(prenomSpacer, Priority.ALWAYS);
         prenomBox.getChildren().addAll(prenomLabel, prenomSpacer, prenom);
@@ -267,7 +337,7 @@ public class AddStudent extends PopUp {
         Label niveauLabel = new Label("Niveau :");
         ObservableList<Integer> intvalues = FXCollections.observableList(List.of(1, 2, 3));
         niveau = new Spinner<>(intvalues);
-        HBox.setMargin(niveau, new Insets(0,75,0,0));
+        HBox.setMargin(niveau, new Insets(0, 75, 0, 0));
         Region niveauSpacer = new Region();
         HBox.setHgrow(niveauSpacer, Priority.ALWAYS);
         niveauBox.getChildren().addAll(niveauLabel, niveauSpacer, niveau);
@@ -279,7 +349,19 @@ public class AddStudent extends PopUp {
         Label moyenneLabel = new Label("Moyenne :");
         moyenne = new TextField();
         moyenne.setPromptText("Moyenne");
-        HBox.setMargin(moyenne, new Insets(0,75,0,0));
+        moyenne.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                    String newValue) {
+                if (newValue.contains(",")) {
+                    moyenne.setText(newValue.replaceAll(",", "."));
+                }
+                if (!newValue.matches("\\d*")) {
+                    moyenne.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
+        HBox.setMargin(moyenne, new Insets(0, 75, 0, 0));
         Region moyenneSpacer = new Region();
         HBox.setHgrow(moyenneSpacer, Priority.ALWAYS);
         moyenneBox.getChildren().addAll(moyenneLabel, moyenneSpacer, moyenne);
@@ -291,7 +373,7 @@ public class AddStudent extends PopUp {
         Label absencesLabel = new Label("Absences :");
         absences = new TextField();
         absences.setPromptText("absences");
-        HBox.setMargin(absences, new Insets(0,75,0,0));
+        HBox.setMargin(absences, new Insets(0, 75, 0, 0));
         Region absencesSpacer = new Region();
         HBox.setHgrow(absencesSpacer, Priority.ALWAYS);
         absencesBox.getChildren().addAll(absencesLabel, absencesSpacer, absences);
@@ -305,7 +387,7 @@ public class AddStudent extends PopUp {
         HBox.setHgrow(motivationSpacer, Priority.ALWAYS);
         ObservableList<Motivation> values = FXCollections.observableList(List.of(Motivation.values()));
         motivation = new Spinner<>(values);
-        HBox.setMargin(motivation, new Insets(0,75,0,0));
+        HBox.setMargin(motivation, new Insets(0, 75, 0, 0));
         motivationBox.getChildren().addAll(motivationLabel, motivationSpacer, motivation);
 
         ajouterFresh = new Button("Ajouter");
@@ -317,36 +399,41 @@ public class AddStudent extends PopUp {
         Region spacer = new Region();
         VBox.setVgrow(spacer, Priority.ALWAYS);
 
-        VBox root = new VBox(nameBox, prenomBox, niveauBox, moyenneBox, absencesBox, motivationBox, spacer, ajouterFresh);
+        VBox root = new VBox(nameBox, prenomBox, niveauBox, moyenneBox, absencesBox, motivationBox, spacer,
+                ajouterFresh);
         root.setPadding(new Insets(20));
         root.setAlignment(Pos.CENTER);
 
         return new Tab("Nouveau", root);
     }
 
-    Tab fromList(){
+    Tab fromList() {
+        tutoredCb.setSelected(true);
+        tutorCb.setSelected(true);
+
+        tutoredCb.selectedProperty().addListener(new CheckBoxListener());
+        tutorCb.selectedProperty().addListener(new CheckBoxListener());
+
         searchList.getSelectionModel().getSelectedItems().addListener(new SearchListListener());
         populateList(students);
-        TextField tf = new TextField();
-        tf.setPromptText("Votre recherche");
-        tf.textProperty().addListener(new SearchStudentListener());
+        searchListTf.setPromptText("Votre recherche");
+        searchListTf.textProperty().addListener(new SearchStudentListener());
 
         ajouterList = new Button("Ajouter");
         ajouterList.setDisable(true);
         ajouterList.setOnAction(new AddingChecker());
-        VBox.setMargin(ajouterList, new Insets(10,0,0,0));
-        VBox.setVgrow(tf, Priority.ALWAYS);
-        VBox root = new VBox(tf, searchList, ajouterList);
+        VBox.setMargin(ajouterList, new Insets(10, 0, 0, 0));
+        VBox.setVgrow(searchListTf, Priority.ALWAYS);
+        VBox root = new VBox(listCb, searchListTf, searchList, ajouterList);
         root.setPadding(new Insets(20));
         root.setAlignment(Pos.CENTER);
-        
 
         return new Tab("Depuis la liste", root);
     }
 
-    private void populateList(List<? extends Student> students){
+    private void populateList(List<? extends Student> students) {
         searchList.getItems().clear();
         searchList.getItems().addAll(students);
     }
-    
+
 }

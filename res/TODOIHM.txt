@@ -37,10 +37,9 @@ V diversité des méthodes pour une même action
 
 TODO:
 
-> MISE EN PAGE AJOUT (ajouter année étudiant + note)
-
 > DARKMODE?
 > SAVE OLD COEFS
 
-> REMPLACER TUTEUR
 > disable les menus
+
+> Si etudiant supprimé : retirer les affectations forcées

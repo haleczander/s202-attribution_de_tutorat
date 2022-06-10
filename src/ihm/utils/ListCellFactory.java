@@ -36,13 +36,7 @@ public class ListCellFactory implements Callback<ListView<Student>,ListCell<Stud
             this.iface = iface;
         }
 
-        String lineSeparator(String str){
-            StringBuilder sb = new StringBuilder();
-            for (int i =0 ; i< str.length() ; i++){
-                sb.append("﹘");
-            }
-            return sb.toString();
-        }
+        
 
         @Override
         public void updateItem(Student item, boolean empty) {
@@ -52,16 +46,8 @@ public class ListCellFactory implements Callback<ListView<Student>,ListCell<Stud
                     setOnMouseReleased(e -> {if (!cursorContained(e, iface)) draggedStudent = null; });
                     setOnMouseEntered(e -> {if (draggedStudent != null) Events.DragNDropHandler(iface, item, e.getButton() == MouseButton.SECONDARY);});
 
-                    Resource resource=iface.dpt.currentTutoring.getResource();
-                    setTooltip(new Tooltip(
-                        item.getName() + "\t(" + (item.isTutored()? "Tutoré" : "Tuteur") + ")"
-                        + " \n" + 
-                        lineSeparator(item.getName() + "\t(" + (item.isTutored()? "Tutoré" : "Tuteur") + ")")
-                        + " \nNotes de " + resource.getName() + " :\t" + item.getGrade(resource)  
-                        + " \nAbsences :\t\t" + item.getAbsences()
-                        + " \nAnnée :\t\t\t" + item.getLevel() 
-                        + " \nMotivation :\t\t" + item.getMotivation()
-                    ));
+                    
+                    setTooltip(new Tooltip(TutoringUtils.getStudentLabel(item, iface)));
                     getTooltip().setStyle("-fx-font-size : 15;");
 
                     if (item.isTutored() &&  iface.dpt.currentTutoring.affectations.size()>0) {

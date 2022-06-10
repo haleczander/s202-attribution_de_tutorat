@@ -23,6 +23,7 @@ public class SelectedStudentListener implements ListChangeListener<Student> {
     public void onChanged(Change<? extends Student> changed) {
         if (changed.getList().size()>0){
             iface.selectedStudent=changed.getList().get(0);
+            iface.rightClickMenuReplace.setDisable(iface.selectedStudent.isTutored());
          }
         
     }

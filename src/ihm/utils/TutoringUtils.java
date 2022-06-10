@@ -85,4 +85,24 @@ public class TutoringUtils {
         }
         
     }
+    static String lineSeparator(String str){
+        StringBuilder sb = new StringBuilder();
+        for (int i =0 ; i< str.length() ; i++){
+            sb.append("﹘");
+        }
+        return sb.toString();
+    }
+
+    public static String getStudentLabel(Student item, Interface iface) {
+        Resource resource=iface.dpt.currentTutoring.getResource();
+        return 
+        item.getName() + "\t(" + (item.isTutored()? "Tutoré" : "Tuteur") + ")"
+        + " \n" + 
+        lineSeparator(item.getName() + "\t(" + (item.isTutored()? "Tutoré" : "Tuteur") + ")")
+        + " \nNotes de " + resource.getName() + " :\t" + item.getGrade(resource)  
+        + " \nAbsences :\t\t" + item.getAbsences()
+        + " \nAnnée :\t\t\t" + item.getLevel() 
+        + " \nMotivation :\t\t" + item.getMotivation();
+
+    }
 }

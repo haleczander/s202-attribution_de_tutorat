@@ -15,6 +15,8 @@ public abstract class PopUp extends Application {
         this.stage = new Stage();
         this.parent = parent;
         stage.initModality(Modality.APPLICATION_MODAL);
+        
+        stage.setResizable(false);
     }
     
     abstract public void start(Stage stage);

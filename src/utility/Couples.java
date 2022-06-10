@@ -1,7 +1,9 @@
 package utility;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import graphs.Couple;
@@ -40,8 +42,8 @@ public final class Couples {
         return null;
     }
 
-    public static Set<Couple> containedIn(Collection<Couple> couples, Student student){
-        Set<Couple> retour = new HashSet<>();
+    public static List<Couple> containedIn(Collection<Couple> couples, Student student){
+        List<Couple> retour = new ArrayList<>();
         for (Couple couple : couples) {
             if (couple.contains(student)) {
                 retour.add(couple);

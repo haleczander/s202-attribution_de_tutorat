@@ -10,6 +10,7 @@ import ihm.events.Events;
 import ihm.events.SelectedStudentListener;
 import ihm.events.SliderListener;
 import ihm.events.SortListHandler;
+import ihm.popup.AddStudent;
 import ihm.popup.Login;
 import ihm.utils.ListCellFactory;
 import ihm.utils.TutoringUtils;
@@ -53,6 +54,7 @@ import oop.Coefficient;
 import oop.Resource;
 import oop.Student;
 import oop.Teacher;
+import oop.Tutor;
 
 public class Interface extends Application {
     // Glob
@@ -107,6 +109,7 @@ public class Interface extends Application {
     public MenuItem rightClickMenuForbid = new MenuItem("Interdire une affectation");  
     public MenuItem rightClickMenuRemove = new MenuItem("Retirer du tutorat");
     public MenuItem rightClickMenuAdd = new MenuItem("Ajouter un étudiant");
+    public MenuItem rightClickMenuReplace = new MenuItem("Supprimer et remplacer");
 
     public ComboBox<Resource> cbMatieres = new ComboBox<>();
     ComboBox<String> cbSession = new ComboBox<>();
@@ -170,8 +173,6 @@ public class Interface extends Application {
         root.setLeft(initListControls());
 
         keyBoardShortcuts();
-        scene.setOnMouseReleased(e->System.out.println("REEASED"));
-        scene.setOnMouseMoved(e->System.out.println("MOOVIT"));
 
         waitingForTutoring(true);
     }
@@ -182,6 +183,8 @@ public class Interface extends Application {
                 case MINUS, SUBTRACT, D, DELETE -> Events.RemoveStudentHandler(this);
                 case ADD, PLUS, N -> Events.AddStudentHandler(this);
                 case F5, ENTER -> Events.AffectationHandler(this);
+                case F -> Events.AddForcedAffectationHandler(this, false);
+                case I -> Events.AddForcedAffectationHandler(this, true);
                 case ESCAPE -> close();
                 default -> nothing();
             }
@@ -214,6 +217,7 @@ public class Interface extends Application {
             rightClickMenuForce,
             rightClickMenuForbid,            
             new SeparatorMenuItem(),
+            rightClickMenuReplace,
             rightClickMenuRemove,
             rightClickMenuAdd
             );
@@ -223,6 +227,7 @@ public class Interface extends Application {
         rightClickMenuForbid.setOnAction(e -> Events.AddForcedAffectationHandler(this, true));
         rightClickMenuRemove.setOnAction(e -> Events.RemoveStudentHandler(this));
         rightClickMenuAdd.setOnAction(e -> Events.AddStudentHandler(this));
+        rightClickMenuReplace.setOnAction(e -> new AddStudent(this, (Tutor)selectedStudent));
         return menu;
     }
 
@@ -264,6 +269,9 @@ public class Interface extends Application {
 
                 ((Button) bt).setDisable(bool);
             }
+        }
+        for (MenuItem item : rightClickMenu.getItems()){
+            item.setDisable(bool);
         }
         btAffect.setDisable(bool);
         affecter.setDisable(bool);
@@ -323,6 +331,8 @@ public class Interface extends Application {
         SelectedStudentListener(this));
         tutored.getSelectionModel().getSelectedItems().addListener(new
         SelectedStudentListener(this));
+
+        
 
         tutored.setContextMenu(rightClickMenu);
         tutors.setContextMenu(rightClickMenu);
