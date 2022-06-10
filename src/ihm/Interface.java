@@ -183,7 +183,7 @@ public class Interface extends Application {
                 case ADD, PLUS, N -> Events.AddStudentHandler(this);
                 case F5, ENTER -> Events.AffectationHandler(this);
                 case ESCAPE -> close();
-                case default -> nothing();
+                default -> nothing();
             }
 
         });

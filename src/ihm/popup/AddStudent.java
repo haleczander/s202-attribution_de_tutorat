@@ -217,6 +217,8 @@ public class AddStudent extends PopUp {
         alreadyThere.addAll(parent.dpt.currentTutoring.getTutors());
         students = new ArrayList<>(parent.dpt.getStudents());
         students.removeAll(alreadyThere);
+        stage.setTitle("Ajouter un étudiant");
+        stage.setResizable(false);
 
         start(stage);
     }
@@ -332,7 +334,11 @@ public class AddStudent extends PopUp {
         ajouterList = new Button("Ajouter");
         ajouterList.setDisable(true);
         ajouterList.setOnAction(new AddingChecker());
+        VBox.setMargin(ajouterList, new Insets(10,0,0,0));
+        VBox.setVgrow(tf, Priority.ALWAYS);
         VBox root = new VBox(tf, searchList, ajouterList);
+        root.setPadding(new Insets(20));
+        root.setAlignment(Pos.CENTER);
         
 
         return new Tab("Depuis la liste", root);
