@@ -22,7 +22,6 @@ public class TutoringUtils {
             iface.tutored.getItems().addAll(iface.dpt.currentTutoring.getTutored());
         }
         else {
-            
             iface.scrollBarOne.valueProperty().bindBidirectional(iface.scrollBarTwo.valueProperty());
             for (Couple couple : iface.dpt.currentTutoring.affectations){
                 iface.tutored.getItems().add(couple.getTutored());

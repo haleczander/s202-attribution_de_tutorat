@@ -62,7 +62,7 @@ public final class Couples {
     public static Set<Student> getTutored(Collection<Couple> couples){
         Set<Student> retour = new HashSet<>();
         for (Couple couple : couples) {
-            retour.add(couple.getTutor());
+            retour.add(couple.getTutored());
         }
         return retour;
     }

@@ -96,10 +96,13 @@ public class AddStudent extends PopUp {
             if (result.get() == ButtonType.YES) {
                 selectedStudent.addGrade(parent.dpt.currentTutoring.getResource(), Student.getDefaultGrade());
                 parent.dpt.currentTutoring.addStudent(selectedStudent);
+                parent.dpt.currentTutoring.removeStudent(toRemove);
                 if (toReaffect != null) {
                     parent.dpt.currentTutoring.addForcedAssignments(toReaffect, (Tutor) selectedStudent);
                 }
-                parent.dpt.currentTutoring.removeStudent(toRemove);
+                parent.dpt.currentTutoring.getWaitingList().remove(toReaffect);
+                parent.dpt.currentTutoring.getWaitingList().remove(selectedStudent);
+                parent.dpt.currentTutoring.affectations.add(new Couple(toReaffect, (Tutor)selectedStudent));
                 TutoringUtils.updateLists(parent);
                 stage.close();
             }
@@ -266,16 +269,14 @@ public class AddStudent extends PopUp {
                 students.add(student);
             }
         }
-        students.remove(toRemove);
+        students.removeAll(parent.dpt.currentTutoring.getTutors());
         listCb.setDisable(true);
-        Set<Couple> forcees = parent.dpt.currentTutoring.getForcedCouples();
-        if (!forcees.isEmpty()) {
-            toReaffect = Couples.containedIn(forcees, toRemove).get(0)
-                    .getTutored();
+        List<Couple> containedIn = Couples.containedIn(parent.dpt.currentTutoring.affectations, toRemove);
+        if (containedIn.size()>0){
+            toReaffect = containedIn.get(0).getTutored();
             students.removeAll(Couples
                     .getTutors(Couples.containedIn(parent.dpt.currentTutoring.getForbiddenCouples(), toReaffect)));
         }
-
         start(stage);
         stage.setTitle("Remplacer " + toRemove.getName());
         root.getTabs().remove(0);

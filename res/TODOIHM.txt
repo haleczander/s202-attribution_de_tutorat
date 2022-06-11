@@ -42,4 +42,3 @@ TODO:
 
 > disable les menus
 
-> Si etudiant supprimé : retirer les affectations forcées

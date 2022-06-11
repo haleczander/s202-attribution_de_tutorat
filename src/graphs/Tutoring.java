@@ -225,12 +225,21 @@ public class Tutoring {
     // ------------------------
     // Collections methods
     // ------------------------
-    public void removeStudent(Tutor student) {
-        this.tutors.remove(student);
-    }
-
-    public void removeStudent(Tutored student) {
-        this.tutored.remove(student);
+    public void removeStudent(Student student) {
+        List<Couple> couples = Couples.containedIn(this.affectations, student);
+        System.out.println(waitingList);
+        if (student.isTutored()){
+            this.tutored.remove(student);
+            waitingList.addAll(Couples.getTutors(couples));
+        }
+        else {
+            this.tutors.remove(student);
+            waitingList.addAll(Couples.getTutored(couples));
+        }
+        this.affectations.removeAll(couples);
+        this.forcedCouples.removeAll(Couples.containedIn(this.forcedCouples, student));
+        this.forbiddenCouples.removeAll(Couples.containedIn(this.forbiddenCouples, student));
+        
     }
 
     /**
@@ -509,7 +518,7 @@ public class Tutoring {
      * @return a copy of the waiting list.
      */
     public List<Student> getWaitingList() {
-        return List.copyOf(this.waitingList);
+        return this.waitingList;
     }
 
     /**

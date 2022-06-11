@@ -41,7 +41,12 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
@@ -145,6 +150,9 @@ public class Interface extends Application {
     final Insets PAD_MIN = new Insets(5);
     final Insets PAD_BTN = new Insets(5, 9, 5, 9);
 
+    // BACKGROUND
+    final Background MENU_BG = new Background(new BackgroundFill(Color.LIGHTGREY, null, null));
+
     @Override
     public void start(Stage stage) throws Exception {
         this.stage = stage;
@@ -154,6 +162,7 @@ public class Interface extends Application {
         stage.setTitle("Tutorat du département " + this.dpt.getName());
         stage.setScene(scene);
         stage.show();
+        // scene.getRoot().setStyle("-fx-base:black");
 
         synchronizeScrollBars();
     }
@@ -202,9 +211,11 @@ public class Interface extends Application {
                 WidgetUtils.spacer(200),
                 new HBox(new Label("Tuteurs ("), tutoringTutorNbLb, new Label(")")),
                 WidgetUtils.spacer());
-
-        VBox main = new VBox(titres, studentListsWidget());
+        HBox lists = studentListsWidget();
+        VBox main = new VBox(titres, lists);
         main.setPadding(PAD_MIN);
+        VBox.setVgrow(lists, Priority.ALWAYS);
+        
 
         return main;
 
@@ -233,7 +244,13 @@ public class Interface extends Application {
 
 
     VBox initTop() {
-        return new VBox(initMenu(), initHeader(), horizontalToolbar());
+        VBox retour = new VBox(initMenu(), initHeader(), horizontalToolbar());
+        retour.setBorder(new Border(new BorderStroke(null, null, Color.DARKGRAY, null, null, null, BorderStrokeStyle.SOLID, null, null, null, Insets.EMPTY)));
+        
+        retour.setBackground(MENU_BG);
+
+        
+        return retour;
     }
 
     void initData() {
@@ -313,17 +330,19 @@ public class Interface extends Application {
     }
 
     VBox initListControls() {
-        VBox listControls = new VBox();
-        listControls.setPadding(PAD_MIN);
-        listControls.setPrefWidth(175);
+        VBox retour = new VBox();
+        retour.setPadding(PAD_MIN);
+        retour.setMaxWidth(300);
 
-        listControls.getChildren().addAll(listStudentControls(), WidgetUtils.filler(), listSortingControls());
+        retour.getChildren().addAll(listStudentControls(), WidgetUtils.filler(), listSortingControls());
 
-        return listControls;
+        retour.setBackground(MENU_BG);
+
+        return retour;
     }
 
     HBox studentListsWidget() {
-        HBox listes = new HBox();
+        HBox retour = new HBox();
 
         rightClickMenu = rightClickMenu();
 
@@ -332,6 +351,8 @@ public class Interface extends Application {
         tutored.getSelectionModel().getSelectedItems().addListener(new
         SelectedStudentListener(this));
 
+        VBox.setVgrow(tutors, Priority.ALWAYS);
+        VBox.setVgrow(tutored, Priority.ALWAYS);
         
 
         tutored.setContextMenu(rightClickMenu);
@@ -340,32 +361,28 @@ public class Interface extends Application {
         tutored.setCellFactory(new ListCellFactory(this));
         tutors.setCellFactory(new ListCellFactory(this));
 
-        listes.getChildren().addAll(tutored, tutors);
-        listes.setAlignment(Pos.CENTER);
-        listes.setPadding(PAD_MIN);
-        return listes;
+        retour.getChildren().addAll(tutored, tutors);
+        retour.setAlignment(Pos.CENTER);
+        retour.setPadding(PAD_MIN);
+
+
+        return retour;
     }
 
     HBox horizontalToolbar() {
-        HBox options = new HBox();
-        options.setSpacing(10);
-        options.getChildren().addAll(coefficientWidgets(), affectationWidgets(), tutoringWidgets());
+        HBox retour = new HBox();
+        retour.setSpacing(10);
+        retour.getChildren().addAll(coefficientWidgets(), affectationWidgets(), tutoringWidgets());
 
-        // coefficientContainer.prefHeightProperty().bindBidirectional(affectationContainer.prefHeightProperty());
-        // tutoringContainer.prefHeightProperty().bindBidirectional(affectationContainer.prefHeightProperty());
-
-        for (Node n : options.getChildren()) {
+        for (Node n : retour.getChildren()) {
             Pane p = ((Pane) ((TitledPane) n).getContent());
             p.setMinHeight(TOOLBAR_HEIGHT);
             p.setPadding(PAD_MIN);
         }
 
-        options.setPadding(PAD_MIN);
-        // options.setMaxHeight(Double.MIN_VALUE);
-        // options.setAlignment(Pos.TOP_LEFT);
-        options.setStyle(
-                "-fx-background-color: #EFEFEF;-fx-effect: dropshadow(gaussian, rgba(125,125,125,0.8), 2, 0, 0, 1);");
-        return options;
+        retour.setPadding(PAD_MIN);
+        retour.setBackground(MENU_BG);
+        return retour;
     }
 
     TitledPane tutoringWidgets() {
@@ -447,8 +464,8 @@ public class Interface extends Application {
     }
 
     HBox initHeader() {
-        HBox header = new HBox();
-        header.setPadding(PAD_MIN);
+        HBox retour = new HBox();
+        retour.setPadding(PAD_MIN);
 
         HBox logo = new HBox();
         HBox.setHgrow(logo, Priority.ALWAYS);
@@ -463,11 +480,15 @@ public class Interface extends Application {
 
         session.getChildren().addAll(cbSession, sessionPhoto);
 
-        header.getChildren().addAll(TutoringUtils.initMatieres(this), logo, session);
-        for (Node n : header.getChildren()) {
+        retour.getChildren().addAll(TutoringUtils.initMatieres(this), logo, session);
+        for (Node n : retour.getChildren()) {
             n.minHeight(Double.MAX_VALUE);
         }
-        return header;
+
+        
+        retour.setBorder(new Border(new BorderStroke(null, null, Color.DARKGRAY, null, null, null, BorderStrokeStyle.SOLID, null, null, null, Insets.EMPTY)));
+
+        return retour;
     }
 
     HBox initFooter() {

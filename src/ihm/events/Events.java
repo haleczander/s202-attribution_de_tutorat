@@ -19,7 +19,6 @@ public class Events {
         if (iface.dpt.currentTutoring == null) {
             return;
         }
-        System.out.println(iface.selectedStudent);
         if (iface.selectedStudent != null) {
             Alert alert = new Alert(AlertType.WARNING,
                     "Vous allez supprimer " + iface.selectedStudent.getName() + ". Êtes-vous certain(e)?",
@@ -40,9 +39,7 @@ public class Events {
     }
 
     public static void AddForcedAffectationHandler(Interface iface, boolean interdite){
-        System.out.println(interdite);
         if (iface.dpt.currentTutoring == null || iface.selectedStudent == null) {
-            System.out.println("null");
             return;
         }
         new AddStudent(iface, interdite);

@@ -9,7 +9,6 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
-import oop.Resource;
 import oop.Student;
 import oop.Tutor;
 import utility.Couples;
