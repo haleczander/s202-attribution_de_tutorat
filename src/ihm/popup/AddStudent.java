@@ -3,12 +3,11 @@ package ihm.popup;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import graphs.Couple;
 import ihm.Interface;
 import ihm.events.Events;
-import ihm.utils.ListCellFactory;
+import ihm.utils.StudentCellFactory;
 import ihm.utils.TutoringUtils;
 import ihm.utils.WidgetUtils;
 import javafx.beans.value.ChangeListener;
@@ -73,9 +72,8 @@ public class AddStudent extends PopUp {
             if (replacing) {
                 confirmReplace();
             } else if (interdite != null) {
-                ListCellFactory.draggedStudent = parent.selectedStudent;
+                StudentCellFactory.draggedStudent = parent.selectedStudent;
                 Events.DragNDropHandler(parent, selectedStudent, interdite);
-                stage.close();
             } else if (target == ajouterFresh) {
                 if (checkInputs()) {
                     createAndAddStudent();
@@ -83,6 +81,9 @@ public class AddStudent extends PopUp {
             } else {
                 confirm();
             }
+            System.out.println("maj listes");
+            TutoringUtils.updateLists(parent);
+            stage.close();
 
         }
 
@@ -103,8 +104,6 @@ public class AddStudent extends PopUp {
                 parent.dpt.currentTutoring.getWaitingList().remove(toReaffect);
                 parent.dpt.currentTutoring.getWaitingList().remove(selectedStudent);
                 parent.dpt.currentTutoring.affectations.add(new Couple(toReaffect, (Tutor)selectedStudent));
-                TutoringUtils.updateLists(parent);
-                stage.close();
             }
         }
 
@@ -117,8 +116,6 @@ public class AddStudent extends PopUp {
             if (result.get() == ButtonType.YES) {
                 selectedStudent.addGrade(parent.dpt.currentTutoring.getResource(), Student.getDefaultGrade());
                 parent.dpt.currentTutoring.addStudent(selectedStudent);
-                TutoringUtils.updateLists(parent);
-                stage.close();
             }
         }
 
@@ -180,15 +177,11 @@ public class AddStudent extends PopUp {
                 Tutored student = new Tutored(prenomString + " " + nomString, absencesInt, motivationValue.getAbbr());
                 student.addGrade(parent.dpt.currentTutoring.getResource(), moyenneDouble);
                 parent.dpt.currentTutoring.addStudent(student);
-                TutoringUtils.updateLists(parent);
-                stage.close();
             } else {
                 Tutor student = new Tutor(prenomString + " " + nomString, niveauInt, absencesInt,
                         motivationValue.getAbbr());
                 student.addGrade(parent.dpt.currentTutoring.getResource(), moyenneDouble);
                 parent.dpt.currentTutoring.addStudent(student);
-                TutoringUtils.updateLists(parent);
-                stage.close();
             }
         }
     }

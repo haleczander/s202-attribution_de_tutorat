@@ -3,7 +3,6 @@ package ihm.events;
 import ihm.Interface;
 import javafx.collections.ListChangeListener;
 import oop.Student;
-import oop.Tutor;
 
 public class SelectedStudentListener implements ListChangeListener<Student> {
     Interface iface;

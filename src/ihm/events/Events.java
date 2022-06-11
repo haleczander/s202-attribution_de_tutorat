@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import ihm.Interface;
 import ihm.popup.AddStudent;
-import ihm.utils.ListCellFactory;
+import ihm.utils.StudentCellFactory;
 import ihm.utils.TutoringUtils;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -56,26 +56,25 @@ public class Events {
         if (iface.dpt.currentTutoring == null) {
             return;
         }
-        iface.aretes.getItems().clear();
         iface.dpt.currentTutoring.affectations();
-        iface.aretes.getItems().addAll(iface.dpt.currentTutoring.affectations);
         TutoringUtils.updateLists(iface);
 
     }
 
     public static void DragNDropHandler(Interface iface, Student entered, boolean interdite) {
-        if (ListCellFactory.draggedStudent == null){
+        if (StudentCellFactory.draggedStudent == null){
         } else if ((!entered.isTutored() && ((Tutor)entered).isDuplicate()) 
-            |(entered.getClass().equals(ListCellFactory.draggedStudent.getClass()))){
+            |(entered.getClass().equals(StudentCellFactory.draggedStudent.getClass()))){
         }
         else {
-            if (ListCellFactory.draggedStudent.isTutored()) {
-                ForcedAffectationHandler(iface, (Tutored) ListCellFactory.draggedStudent, (Tutor) entered, interdite);
+            if (StudentCellFactory.draggedStudent.isTutored()) {
+                ForcedAffectationHandler(iface, (Tutored) StudentCellFactory.draggedStudent, (Tutor) entered, interdite);
             } else {
-                ForcedAffectationHandler(iface, (Tutored) entered, (Tutor) ListCellFactory.draggedStudent, interdite);
+                ForcedAffectationHandler(iface, (Tutored) entered, (Tutor) StudentCellFactory.draggedStudent, interdite);
             }
         }
-        ListCellFactory.draggedStudent = null;
+        TutoringUtils.updateLists(iface);
+        StudentCellFactory.draggedStudent = null;
 
     }
 

@@ -12,7 +12,8 @@ import ihm.events.SliderListener;
 import ihm.events.SortListHandler;
 import ihm.popup.AddStudent;
 import ihm.popup.Login;
-import ihm.utils.ListCellFactory;
+import ihm.utils.CoupleCellFactory;
+import ihm.utils.StudentCellFactory;
 import ihm.utils.TutoringUtils;
 import ihm.utils.WidgetUtils;
 import javafx.application.Application;
@@ -42,7 +43,6 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.BorderStroke;
@@ -141,17 +141,17 @@ public class Interface extends Application {
 
     public ListView<Student> tutors = new ListView<>();
     public ListView<Student> tutored = new ListView<>();
+    public ListView<Couple> couples = new ListView<>();
 
     public boolean affectationInterdite;
 
-    public ListView<Couple> aretes = new ListView<>();
 
     // Padding
     final Insets PAD_MIN = new Insets(5);
     final Insets PAD_BTN = new Insets(5, 9, 5, 9);
 
     // BACKGROUND
-    final Background MENU_BG = new Background(new BackgroundFill(Color.LIGHTGREY, null, null));
+    final Background MENU_BG = null;//new Background(new BackgroundFill(Color.LIGHTGREY, null, null));
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -195,6 +195,7 @@ public class Interface extends Application {
                 case F -> Events.AddForcedAffectationHandler(this, false);
                 case I -> Events.AddForcedAffectationHandler(this, true);
                 case ESCAPE -> close();
+                case R -> {if (!selectedStudent.isTutored()) new AddStudent(this, (Tutor)selectedStudent);}
                 default -> nothing();
             }
 
@@ -206,11 +207,11 @@ public class Interface extends Application {
 
     VBox initMain() {
         HBox titres = new HBox(
-                WidgetUtils.spacer(),
-                new HBox(new Label("Tutorés ("), tutoringTutoredNbLb, new Label(")")),
                 WidgetUtils.spacer(200),
+                new HBox(new Label("Tutorés ("), tutoringTutoredNbLb, new Label(")")),
+                WidgetUtils.spacer(),
                 new HBox(new Label("Tuteurs ("), tutoringTutorNbLb, new Label(")")),
-                WidgetUtils.spacer());
+                WidgetUtils.spacer(200));
         HBox lists = studentListsWidget();
         VBox main = new VBox(titres, lists);
         main.setPadding(PAD_MIN);
@@ -267,13 +268,15 @@ public class Interface extends Application {
         etudiantsControls = new VBox();
 
         HBox add = WidgetUtils.labelButton("Ajouter", "+", e -> Events.AddStudentHandler(this), "Ajouter un étudiant");
-        HBox del = WidgetUtils.labelButton("Supprimer", "‒", e -> Events.RemoveStudentHandler(this),
+        HBox del = WidgetUtils.labelButton("Supprimer (D)", "‒", e -> Events.RemoveStudentHandler(this),
                 "Supprimer un étudiant");
-        HBox union = WidgetUtils.labelButton("Forcer", "🔗", e -> Events.AddForcedAffectationHandler(this, false), "Forcer une affectation");
+        HBox union = WidgetUtils.labelButton("Forcer (F)", "🔗", e -> Events.AddForcedAffectationHandler(this, false), "Forcer une affectation");
         HBox disUnion = WidgetUtils.labelButton("Interdire", "⦸", e -> Events.AddForcedAffectationHandler(this, true),
                 "Interdire une affectation");
 
         etudiantsControls.getChildren().addAll(add, del, union, disUnion);
+        
+        etudiantsControls.setPadding(PAD_MIN);
         return new TitledPane("Etudiants", etudiantsControls);
     }
 
@@ -326,6 +329,7 @@ public class Interface extends Application {
         triControls.setSpacing(5);
 
         VBox triGroup = new VBox(filterGroup, WidgetUtils.filler(), triControls);
+        triGroup.setPadding(PAD_MIN);
         return new TitledPane("Trier par", triGroup);
     }
 
@@ -351,17 +355,24 @@ public class Interface extends Application {
         tutored.getSelectionModel().getSelectedItems().addListener(new
         SelectedStudentListener(this));
 
+
+        couples.setBackground(null);
+        HBox.setHgrow(couples, Priority.ALWAYS);
+        couples.setMaxWidth(175);
+
         VBox.setVgrow(tutors, Priority.ALWAYS);
         VBox.setVgrow(tutored, Priority.ALWAYS);
+        VBox.setVgrow(couples, Priority.ALWAYS);
         
 
         tutored.setContextMenu(rightClickMenu);
         tutors.setContextMenu(rightClickMenu);
 
-        tutored.setCellFactory(new ListCellFactory(this));
-        tutors.setCellFactory(new ListCellFactory(this));
+        tutored.setCellFactory(new StudentCellFactory(this));
+        tutors.setCellFactory(new StudentCellFactory(this));
+        couples.setCellFactory(new CoupleCellFactory(this));
 
-        retour.getChildren().addAll(tutored, tutors);
+        retour.getChildren().addAll(WidgetUtils.spacer(), tutored, WidgetUtils.spacer(),couples, WidgetUtils.spacer(), tutors, WidgetUtils.spacer());
         retour.setAlignment(Pos.CENTER);
         retour.setPadding(PAD_MIN);
 
@@ -371,13 +382,16 @@ public class Interface extends Application {
 
     HBox horizontalToolbar() {
         HBox retour = new HBox();
-        retour.setSpacing(10);
-        retour.getChildren().addAll(coefficientWidgets(), affectationWidgets(), tutoringWidgets());
+        // retour.maxWidthProperty().bind(root.prefWidthProperty());
+        retour.getChildren().addAll(coefficientWidgets(), WidgetUtils.spacer(), affectationWidgets(), WidgetUtils.spacer(), tutoringWidgets());
 
         for (Node n : retour.getChildren()) {
-            Pane p = ((Pane) ((TitledPane) n).getContent());
-            p.setMinHeight(TOOLBAR_HEIGHT);
-            p.setPadding(PAD_MIN);
+            if (n instanceof TitledPane){
+                Pane p = ((Pane) ((TitledPane) n).getContent());
+                p.setMinHeight(TOOLBAR_HEIGHT);
+                p.setPadding(PAD_MIN);
+
+            }
         }
 
         retour.setPadding(PAD_MIN);
@@ -492,15 +506,17 @@ public class Interface extends Application {
     }
 
     HBox initFooter() {
-        HBox footer = new HBox();
+        HBox retour = new HBox();
         sessionBt.getStyleClass().clear();
         sessionBt.setOnMouseEntered(e -> ((Button) e.getTarget()).setTextFill(Color.BLUE));
         ;
         sessionBt.setOnMouseExited(e -> ((Button) e.getTarget()).setTextFill(Color.BLACK));
         ;
         sessionBt.setOnAction(new AuthentificationHandler(this));
-        footer.getChildren().addAll(sessionBt);
-        return footer;
+        retour.getChildren().addAll(sessionBt);
+        retour.setBorder(new Border(new BorderStroke(Color.DARKGRAY, null, null, null, BorderStrokeStyle.SOLID, null, null, null, null, null, Insets.EMPTY)));
+        retour.setPadding(PAD_MIN);
+        return retour;
     }
 
     public void close() {

@@ -13,7 +13,7 @@ import oop.Student;
 import oop.Tutor;
 import utility.Couples;
 
-public class ListCellFactory implements Callback<ListView<Student>,ListCell<Student>> {
+public class StudentCellFactory implements Callback<ListView<Student>,ListCell<Student>> {
     Interface iface;
     public static boolean dragging = false;
     public static Student draggedStudent = null;
@@ -21,18 +21,19 @@ public class ListCellFactory implements Callback<ListView<Student>,ListCell<Stud
     public static Student hoveredStudent = null;
 
 
-    public ListCellFactory(Interface iface) {
+    public StudentCellFactory(Interface iface) {
         this.iface = iface;
     }
 
     public ListCell<Student> call(ListView<Student> listview) {
-        return new StudentColorier(iface);
+        return new StudentCellStyler(iface);
     }
 
-    static class StudentColorier extends ListCell<Student> {
+    static class StudentCellStyler extends ListCell<Student> {
         Interface iface;
-        StudentColorier(Interface iface){
+        StudentCellStyler(Interface iface){
             this.iface = iface;
+            setPrefHeight(TutoringUtils.LIST_CELL_HEIGHT);
         }
 
         
@@ -64,8 +65,7 @@ public class ListCellFactory implements Callback<ListView<Student>,ListCell<Stud
                         else {
                             setTextFill(Color.BLACK);
                         }
-                    }
-                    
+                    }                    
                     setText(item.getName());
                 }
                 else {

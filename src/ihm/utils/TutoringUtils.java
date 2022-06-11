@@ -11,11 +11,13 @@ import oop.Resource;
 import oop.Student;
 
 public class TutoringUtils {  
+    public static final double LIST_CELL_HEIGHT = 25;
 
 
     public static void updateLists(Interface iface) {
         iface.tutors.getItems().clear();
         iface.tutored.getItems().clear();
+        iface.couples.getItems().clear();
         if (iface.dpt.currentTutoring.affectations.size() ==0 ){
             iface.scrollBarOne.valueProperty().unbindBidirectional(iface.scrollBarTwo.valueProperty());
             iface.tutors.getItems().addAll(iface.dpt.currentTutoring.getTutors()); 
@@ -26,6 +28,7 @@ public class TutoringUtils {
             for (Couple couple : iface.dpt.currentTutoring.affectations){
                 iface.tutored.getItems().add(couple.getTutored());
                 iface.tutors.getItems().add(couple.getTutor());
+                iface.couples.getItems().add(couple);
             }
             for (Student student : iface.dpt.currentTutoring.getWaitingList()){
                 if (student.isTutored()){

@@ -227,7 +227,6 @@ public class Tutoring {
     // ------------------------
     public void removeStudent(Student student) {
         List<Couple> couples = Couples.containedIn(this.affectations, student);
-        System.out.println(waitingList);
         if (student.isTutored()){
             this.tutored.remove(student);
             waitingList.addAll(Couples.getTutors(couples));
@@ -502,8 +501,8 @@ public class Tutoring {
     }
 
     public void affectations(){
-        calculAffectation();
         this.affectations.clear();
+        calculAffectation();
         Couple c;
         for (Arete<Student> arete : this.affectation.getAffectation()) {
             c = new Couple((Tutored)arete.getExtremite1(), (Tutor)arete.getExtremite2());

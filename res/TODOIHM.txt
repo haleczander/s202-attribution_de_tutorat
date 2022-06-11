@@ -41,4 +41,9 @@ TODO:
 > SAVE OLD COEFS
 
 > disable les menus
+> force affect disable buttons liste
+> Afficher touche des racxourcis (menu top, menu a gauche, et menu clic droit)
 
+> ordonner code
+
+> interliste des unions
