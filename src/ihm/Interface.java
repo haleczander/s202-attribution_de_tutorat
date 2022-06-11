@@ -5,7 +5,6 @@ import java.util.Random;
 
 import graphs.Couple;
 import graphs.Tutoring;
-import ihm.events.AuthentificationHandler;
 import ihm.events.Events;
 import ihm.events.SelectedStudentListener;
 import ihm.events.SliderListener;
@@ -38,11 +37,11 @@ import javafx.scene.control.ScrollBar;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TitledPane;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.BorderStroke;
@@ -73,6 +72,9 @@ public class Interface extends Application {
 
     public ScrollBar scrollBarOne;
     public ScrollBar scrollBarTwo;
+    public ScrollBar scrollBarThree;
+
+    MenuBar menuBar;
 
     // Waiting for tutoring
     VBox etudiantsControls;
@@ -100,7 +102,7 @@ public class Interface extends Application {
     VBox tutoringContainer = new VBox();
 
     // Login controls
-    Button sessionBt = new Button();
+    Label sessionBt = new Label();
     final String notLogged = "Non connecté";
     final String logged = "Connecté en tant que ";
     MenuItem login = new MenuItem("Se connecter");
@@ -150,8 +152,8 @@ public class Interface extends Application {
     final Insets PAD_MIN = new Insets(5);
     final Insets PAD_BTN = new Insets(5, 9, 5, 9);
 
-    // BACKGROUND
-    final Background MENU_BG = null;//new Background(new BackgroundFill(Color.LIGHTGREY, null, null));
+
+
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -162,14 +164,23 @@ public class Interface extends Application {
         stage.setTitle("Tutorat du département " + this.dpt.getName());
         stage.setScene(scene);
         stage.show();
-        // scene.getRoot().setStyle("-fx-base:black");
-
+        
         synchronizeScrollBars();
+    }
+
+    public void setTheme(String color) {   
+        scene.getRoot().setStyle("-fx-base:"+color);
+        couples.setBackground(affectationContainer.getBackground());
+        couples.setPadding(Insets.EMPTY);
+        couples.getStyleClass().clear();
     }
 
     void synchronizeScrollBars() {
         scrollBarOne = (ScrollBar) tutored.lookup(".scroll-bar:vertical");
         scrollBarTwo = (ScrollBar) tutors.lookup(".scroll-bar:vertical");
+        scrollBarThree = (ScrollBar) couples.lookup(".scroll-bar:vertical");
+        
+        couples.lookup(".scroll-bar").setStyle("-fx-scale:0;");
     }
 
     void initInterface() {
@@ -182,6 +193,7 @@ public class Interface extends Application {
         root.setLeft(initListControls());
 
         keyBoardShortcuts();
+        
 
         waitingForTutoring(true);
     }
@@ -248,7 +260,7 @@ public class Interface extends Application {
         VBox retour = new VBox(initMenu(), initHeader(), horizontalToolbar());
         retour.setBorder(new Border(new BorderStroke(null, null, Color.DARKGRAY, null, null, null, BorderStrokeStyle.SOLID, null, null, null, Insets.EMPTY)));
         
-        retour.setBackground(MENU_BG);
+        // retour.setBackground(MENU_BG_DARK);
 
         
         return retour;
@@ -340,7 +352,7 @@ public class Interface extends Application {
 
         retour.getChildren().addAll(listStudentControls(), WidgetUtils.filler(), listSortingControls());
 
-        retour.setBackground(MENU_BG);
+        // retour.setBackground(MENU_BG_LIGHT);
 
         return retour;
     }
@@ -359,11 +371,16 @@ public class Interface extends Application {
         couples.setBackground(null);
         HBox.setHgrow(couples, Priority.ALWAYS);
         couples.setMaxWidth(175);
+        couples.setDisable(true);
+        
+        couples.setPadding(Insets.EMPTY);
+
 
         VBox.setVgrow(tutors, Priority.ALWAYS);
         VBox.setVgrow(tutored, Priority.ALWAYS);
         VBox.setVgrow(couples, Priority.ALWAYS);
         
+        // tutored.setStyle("-fx-base:"+WidgetUtils.getRgb(Color.LIGHTGRAY));
 
         tutored.setContextMenu(rightClickMenu);
         tutors.setContextMenu(rightClickMenu);
@@ -372,7 +389,7 @@ public class Interface extends Application {
         tutors.setCellFactory(new StudentCellFactory(this));
         couples.setCellFactory(new CoupleCellFactory(this));
 
-        retour.getChildren().addAll(WidgetUtils.spacer(), tutored, WidgetUtils.spacer(),couples, WidgetUtils.spacer(), tutors, WidgetUtils.spacer());
+        retour.getChildren().addAll(WidgetUtils.spacer(), tutored, WidgetUtils.spacer(50),couples, WidgetUtils.spacer(50), tutors, WidgetUtils.spacer());
         retour.setAlignment(Pos.CENTER);
         retour.setPadding(PAD_MIN);
 
@@ -395,7 +412,7 @@ public class Interface extends Application {
         }
 
         retour.setPadding(PAD_MIN);
-        retour.setBackground(MENU_BG);
+        // retour.setBackground(MENU_BG_LIGHT);
         return retour;
     }
 
@@ -507,15 +524,21 @@ public class Interface extends Application {
 
     HBox initFooter() {
         HBox retour = new HBox();
-        sessionBt.getStyleClass().clear();
-        sessionBt.setOnMouseEntered(e -> ((Button) e.getTarget()).setTextFill(Color.BLUE));
-        ;
-        sessionBt.setOnMouseExited(e -> ((Button) e.getTarget()).setTextFill(Color.BLACK));
-        ;
-        sessionBt.setOnAction(new AuthentificationHandler(this));
-        retour.getChildren().addAll(sessionBt);
-        retour.setBorder(new Border(new BorderStroke(Color.DARKGRAY, null, null, null, BorderStrokeStyle.SOLID, null, null, null, null, null, Insets.EMPTY)));
+        ToggleButton nightMode = new ToggleButton("🌙");
+        ToggleButton dayMode = new ToggleButton("☀");
+        ToggleGroup tGroup = new ToggleGroup();
+        nightMode.setToggleGroup(tGroup);
+        nightMode.setTooltip(new Tooltip("Passer en thème sombre"));
+        dayMode.setToggleGroup(tGroup);
+        dayMode.setTooltip(new Tooltip("Passer en thème jour"));
+        nightMode.setOnAction(e -> setTheme("black"));
+        dayMode.setOnAction(e ->setTheme("#ececec"));
+       
+        retour.setOnMouseClicked(e -> Events.AuthentificationHandler(this));
+        retour.getChildren().addAll(sessionBt, WidgetUtils.spacer(), nightMode, dayMode);
+
         retour.setPadding(PAD_MIN);
+        retour.getStyleClass().addAll(cbMatieres.getStyleClass());
         return retour;
     }
 
@@ -531,8 +554,9 @@ public class Interface extends Application {
     }
 
     MenuBar initMenu() {
-        return new MenuBar(initMenuFichier(), initMenuSelection(), initMenuListes(), initMenuAffectation(),
+        menuBar =new MenuBar(initMenuFichier(), initMenuSelection(), initMenuListes(), initMenuAffectation(),
                 initMenuEdition());
+        return menuBar;
     }
 
     Menu initMenuFichier() {
@@ -549,8 +573,8 @@ public class Interface extends Application {
 
         // exporter.setOnAction(e->exporter());
         // importer.setOnAction(e->importer());
-        login.setOnAction(new AuthentificationHandler(this));
-        logout.setOnAction(new AuthentificationHandler(this));
+        login.setOnAction(e -> Events.AuthentificationHandler(this));
+        logout.setOnAction(e -> Events.AuthentificationHandler(this));
         // save.setOnAction(e->save());
         quit.setOnAction(e -> close());
 

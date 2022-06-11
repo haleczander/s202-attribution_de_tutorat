@@ -50,6 +50,9 @@ public class CoupleCellFactory implements Callback<ListView<Couple>, ListCell<Co
                 gc.strokeLine(5, TutoringUtils.LIST_CELL_HEIGHT / 2, iface.couples.getWidth() - 10,
                         TutoringUtils.LIST_CELL_HEIGHT / 2);
             }
+            else {
+                getStyleClass().clear();
+            }
         }
 
     }

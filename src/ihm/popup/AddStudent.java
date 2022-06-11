@@ -81,7 +81,6 @@ public class AddStudent extends PopUp {
             } else {
                 confirm();
             }
-            System.out.println("maj listes");
             TutoringUtils.updateLists(parent);
             stage.close();
 

@@ -24,6 +24,11 @@ public class SelectedStudentListener implements ListChangeListener<Student> {
         if (changed.getList().size()>0){
             iface.selectedStudent=changed.getList().get(0);
             iface.rightClickMenuReplace.setDisable(iface.dpt.currentTutoring.affectations.size()==0 || iface.selectedStudent.isTutored());// || (!iface.selectedStudent.isTutored() && ((Tutor) iface.selectedStudent).isDuplicate()));
+            if (iface.selectedStudent.isTutored()){
+                iface.tutors.getSelectionModel().clearSelection();
+            } else {
+                iface.tutored.getSelectionModel().clearSelection();
+            }
         }
         
     }

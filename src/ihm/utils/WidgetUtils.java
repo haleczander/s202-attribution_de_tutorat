@@ -11,6 +11,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 public class WidgetUtils {
     public static Region spacer(){
@@ -65,10 +66,14 @@ public class WidgetUtils {
         bt.setOnAction(handler);
         bt.setTooltip(new Tooltip(tooltip));
         bt.getTooltip().setStyle("-fx-font-size : 15;");
-        bt.setStyle("-fx-font-size : " + (int) (15/n) + ";");
+        bt.setStyle("-fx-font-size : " + (int) (1.5*15/n) + ";");
         bt.setPadding(new Insets(0));
-        bt.setPrefSize((int) (20/n), (int) (20/n));
+        bt.setPrefSize((int) (25/n), (int) (20/n));
         return bt;
+    }
+
+    public static String getRgb(Color color){
+        return "rgba("+color.getRed()+","+color.getGreen()+","+color.getBlue()+","+color.getOpacity()+")";
     }
 
 }

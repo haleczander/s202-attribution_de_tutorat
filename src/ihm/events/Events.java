@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import ihm.Interface;
 import ihm.popup.AddStudent;
+import ihm.popup.Login;
 import ihm.utils.StudentCellFactory;
 import ihm.utils.TutoringUtils;
 import javafx.scene.control.Alert;
@@ -90,6 +91,23 @@ public class Events {
                 iface.dpt.currentTutoring.addForbiddenAssignments(tutored, tutor);
             } else {
                 iface.dpt.currentTutoring.addForcedAssignments(tutored, tutor);
+            }
+        }
+    }
+
+    public static void AuthentificationHandler(Interface iface) {
+        if (!Login.loggedIn) {
+            new Login(iface);
+        } else {
+            Alert alert = new Alert(AlertType.CONFIRMATION,
+                    "Vous allez vous déconnecter. Êtes-vous certain(e)?",
+                    ButtonType.YES, ButtonType.CANCEL);
+            alert.headerTextProperty().set("");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.YES) {
+                Login.loggedIn = false;
+                Login.account = null;
+                iface.updateSession();
             }
         }
     }

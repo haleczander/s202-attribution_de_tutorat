@@ -9,6 +9,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import oop.Resource;
 import oop.Student;
+import oop.Tutor;
 
 public class TutoringUtils {  
     public static final double LIST_CELL_HEIGHT = 25;
@@ -20,11 +21,14 @@ public class TutoringUtils {
         iface.couples.getItems().clear();
         if (iface.dpt.currentTutoring.affectations.size() ==0 ){
             iface.scrollBarOne.valueProperty().unbindBidirectional(iface.scrollBarTwo.valueProperty());
+            iface.scrollBarOne.valueProperty().unbindBidirectional(iface.scrollBarThree.valueProperty());
+
             iface.tutors.getItems().addAll(iface.dpt.currentTutoring.getTutors()); 
             iface.tutored.getItems().addAll(iface.dpt.currentTutoring.getTutored());
         }
         else {
             iface.scrollBarOne.valueProperty().bindBidirectional(iface.scrollBarTwo.valueProperty());
+            iface.scrollBarOne.valueProperty().bindBidirectional(iface.scrollBarThree.valueProperty());
             for (Couple couple : iface.dpt.currentTutoring.affectations){
                 iface.tutored.getItems().add(couple.getTutored());
                 iface.tutors.getItems().add(couple.getTutor());
@@ -98,7 +102,7 @@ public class TutoringUtils {
     public static String getStudentLabel(Student item, Interface iface) {
         Resource resource=iface.dpt.currentTutoring.getResource();
         return 
-        item.getName() + "\t(" + (item.isTutored()? "Tutoré" : "Tuteur") + ")"
+        item.getName() + "\t(" + (item.isTutored()? "Tutoré" : ("Tuteur" + (((Tutor)item).isDuplicate() ? " dupliqué" : ""))) + ")"
         + " \n" + 
         lineSeparator(item.getName() + "\t(" + (item.isTutored()? "Tutoré" : "Tuteur") + ")")
         + " \nNotes de " + resource.getName() + " :\t" + item.getGrade(resource)  
