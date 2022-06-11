@@ -41,9 +41,10 @@ TODO:
 > SAVE OLD COEFS
 
 > disable les menus
-> force affect disable buttons liste
+> force affect disable buttons liste (tutor tutored)
+
 > Afficher touche des racxourcis (menu top, menu a gauche, et menu clic droit)
 
 > ordonner code
 
-> interliste des unions
+> visualiser affectations forcées / interdites
