@@ -3,6 +3,7 @@ package oop;
 public class TutorDuplicate extends Tutor {
     private static double weightModifier = 1.5;
     private static char tutorDuplicateIdentifier = 'D';
+    private Tutor tutor;
 
     private TutorDuplicate(String name, int level, int absences, char motivation) {
         super(name + "(" + TutorDuplicate.tutorDuplicateIdentifier + ")", level, absences, motivation, 1);
@@ -11,6 +12,11 @@ public class TutorDuplicate extends Tutor {
     public TutorDuplicate(Tutor tutor) {
         this(tutor.getName(), tutor.getLevel(), tutor.getAbsences(), tutor.getMotivation());
         this.grades.putAll(tutor.getGrades());
+        this.tutor = tutor;
+    }
+
+    public Tutor getTutor(){
+        return this.tutor;
     }
 
     @Override

@@ -5,6 +5,7 @@ import java.util.Random;
 
 import graphs.Couple;
 import graphs.Tutoring;
+import ihm.events.AffectationGlimpseManager;
 import ihm.events.Events;
 import ihm.events.SelectedStudentListener;
 import ihm.events.SliderListener;
@@ -50,6 +51,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
@@ -86,6 +90,7 @@ public class Interface extends Application {
     public CheckBox polyTutoring;
     Button coefResetBtn;
     Button coefShuffleBtn;
+    Button tutoringAffectationGlimpseBt = new Button("👁");
 
     // Tutoring infos;
     public Label tutoringTeacherLb = new Label();
@@ -160,6 +165,7 @@ public class Interface extends Application {
         this.stage = stage;
         initInterface();
         initData();
+
 
         stage.setTitle("Tutorat du département " + this.dpt.getName());
         stage.setScene(scene);
@@ -424,8 +430,11 @@ public class Interface extends Application {
         polyTutoring.setTooltip(new Tooltip("Les tuteurs s'occupent de plusieurs tutorés."));
         polyTutoring.selectedProperty().addListener((a, o, n) -> dpt.currentTutoring.setPolyTutor(n));
 
+        tutoringAffectationGlimpseBt.setTooltip(new Tooltip("Consulter les affectations"));
+        tutoringAffectationGlimpseBt.setOnAction(e -> new AffectationGlimpseManager(this));
+
         VBox affectations = new VBox(
-                new Label("Affectations : "),
+                new Label("Affectations : "), tutoringAffectationGlimpseBt, 
                 new HBox(WidgetUtils.filler(15), new Label("Affectés"), WidgetUtils.spacer(), tutoringAffectedLb),
                 new HBox(WidgetUtils.filler(15), new Label("En attente"), WidgetUtils.spacer(), tutoringAwaitingLb),
                 new HBox(WidgetUtils.filler(15), new Label("Forcées"), WidgetUtils.spacer(), tutoringForcedLb),
@@ -533,6 +542,7 @@ public class Interface extends Application {
         dayMode.setTooltip(new Tooltip("Passer en thème jour"));
         nightMode.setOnAction(e -> setTheme("black"));
         dayMode.setOnAction(e ->setTheme("#ececec"));
+        tGroup.selectToggle(dayMode);
        
         retour.setOnMouseClicked(e -> Events.AuthentificationHandler(this));
         retour.getChildren().addAll(sessionBt, WidgetUtils.spacer(), nightMode, dayMode);
