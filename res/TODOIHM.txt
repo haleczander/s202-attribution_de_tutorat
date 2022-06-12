@@ -45,3 +45,8 @@ TODO:
 > Afficher touche des racxourcis (menu top, menu a gauche, et menu clic droit)
 
 
+
+GUIDAGE 
+INCITATION :
+    POPUP INPUT Label explicites pour la nature
+    

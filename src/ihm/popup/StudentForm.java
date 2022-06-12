@@ -212,12 +212,6 @@ public class StudentForm extends PopUp {
                 parent.dpt.tutoring.getForcedCouples(),
             parent.selectedStudent);
 
-        // if (parent.affectationInterdite) {
-        //     containedIn = Couples.containedIn(parent.dpt.tutoring.getForbiddenCouples(), parent.selectedStudent);
-        // } else {
-        //     containedIn = Couples.containedIn(parent.dpt.tutoring.getForcedCouples(), parent.selectedStudent);
-        // }
-
         if (parent.selectedStudent.isTutored()) {
             students = new ArrayList<>(parent.dpt.tutoring.getTutors());
             tutoredCb.setSelected(false);
@@ -289,50 +283,15 @@ public class StudentForm extends PopUp {
     }
 
     Tab fresh() {
-        // HBox nameBox = new HBox();
-        // nameBox.setAlignment(Pos.CENTER_LEFT);
-        // nameBox.setPadding(new Insets(5));
-        // nameBox.setPrefWidth(300);
-        // Label nameLabel = new Label("Nom :");
+
         nom = new TextField();
-        // nom.setPromptText("Nom");
-        // HBox.setMargin(nom, new Insets(0, 75, 0, 0));
-        // Region nameSpacer = new Region();
-        // HBox.setHgrow(nameSpacer, Priority.ALWAYS);
-        // nameBox.getChildren().addAll(nameLabel, nameSpacer, nom);
-        // HBox nameBox = WidgetUtils.labelInput("Nom", nom);
 
-        // HBox prenomBox = new HBox();
-        // prenomBox.setAlignment(Pos.CENTER_LEFT);
-        // prenomBox.setPadding(new Insets(5));
-        // prenomBox.setPrefWidth(300);
-        // Label prenomLabel = new Label("Prénom :");
         prenom = new TextField();
-        // prenom.setPromptText("Prénom");
-        // HBox.setMargin(prenom, new Insets(0, 75, 0, 0));
-        // Region prenomSpacer = new Region();
-        // HBox.setHgrow(prenomSpacer, Priority.ALWAYS);
-        // prenomBox.getChildren().addAll(prenomLabel, prenomSpacer, prenom);
 
-        // HBox niveauBox = new HBox();
-        // niveauBox.setAlignment(Pos.CENTER_LEFT);
-        // niveauBox.setPadding(new Insets(5));
-        // niveauBox.setPrefWidth(300);
-        // Label niveauLabel = new Label("Niveau :");
         ObservableList<Integer> intvalues = FXCollections.observableList(List.of(1, 2, 3));
         niveau = new Spinner<>(intvalues);
-        // HBox.setMargin(niveau, new Insets(0, 75, 0, 0));
-        // Region niveauSpacer = new Region();
-        // HBox.setHgrow(niveauSpacer, Priority.ALWAYS);
-        // niveauBox.getChildren().addAll(niveauLabel, niveauSpacer, niveau);
 
-        // HBox moyenneBox = new HBox();
-        // moyenneBox.setAlignment(Pos.CENTER_LEFT);
-        // moyenneBox.setPadding(new Insets(5));
-        // moyenneBox.setPrefWidth(300);
-        // Label moyenneLabel = new Label("Moyenne :");
         moyenne = new TextField();
-        // moyenne.setPromptText("Moyenne");
         moyenne.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -345,34 +304,10 @@ public class StudentForm extends PopUp {
                 }
             }
         });
-        // HBox.setMargin(moyenne, new Insets(0, 75, 0, 0));
-        // Region moyenneSpacer = new Region();
-        // HBox.setHgrow(moyenneSpacer, Priority.ALWAYS);
-        // moyenneBox.getChildren().addAll(moyenneLabel, moyenneSpacer, moyenne);
-
-        // HBox absencesBox = new HBox();
-        // absencesBox.setAlignment(Pos.CENTER_LEFT);
-        // absencesBox.setPadding(new Insets(5));
-        // absencesBox.setPrefWidth(300);
-        // Label absencesLabel = new Label("Absences :");
         absences = new TextField();
-        // absences.setPromptText("absences");
-        // HBox.setMargin(absences, new Insets(0, 75, 0, 0));
-        // Region absencesSpacer = new Region();
-        // HBox.setHgrow(absencesSpacer, Priority.ALWAYS);
-        // absencesBox.getChildren().addAll(absencesLabel, absencesSpacer, absences);
 
-        // HBox motivationBox = new HBox();
-        // motivationBox.setAlignment(Pos.CENTER_LEFT);
-        // motivationBox.setPadding(new Insets(5));
-        // motivationBox.setPrefWidth(300);
-        // Label motivationLabel = new Label("Motivation :");
-        // Region motivationSpacer = new Region();
-        // HBox.setHgrow(motivationSpacer, Priority.ALWAYS);
         ObservableList<Motivation> values = FXCollections.observableList(List.of(Motivation.values()));
         motivation = new Spinner<>(values);
-        // HBox.setMargin(motivation, new Insets(0, 75, 0, 0));
-        // motivationBox.getChildren().addAll(motivationLabel, motivationSpacer, motivation);
 
         ajouterFresh = new Button("Ajouter");
         ajouterFresh.setAlignment(Pos.CENTER);
@@ -396,7 +331,6 @@ public class StudentForm extends PopUp {
 
         VBox root = new VBox(
             inputs,
-            // nameBox, prenomBox, niveauBox, moyenneBox, absencesBox, motivationBox, spacer,
             ajouterFresh);
         root.setSpacing(20);
         root.setPadding(new Insets(20));
