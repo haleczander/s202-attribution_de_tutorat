@@ -10,13 +10,17 @@ import ihm.events.Events;
 import ihm.events.SelectedStudentListener;
 import ihm.events.SliderListener;
 import ihm.events.SortListHandler;
-import ihm.popup.AddStudent;
+import ihm.events.TutoringSelectorListener;
 import ihm.popup.Login;
 import ihm.utils.CoupleCellFactory;
+import ihm.utils.DisplayUtils;
+import ihm.utils.RightClickMenu;
+import ihm.utils.Shortcuts;
 import ihm.utils.StudentCellFactory;
-import ihm.utils.TutoringUtils;
 import ihm.utils.WidgetUtils;
 import javafx.application.Application;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -51,9 +55,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.media.AudioClip;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
@@ -62,18 +63,17 @@ import oop.Coefficient;
 import oop.Resource;
 import oop.Student;
 import oop.Teacher;
-import oop.Tutor;
 
 public class Interface extends Application {
     // Glob
     public BorderPane root;
     Stage stage;
-    Scene scene;
+    public Scene scene;
     public IHMDepartment dpt = new IHMDepartment();
 
     // list filter
     public boolean filterTutored = true;
-
+    // Scrollbar synchronize
     public ScrollBar scrollBarOne;
     public ScrollBar scrollBarTwo;
     public ScrollBar scrollBarThree;
@@ -102,29 +102,22 @@ public class Interface extends Application {
     public Label tutoringTutoredNbLb = new Label();
 
     // Toolbar
-    HBox affectationContainer = new HBox();
+    public HBox affectationContainer = new HBox();
     HBox coefficientContainer = new HBox();
     VBox tutoringContainer = new VBox();
 
     // Login controls
-    Label sessionBt = new Label();
-    final String notLogged = "Non connecté";
-    final String logged = "Connecté en tant que ";
-    MenuItem login = new MenuItem("Se connecter");
-    MenuItem logout = new MenuItem("Se déconnecter");
+    public Label sessionBt = new Label();
+
+    public MenuItem login = new MenuItem("Se connecter");
+    public MenuItem logout = new MenuItem("Se déconnecter");
     Circle sessionPhoto = new Circle(50);
 
     // RightClickMenu
     ContextMenu rightClickMenu;
-    public MenuItem rightClickMenuInfo = new MenuItem("Informations");
-    public MenuItem rightClickMenuForce = new MenuItem("Forcer une affectation");
-    public MenuItem rightClickMenuForbid = new MenuItem("Interdire une affectation");  
-    public MenuItem rightClickMenuRemove = new MenuItem("Retirer du tutorat");
-    public MenuItem rightClickMenuAdd = new MenuItem("Ajouter un étudiant");
-    public MenuItem rightClickMenuReplace = new MenuItem("Supprimer et remplacer");
 
     public ComboBox<Resource> cbMatieres = new ComboBox<>();
-    ComboBox<String> cbSession = new ComboBox<>();
+    public ComboBox<String> cbSession = new ComboBox<>();
 
     public Student selectedStudent;
     public boolean dragging;
@@ -146,307 +139,430 @@ public class Interface extends Application {
     Slider slAbs = new Slider(slMin, slMax, 1);
     Slider slLvl = new Slider(slMin, slMax, 1);
 
-    public ListView<Student> tutors = new ListView<>();
-    public ListView<Student> tutored = new ListView<>();
-    public ListView<Couple> couples = new ListView<>();
+    public ListView<Student> tutorsView;
+    public ListView<Student> tutoredView;
+    public ListView<Couple> couplesView;
 
     public boolean affectationInterdite;
 
-
     // Padding
-    final Insets PAD_MIN = new Insets(5);
+    public final Insets PAD_MIN = new Insets(5);
     final Insets PAD_BTN = new Insets(5, 9, 5, 9);
-
-
-
 
     @Override
     public void start(Stage stage) throws Exception {
         this.stage = stage;
-        initInterface();
+        initScene();
         initData();
-
+        initControls();
+        initDisplays();
 
         stage.setTitle("Tutorat du département " + this.dpt.getName());
         stage.setScene(scene);
         stage.show();
-        
-        synchronizeScrollBars();
     }
 
-    public void setTheme(String color) {   
-        scene.getRoot().setStyle("-fx-base:"+color);
-        couples.setBackground(affectationContainer.getBackground());
-        couples.setPadding(Insets.EMPTY);
-        couples.getStyleClass().clear();
-    }
-
-    void synchronizeScrollBars() {
-        scrollBarOne = (ScrollBar) tutored.lookup(".scroll-bar:vertical");
-        scrollBarTwo = (ScrollBar) tutors.lookup(".scroll-bar:vertical");
-        scrollBarThree = (ScrollBar) couples.lookup(".scroll-bar:vertical");
-        
-        couples.lookup(".scroll-bar").setStyle("-fx-scale:0;");
-    }
-
-    void initInterface() {
+    /**
+     * Creation de la scene : BorderPane
+     */
+    void initScene() {
         root = new BorderPane();
         scene = new Scene(root, 850, 800);
 
         root.setTop(initTop());
-        root.setCenter(initMain());
-        root.setBottom(initFooter());
-        root.setLeft(initListControls());
-
-        keyBoardShortcuts();
-        
-
-        waitingForTutoring(true);
+        root.setCenter(initCenter());
+        root.setBottom(initBottom());
+        root.setLeft(initLeft());
     }
 
-    void keyBoardShortcuts() {
-        scene.setOnKeyPressed(e -> {
-            switch (e.getCode()) {
-                case MINUS, SUBTRACT, D, DELETE -> Events.RemoveStudentHandler(this);
-                case ADD, PLUS, N -> Events.AddStudentHandler(this);
-                case F5, ENTER -> Events.AffectationHandler(this);
-                case F -> Events.AddForcedAffectationHandler(this, false);
-                case I -> Events.AddForcedAffectationHandler(this, true);
-                case ESCAPE -> close();
-                case R -> {if (!selectedStudent.isTutored()) new AddStudent(this, (Tutor)selectedStudent);}
-                default -> nothing();
-            }
-
-        });
-    }
-
-    void nothing() {
-    }
-
-    VBox initMain() {
+    // Init Border Pane
+    VBox initCenter() {
         HBox titres = new HBox(
                 WidgetUtils.spacer(200),
                 new HBox(new Label("Tutorés ("), tutoringTutoredNbLb, new Label(")")),
                 WidgetUtils.spacer(),
                 new HBox(new Label("Tuteurs ("), tutoringTutorNbLb, new Label(")")),
                 WidgetUtils.spacer(200));
-        HBox lists = studentListsWidget();
-        VBox main = new VBox(titres, lists);
-        main.setPadding(PAD_MIN);
-        VBox.setVgrow(lists, Priority.ALWAYS);
-        
 
-        return main;
+        HBox listViews = initListViews();
+
+        VBox retour = new VBox(titres, listViews);
+        retour.setSpacing(10);
+        VBox.setVgrow(retour, Priority.ALWAYS);
+        retour.setPadding(PAD_MIN);
+
+        listViews.prefHeightProperty().bind(Bindings.multiply(retour.heightProperty(), .85));
+
+        return retour;
 
     }
-
-    ContextMenu rightClickMenu (){
-        ContextMenu menu = new ContextMenu(
-            rightClickMenuInfo,
-            new SeparatorMenuItem(),
-            rightClickMenuForce,
-            rightClickMenuForbid,            
-            new SeparatorMenuItem(),
-            rightClickMenuReplace,
-            rightClickMenuRemove,
-            rightClickMenuAdd
-            );
-
-        // rightClickMenuInfo.setOnAction(e -> StudentInformationHandler(this));
-        rightClickMenuForce.setOnAction(e -> Events.AddForcedAffectationHandler(this, false));
-        rightClickMenuForbid.setOnAction(e -> Events.AddForcedAffectationHandler(this, true));
-        rightClickMenuRemove.setOnAction(e -> Events.RemoveStudentHandler(this));
-        rightClickMenuAdd.setOnAction(e -> Events.AddStudentHandler(this));
-        rightClickMenuReplace.setOnAction(e -> new AddStudent(this, (Tutor)selectedStudent));
-        return menu;
-    }
-
 
     VBox initTop() {
-        VBox retour = new VBox(initMenu(), initHeader(), horizontalToolbar());
-        retour.setBorder(new Border(new BorderStroke(null, null, Color.DARKGRAY, null, null, null, BorderStrokeStyle.SOLID, null, null, null, Insets.EMPTY)));
-        
-        // retour.setBackground(MENU_BG_DARK);
+        VBox retour = new VBox(
+                initMenuBar(),
+                initHeader(),
+                horizontalToolbar());
 
-        
+        retour.setBorder(
+                new Border(
+                        new BorderStroke(
+                                null, null, Color.DARKGRAY, null,
+                                null, null, BorderStrokeStyle.SOLID, null,
+                                null, null, Insets.EMPTY)));
+
         return retour;
     }
 
-    void initData() {
-        initDepartment();
-        updateSession();
-        // setLists();
-    }
+    HBox initBottom() {
 
-    void initDepartment() {
+        ToggleGroup tGroup = new ToggleGroup();
+        ToggleButton nightMode = new ToggleButton("🌙");
+        ToggleButton dayMode = new ToggleButton("☀");
 
-    }
+        nightMode.setTooltip(new Tooltip("Passer en thème sombre"));
+        dayMode.setTooltip(new Tooltip("Passer en thème jour"));
 
-    TitledPane listStudentControls() {
-        etudiantsControls = new VBox();
+        nightMode.setToggleGroup(tGroup);
+        dayMode.setToggleGroup(tGroup);
+        tGroup.selectToggle(dayMode);
 
-        HBox add = WidgetUtils.labelButton("Ajouter", "+", e -> Events.AddStudentHandler(this), "Ajouter un étudiant");
-        HBox del = WidgetUtils.labelButton("Supprimer (D)", "‒", e -> Events.RemoveStudentHandler(this),
-                "Supprimer un étudiant");
-        HBox union = WidgetUtils.labelButton("Forcer (F)", "🔗", e -> Events.AddForcedAffectationHandler(this, false), "Forcer une affectation");
-        HBox disUnion = WidgetUtils.labelButton("Interdire", "⦸", e -> Events.AddForcedAffectationHandler(this, true),
-                "Interdire une affectation");
+        nightMode.setOnAction(e -> DisplayUtils.setTheme(this, "black"));
+        dayMode.setOnAction(e -> DisplayUtils.setTheme(this, "#ececec"));
 
-        etudiantsControls.getChildren().addAll(add, del, union, disUnion);
-        
-        etudiantsControls.setPadding(PAD_MIN);
-        return new TitledPane("Etudiants", etudiantsControls);
-    }
+        HBox retour = new HBox(
+                sessionBt,
+                WidgetUtils.spacer(),
+                nightMode,
+                dayMode);
 
-    public void waitingForTutoring(boolean bool) {
-        for (Node box : etudiantsControls.getChildren()) {
-            ((Button) ((HBox) box).getChildren().get(2)).setDisable(bool);
-        }
-        for (Node box : triControls.getChildren()) {
-            for (Node bt : ((VBox) ((HBox) box).getChildren().get(2)).getChildren()) {
-
-                ((Button) bt).setDisable(bool);
-            }
-        }
-        for (MenuItem item : rightClickMenu.getItems()){
-            item.setDisable(bool);
-        }
-        btAffect.setDisable(bool);
-        affecter.setDisable(bool);
-        ajouter.setDisable(bool);
-        supprimer.setDisable(bool);
-        polyTutoring.setDisable(bool);
-        coefResetBtn.setDisable(bool);
-        coefShuffleBtn.setDisable(bool);
-        slAbs.setDisable(bool);
-        slAvg.setDisable(bool);
-        slLvl.setDisable(bool);
-    }
-
-    TitledPane listSortingControls() {
-
-        ToggleGroup tg = new ToggleGroup();
-        tg.selectedToggleProperty()
-                .addListener((obs, old, newv) -> filterTutored = ((RadioButton) newv).getText().equals("Tutorés"));
-        RadioButton tutorFilter = new RadioButton("Tuteurs");
-        tutorFilter.setToggleGroup(tg);
-        RadioButton tutoredFilter = new RadioButton("Tutorés");
-        tutoredFilter.setToggleGroup(tg);
-        tutoredFilter.setSelected(true);
-
-        HBox filterGroup = new HBox(tutoredFilter, WidgetUtils.filler(), tutorFilter);
-
-        triControls = new VBox();
-        HBox nom = WidgetUtils.labelButton("Nom", "▼", "▲", new SortListHandler(this, "nom"), ASC, DESC);
-        HBox prenom = WidgetUtils.labelButton("Prénom", "▼", "▲", new SortListHandler(this, "pre"), ASC, DESC);
-        HBox avg = WidgetUtils.labelButton("Moyenne", "▼", "▲", new SortListHandler(this, "avg"), ASC, DESC);
-        HBox abs = WidgetUtils.labelButton("Absences", "▼", "▲", new SortListHandler(this, "abs"), ASC, DESC);
-        HBox motiv = WidgetUtils.labelButton("Motivation", "▼", "▲", new SortListHandler(this, "mot"), ASC, DESC);
-
-        triControls.getChildren().addAll(nom, prenom, avg, abs, motiv);
-        triControls.setSpacing(5);
-
-        VBox triGroup = new VBox(filterGroup, WidgetUtils.filler(), triControls);
-        triGroup.setPadding(PAD_MIN);
-        return new TitledPane("Trier par", triGroup);
-    }
-
-    VBox initListControls() {
-        VBox retour = new VBox();
+        retour.setOnMouseClicked(e -> Events.AuthentificationHandler(this));
         retour.setPadding(PAD_MIN);
+        retour.getStyleClass().addAll(cbMatieres.getStyleClass());
+
+        return retour;
+    }
+
+    VBox initLeft() {
+        VBox retour = new VBox(
+                listStudentControls(),
+                WidgetUtils.filler(),
+                listSortingControls());
+
+        retour.setPadding(PAD_MIN);
+        retour.prefWidthProperty().bind(Bindings.divide(stage.widthProperty(), 5));
         retour.setMaxWidth(300);
 
-        retour.getChildren().addAll(listStudentControls(), WidgetUtils.filler(), listSortingControls());
-
-        // retour.setBackground(MENU_BG_LIGHT);
-
         return retour;
     }
 
-    HBox studentListsWidget() {
-        HBox retour = new HBox();
+    // Init Center
+    HBox initListViews() {
+        tutorsView = new ListView<>();
+        tutoredView = new ListView<>();
+        couplesView = new ListView<>();
 
-        rightClickMenu = rightClickMenu();
+        tutorsView.getSelectionModel().getSelectedItems().addListener(new SelectedStudentListener(this));
+        tutoredView.getSelectionModel().getSelectedItems().addListener(new SelectedStudentListener(this));
 
-        tutors.getSelectionModel().getSelectedItems().addListener(new
-        SelectedStudentListener(this));
-        tutored.getSelectionModel().getSelectedItems().addListener(new
-        SelectedStudentListener(this));
+        // right click menu
+        rightClickMenu = RightClickMenu.get(this);
+        tutoredView.setContextMenu(rightClickMenu);
+        tutorsView.setContextMenu(rightClickMenu);
 
+        // Cell factories
+        tutoredView.setCellFactory(new StudentCellFactory(this));
+        tutorsView.setCellFactory(new StudentCellFactory(this));
+        couplesView.setCellFactory(new CoupleCellFactory(this));
 
-        couples.setBackground(null);
-        HBox.setHgrow(couples, Priority.ALWAYS);
-        couples.setMaxWidth(175);
-        couples.setDisable(true);
-        
-        couples.setPadding(Insets.EMPTY);
+        HBox retour = new HBox(
+                tutoredView,
+                WidgetUtils.spacer(50),
+                couplesView,
+                WidgetUtils.spacer(50),
+                tutorsView);
 
+        // Tout le monde fait la hauteur max de vbox
+        VBox.setVgrow(tutorsView, Priority.ALWAYS);
+        VBox.setVgrow(tutoredView, Priority.ALWAYS);
+        VBox.setVgrow(couplesView, Priority.ALWAYS);
 
-        VBox.setVgrow(tutors, Priority.ALWAYS);
-        VBox.setVgrow(tutored, Priority.ALWAYS);
-        VBox.setVgrow(couples, Priority.ALWAYS);
-        
-        // tutored.setStyle("-fx-base:"+WidgetUtils.getRgb(Color.LIGHTGRAY));
+        couplesView.prefWidthProperty().bind(Bindings.divide(retour.prefWidthProperty(), 8));
+        couplesView.getStyleClass().clear();
+        couplesView.setMaxWidth(175);
 
-        tutored.setContextMenu(rightClickMenu);
-        tutors.setContextMenu(rightClickMenu);
-
-        tutored.setCellFactory(new StudentCellFactory(this));
-        tutors.setCellFactory(new StudentCellFactory(this));
-        couples.setCellFactory(new CoupleCellFactory(this));
-
-        retour.getChildren().addAll(WidgetUtils.spacer(), tutored, WidgetUtils.spacer(50),couples, WidgetUtils.spacer(50), tutors, WidgetUtils.spacer());
         retour.setAlignment(Pos.CENTER);
-        retour.setPadding(PAD_MIN);
-
 
         return retour;
     }
 
+    // Init top
+    // Menu bar
+    MenuBar initMenuBar() {
+        menuBar = new MenuBar(
+                initMenuFichier(),
+                initMenuSelection(),
+                initMenuListes(),
+                initMenuAffectation(),
+                initMenuEdition());
+
+        return menuBar;
+    }
+
+    Menu initMenuFichier() {
+        MenuItem exporter = new MenuItem("Exporter");
+        exporter.setDisable(true);
+        MenuItem importer = new MenuItem("Importer");
+        importer.setDisable(true);
+        MenuItem save = new MenuItem("Sauvegarder");
+        save.setDisable(true);
+        MenuItem quit = new MenuItem("Quitter");
+
+        Menu retour = new Menu(
+                "Fichier",
+                null,
+                exporter,
+                importer,
+                new SeparatorMenuItem(),
+                login,
+                logout,
+                new SeparatorMenuItem(),
+                save,
+                quit);
+
+        // exporter.setOnAction(e->exporter());
+        // importer.setOnAction(e->importer());
+        login.setOnAction(e -> Events.AuthentificationHandler(this));
+        logout.setOnAction(e -> Events.AuthentificationHandler(this));
+        // save.setOnAction(e->save());
+        quit.setOnAction(e -> close());
+
+        return retour;
+    }
+
+    Menu initMenuSelection() {
+        ajouter = new MenuItem("Ajoute un étudiant");
+        supprimer = new MenuItem("Supprimer l'étudiant");
+        MenuItem forcer = new MenuItem("Forcer l'affectation");
+        MenuItem interdire = new MenuItem("Interdire l'affection");
+
+        Menu retour = new Menu(
+                "Édition",
+                null,
+                ajouter,
+                supprimer,
+                new SeparatorMenuItem(),
+                forcer,
+                interdire);
+
+        ajouter.setOnAction(e -> Events.AddStudentHandler(this));
+        supprimer.setOnAction(e -> Events.RemoveStudentHandler(this));
+        forcer.setOnAction(e -> Events.AddForcedAffectationHandler(this, false));
+        interdire.setOnAction(e -> Events.AddForcedAffectationHandler(this, true));
+
+        return retour;
+    }
+
+    Menu initMenuEdition() {
+        MenuItem changeMat = new MenuItem("Changer de matière");
+        changeMat.setDisable(true);
+        MenuItem editProfil = new MenuItem("Editer le profil");
+        editProfil.setDisable(true);
+        MenuItem changeProf = new MenuItem("Changer le professeur référent");
+        changeProf.setDisable(true);
+
+        Menu retour = new Menu(
+                "Edition",
+                null,
+                changeMat,
+                new SeparatorMenuItem(),
+                editProfil,
+                new SeparatorMenuItem(),
+                changeProf);
+
+        // changeMat.setOnAction(e->changeMat());
+        // editProfil.setOnAction(e->editprofil());
+        // changeProf.setOnAction(e->changeProf());
+
+        return retour;
+    }
+
+    Menu initMenuListes() {
+        // ajouter = new MenuItem("Ajouter un étudiant");
+        // supprimer = new MenuItem("Supprimer l'étudiant");
+        MenuItem separator = new MenuItem("Trier par :");
+        separator.setDisable(true);
+        MenuItem triNom = new MenuItem("\tnom");
+        MenuItem triPrenom = new MenuItem("\tprénom");
+        MenuItem triNotes = new MenuItem("\tmoyennes");
+        MenuItem triAbs = new MenuItem("\tabsences");
+        MenuItem triMot = new MenuItem("\tmotivation");
+
+        Menu retour = new Menu(
+                "Listes",
+                null,
+                // ajouter,
+                // supprimer,
+                // new SeparatorMenuItem(),
+                separator,
+                triNom,
+                triPrenom,
+                triNotes,
+                triAbs,
+                triMot);
+
+        // ajouter.setOnAction(e -> Events.AddStudentHandler(this));
+        // supprimer.setOnAction(e -> Events.RemoveStudentHandler(this));
+        triNom.setOnAction(new SortListHandler(this, "nom"));
+        triPrenom.setOnAction(new SortListHandler(this, "pre"));
+        triNotes.setOnAction(new SortListHandler(this, "avg"));
+        triAbs.setOnAction(new SortListHandler(this, "abs"));
+        triMot.setOnAction(new SortListHandler(this, "mot"));
+
+        return retour;
+    }
+
+    Menu initMenuAffectation() {
+        affecter = new MenuItem("Lancer l'affectation");
+        MenuItem coefRst = new MenuItem("Réinitialiser les coefficients");
+        MenuItem coefAvg = new MenuItem("Maximiser la moyenne");
+        MenuItem coefAbs = new MenuItem("Maximiser les absences");
+        MenuItem coefLvl = new MenuItem("Maximiser la motivation");
+        MenuItem coefRng = new MenuItem("Coefficients aléatoires");
+
+        Menu retour = new Menu(
+                "Affectation",
+                null,
+                affecter,
+                new SeparatorMenuItem(),
+                coefRst,
+                coefRng,
+                new SeparatorMenuItem(),
+                coefAvg,
+                coefAbs,
+                coefLvl);
+
+        affecter.setOnAction(e -> Events.AffectationHandler(this));
+        affecter.disableProperty().bind(Bindings.isNull(new SimpleObjectProperty<>(dpt.tutoring)));
+        coefRst.setOnAction(e -> setCoefs());
+        coefAvg.setOnAction(e -> setCoefs(2, .5, .5));
+        coefAbs.setOnAction(e -> setCoefs(.5, 2, .5));
+        coefLvl.setOnAction(e -> setCoefs(.5, .5, 2));
+        coefRng.setOnAction(e -> setCoefs(666));
+
+        return retour;
+    }
+
+    // header
+    HBox initHeader() {
+
+        ImageView logoImgView = new ImageView(new Image("file:res/img/logo.png"));
+        logoImgView.setFitHeight(75);
+        logoImgView.setPreserveRatio(true);
+
+        HBox.setHgrow(logoImgView, Priority.ALWAYS);
+
+        HBox session = new HBox(
+                cbSession,
+                sessionPhoto);
+
+        session.setAlignment(Pos.CENTER_RIGHT);
+        session.setSpacing(10);
+
+        cbMatieres.setPromptText("Choisir une matière");
+        cbMatieres.setMaxWidth(150);
+        cbMatieres.getSelectionModel().selectedItemProperty().addListener(new TutoringSelectorListener(this));
+        for (Resource resource : dpt.getTutorings().keySet()) {
+            cbMatieres.getItems().add(resource);
+        }
+
+        HBox retour = new HBox(
+                cbMatieres,
+                WidgetUtils.spacer(),
+                logoImgView,
+                WidgetUtils.spacer(),
+                session);
+
+        cbMatieres.prefWidthProperty().bind(Bindings.divide(retour.widthProperty(), 4));
+        session.prefWidthProperty().bind(Bindings.divide(retour.widthProperty(), 3));
+
+        retour.setPadding(PAD_MIN);
+        retour.setAlignment(Pos.CENTER);
+        retour.setBorder(
+                new Border(
+                        new BorderStroke(
+                                null, null, Color.DARKGRAY, null,
+                                null, null, BorderStrokeStyle.SOLID, null,
+                                null, null, Insets.EMPTY)));
+
+        return retour;
+    }
+
+    // toolbar
     HBox horizontalToolbar() {
-        HBox retour = new HBox();
-        // retour.maxWidthProperty().bind(root.prefWidthProperty());
-        retour.getChildren().addAll(coefficientWidgets(), WidgetUtils.spacer(), affectationWidgets(), WidgetUtils.spacer(), tutoringWidgets());
+        HBox retour = new HBox(
+                coefficientWidgets(),
+                WidgetUtils.spacer(),
+                affectationWidgets(),
+                WidgetUtils.spacer(),
+                tutoringWidgets());
 
         for (Node n : retour.getChildren()) {
-            if (n instanceof TitledPane){
+            if (n instanceof TitledPane) {
                 Pane p = ((Pane) ((TitledPane) n).getContent());
                 p.setMinHeight(TOOLBAR_HEIGHT);
                 p.setPadding(PAD_MIN);
-
             }
         }
 
         retour.setPadding(PAD_MIN);
-        // retour.setBackground(MENU_BG_LIGHT);
+
         return retour;
     }
 
-    TitledPane tutoringWidgets() {
+    TitledPane coefficientWidgets() {
+        initSliders();
 
-        TutoringUtils.updateTutoringInfos(this);
+        Label slAvgLb = new Label("Moyenne");
+        Label slAbsLb = new Label("Absences");
+        Label slLblLb = new Label("Motivation");
 
-        polyTutoring = new CheckBox("Polytutorat");
-        polyTutoring.setTooltip(new Tooltip("Les tuteurs s'occupent de plusieurs tutorés."));
-        polyTutoring.selectedProperty().addListener((a, o, n) -> dpt.currentTutoring.setPolyTutor(n));
+        coefResetBtn = new Button("↺");
+        coefResetBtn.setTooltip(new Tooltip("Réinitialiser les coefficients"));
+        coefResetBtn.setOnAction(e -> setCoefs());
 
-        tutoringAffectationGlimpseBt.setTooltip(new Tooltip("Consulter les affectations"));
-        tutoringAffectationGlimpseBt.setOnAction(e -> new AffectationGlimpseManager(this));
+        coefShuffleBtn = new Button("🔀");
+        coefShuffleBtn.setTooltip(new Tooltip("Randomiser les coefficients"));
+        coefShuffleBtn.setOnAction(e -> setCoefs(1));
 
-        VBox affectations = new VBox(
-                new Label("Affectations : "), tutoringAffectationGlimpseBt, 
-                new HBox(WidgetUtils.filler(15), new Label("Affectés"), WidgetUtils.spacer(), tutoringAffectedLb),
-                new HBox(WidgetUtils.filler(15), new Label("En attente"), WidgetUtils.spacer(), tutoringAwaitingLb),
-                new HBox(WidgetUtils.filler(15), new Label("Forcées"), WidgetUtils.spacer(), tutoringForcedLb),
-                new HBox(WidgetUtils.filler(15), new Label("Interdites"), WidgetUtils.spacer(), tutoringForbiddenLb));
-        tutoringContainer.getChildren().addAll(
-                new HBox(new Label("Responsable : "), tutoringTeacherLb),
-                polyTutoring,
-                affectations);
-        tutoringContainer.setSpacing(10);
-        TitledPane retour = new TitledPane("Informations sur le tutorat", tutoringContainer);
-        retour.setExpanded(false);
-        return retour;
+        undoCoef = new Button("Undo");
+        undoCoef.setOnAction(e -> SliderListener.restoreCoefs(this, dpt.tutoring.getTeacher()));
+        undoCoef.setDisable(true);
+
+        redoCoef = new Button("Redo");
+        redoCoef.setOnAction(e -> SliderListener.reEditCoefs(this, dpt.tutoring.getTeacher()));
+        redoCoef.setDisable(true);
+
+        coefficientContainer.getChildren().addAll(
+                WidgetUtils.nodeSpaceNode(slAvgLb, slAvg),
+                WidgetUtils.nodeSpaceNode(slAbsLb, slAbs),
+                WidgetUtils.nodeSpaceNode(slLblLb, slLvl),
+                WidgetUtils.nodeSpaceNode(coefResetBtn, coefShuffleBtn));
+        // , undoCoef, redoCoef);
+
+        coefficientContainer.setAlignment(Pos.CENTER);
+        coefficientContainer.setSpacing(10);
+        return new TitledPane("Coefficients", coefficientContainer);
+    }
+
+    void initSliders() {
+        for (Slider slider : new Slider[] { slAvg, slAbs, slLvl }) {
+            slider.setMaxWidth(75);
+            slider.setMajorTickUnit(1);
+            slider.setShowTickLabels(true);
+        }
+        slAvg.valueProperty().addListener(new SliderListener(this, slAvg, Coefficient.GRADES));
+        slAbs.valueProperty().addListener(new SliderListener(this, slAbs, Coefficient.ABSENCES));
+        slLvl.valueProperty().addListener(new SliderListener(this, slLvl, Coefficient.LEVEL));
     }
 
     TitledPane affectationWidgets() {
@@ -464,93 +580,177 @@ public class Interface extends Application {
         return new TitledPane("Affectation", affectationContainer);
     }
 
-    TitledPane coefficientWidgets() {
+    TitledPane tutoringWidgets() {
+        polyTutoring = new CheckBox("Polytutorat");
+        polyTutoring.setTooltip(new Tooltip("Les tuteurs s'occupent de plusieurs tutorés."));
+        polyTutoring.selectedProperty().addListener((a, o, n) -> dpt.tutoring.setPolyTutor(n));
 
-        Slider[] sliders = { slAvg, slAbs, slLvl };
-        for (Slider slider : sliders) {
-            slider.setMaxWidth(75);
-            slider.setMajorTickUnit(1);
-            slider.setShowTickLabels(true);
-        }
-        slAvg.valueProperty().addListener(new SliderListener(this, slAvg, Coefficient.GRADES));
-        slAbs.valueProperty().addListener(new SliderListener(this, slAbs, Coefficient.ABSENCES));
-        slLvl.valueProperty().addListener(new SliderListener(this, slLvl, Coefficient.LEVEL));
+        tutoringAffectationGlimpseBt.setTooltip(new Tooltip("Consulter les affectations"));
+        tutoringAffectationGlimpseBt.setOnAction(e -> new AffectationGlimpseManager(this));
 
-        Label slAvgLb = new Label("Moyenne");
-        Label slAbsLb = new Label("Absences");
-        Label slLblLb = new Label("Motivation");
+        VBox affectations = new VBox(
+                WidgetUtils.nodeSpaceNode("Affectations : ", tutoringAffectationGlimpseBt),
+                WidgetUtils.nodeSpaceNode("\tAffectés", tutoringAffectedLb),
+                WidgetUtils.nodeSpaceNode(("\tEn attente"), tutoringAwaitingLb),
+                WidgetUtils.nodeSpaceNode("\tForcées", tutoringForcedLb),
+                WidgetUtils.nodeSpaceNode("\tInterdites", tutoringForbiddenLb));
 
-        coefResetBtn = new Button("↺");
-        coefResetBtn.setTooltip(new Tooltip("Réinitialiser les coefficients"));
-        coefResetBtn.setOnAction(e -> setCoefs());
+        tutoringContainer.getChildren().addAll(
+                new HBox(new Label("Responsable : "), tutoringTeacherLb),
+                polyTutoring,
+                affectations);
 
-        coefShuffleBtn = new Button("🔀");
-        coefShuffleBtn.setTooltip(new Tooltip("Randomiser les coefficients"));
-        coefShuffleBtn.setOnAction(e -> setCoefs(1));
-
-        undoCoef = new Button("Undo");
-        undoCoef.setOnAction(e -> SliderListener.restoreCoefs(this, dpt.currentTutoring.getTeacher()));
-        undoCoef.setDisable(true);
-
-        redoCoef = new Button("Redo");
-        redoCoef.setOnAction(e -> SliderListener.reEditCoefs(this, dpt.currentTutoring.getTeacher()));
-        redoCoef.setDisable(true);
-
-        coefficientContainer.getChildren().addAll(slAvgLb, slAvg, slAbsLb, slAbs, slLblLb, slLvl, coefResetBtn,
-                coefShuffleBtn);//, undoCoef, redoCoef);
-
-        coefficientContainer.setAlignment(Pos.CENTER);
-        return new TitledPane("Coefficients", coefficientContainer);
+        tutoringContainer.setSpacing(10);
+        TitledPane retour = new TitledPane("Informations sur le tutorat", tutoringContainer);
+        retour.setExpanded(false);
+        return retour;
     }
 
-    HBox initHeader() {
-        HBox retour = new HBox();
-        retour.setPadding(PAD_MIN);
+    // Init left
+    TitledPane listStudentControls() {
 
-        HBox logo = new HBox();
-        HBox.setHgrow(logo, Priority.ALWAYS);
-        logo.setAlignment(Pos.CENTER);
+        HBox add = WidgetUtils.labelButton(
+            "Ajouter (N)", 
+            "+", 
+            e -> Events.AddStudentHandler(this), 
+            "Ajouter un étudiant");
 
-        HBox session = new HBox();
-        session.setAlignment(Pos.CENTER_RIGHT);
-        ImageView logoImgView = new ImageView(new Image("file:res/img/logo.png"));
-        logoImgView.setFitHeight(75);
-        logoImgView.setPreserveRatio(true);
-        logo.getChildren().addAll(logoImgView);
+        HBox del = WidgetUtils.labelButton(
+            "Supprimer (D)", 
+            "‒", 
+            e -> Events.RemoveStudentHandler(this),
+            "Supprimer un étudiant");
 
-        session.getChildren().addAll(cbSession, sessionPhoto);
+        HBox union = WidgetUtils.labelButton(
+            "Forcer (F)", 
+            "🔗", 
+            e -> Events.AddForcedAffectationHandler(this, false),
+            "Forcer une affectation");
 
-        retour.getChildren().addAll(TutoringUtils.initMatieres(this), logo, session);
-        for (Node n : retour.getChildren()) {
-            n.minHeight(Double.MAX_VALUE);
-        }
+        HBox disUnion = WidgetUtils.labelButton(
+            "Interdire (I)", 
+            "⦸", 
+            e -> Events.AddForcedAffectationHandler(this, true),
+            "Interdire une affectation");
+
+        HBox consult = WidgetUtils.labelButton(
+            "Consulter (V)", 
+            "👁", 
+            e -> new AffectationGlimpseManager(this) , 
+            "Consulter les affectations automatiques, forcées et interdites");
 
         
-        retour.setBorder(new Border(new BorderStroke(null, null, Color.DARKGRAY, null, null, null, BorderStrokeStyle.SOLID, null, null, null, Insets.EMPTY)));
+        etudiantsControls = new VBox(
+            add, 
+            del, 
+            union, 
+            disUnion,
+            consult);
 
-        return retour;
+        etudiantsControls.setPadding(PAD_MIN);
+        return new TitledPane("Etudiants", etudiantsControls);
     }
 
-    HBox initFooter() {
-        HBox retour = new HBox();
-        ToggleButton nightMode = new ToggleButton("🌙");
-        ToggleButton dayMode = new ToggleButton("☀");
-        ToggleGroup tGroup = new ToggleGroup();
-        nightMode.setToggleGroup(tGroup);
-        nightMode.setTooltip(new Tooltip("Passer en thème sombre"));
-        dayMode.setToggleGroup(tGroup);
-        dayMode.setTooltip(new Tooltip("Passer en thème jour"));
-        nightMode.setOnAction(e -> setTheme("black"));
-        dayMode.setOnAction(e ->setTheme("#ececec"));
-        tGroup.selectToggle(dayMode);
-       
-        retour.setOnMouseClicked(e -> Events.AuthentificationHandler(this));
-        retour.getChildren().addAll(sessionBt, WidgetUtils.spacer(), nightMode, dayMode);
+    TitledPane listSortingControls() {
+
+        ToggleGroup tg = new ToggleGroup();
+        tg.selectedToggleProperty()
+                .addListener((obs, old, newv) -> filterTutored = ((RadioButton) newv).getText().equals("Tutorés"));
+        RadioButton tutorFilter = new RadioButton("Tuteurs");
+        tutorFilter.setToggleGroup(tg);
+        RadioButton tutoredFilter = new RadioButton("Tutorés");
+        tutoredFilter.setToggleGroup(tg);
+        tutoredFilter.setSelected(true);
+
+        HBox filterGroup = new HBox(tutoredFilter, WidgetUtils.filler(), tutorFilter);
+
+        HBox nom = WidgetUtils.labelButton(
+            "Nom", 
+            "▼", "▲", 
+            new SortListHandler(this, "nom"), 
+            ASC, DESC);
+
+        HBox prenom = WidgetUtils.labelButton(
+            "Prénom", 
+            "▼", "▲", 
+            new SortListHandler(this, "pre"), 
+            ASC, DESC);
+
+        HBox avg = WidgetUtils.labelButton(
+            "Moyenne", 
+            "▼", "▲", 
+            new SortListHandler(this, "avg"), 
+            ASC, DESC);
+
+        HBox abs = WidgetUtils.labelButton(
+            "Absences", 
+            "▼", "▲", 
+            new SortListHandler(this, "abs"), 
+            ASC, DESC);
+
+        HBox motiv = WidgetUtils.labelButton(
+            "Motivation", 
+            "▼", "▲", 
+            new SortListHandler(this, "mot"), 
+            ASC, DESC);
+
+        triControls = new VBox(
+            nom, 
+            prenom, 
+            avg, 
+            abs, 
+            motiv);
+        triControls.setSpacing(5);
+
+        VBox retour = new VBox(
+            filterGroup, 
+            WidgetUtils.filler(), 
+            triControls);
 
         retour.setPadding(PAD_MIN);
-        retour.getStyleClass().addAll(cbMatieres.getStyleClass());
-        return retour;
+        return new TitledPane("Trier par", retour);
     }
+
+
+    // Data initialize
+    void initData() {
+        Login.updateSession(this);
+    }
+
+    void initControls(){
+        Shortcuts.init(this);
+        disableTutoringControls(true);
+    }
+   
+    public void disableTutoringControls(boolean bool) {
+        for (Node box : etudiantsControls.getChildren()) {
+            ((Button) ((HBox) box).getChildren().get(2)).setDisable(bool);
+        }
+        for (Node box : triControls.getChildren()) {
+            for (Node bt : ((VBox) ((HBox) box).getChildren().get(2)).getChildren()) {
+
+                ((Button) bt).setDisable(bool);
+            }
+        }
+        for (MenuItem item : rightClickMenu.getItems()) {
+            item.setDisable(bool);
+        }
+        btAffect.setDisable(bool);
+        // affecter.setDisable(bool);
+        ajouter.setDisable(bool);
+        supprimer.setDisable(bool);
+        polyTutoring.setDisable(bool);
+        coefResetBtn.setDisable(bool);
+        coefShuffleBtn.setDisable(bool);
+        slAbs.setDisable(bool);
+        slAvg.setDisable(bool);
+        slLvl.setDisable(bool);
+    }
+
+    void initDisplays(){        
+        DisplayUtils.setScrollBars(this);
+    }
+
 
     public void close() {
         Alert alert = new Alert(AlertType.CONFIRMATION,
@@ -563,99 +763,12 @@ public class Interface extends Application {
         }
     }
 
-    MenuBar initMenu() {
-        menuBar =new MenuBar(initMenuFichier(), initMenuSelection(), initMenuListes(), initMenuAffectation(),
-                initMenuEdition());
-        return menuBar;
-    }
-
-    Menu initMenuFichier() {
-        Menu fichier = new Menu("Fichier");
-        MenuItem exporter = new MenuItem("Exporter");
-        exporter.setDisable(true);
-        MenuItem importer = new MenuItem("Importer");
-        importer.setDisable(true);
-        MenuItem save = new MenuItem("Sauvegarder");
-        save.setDisable(true);
-        MenuItem quit = new MenuItem("Quitter");
-        fichier.getItems().addAll(exporter, importer, new SeparatorMenuItem(), login, logout, new SeparatorMenuItem(),
-                save, quit);
-
-        // exporter.setOnAction(e->exporter());
-        // importer.setOnAction(e->importer());
-        login.setOnAction(e -> Events.AuthentificationHandler(this));
-        logout.setOnAction(e -> Events.AuthentificationHandler(this));
-        // save.setOnAction(e->save());
-        quit.setOnAction(e -> close());
-
-        return fichier;
-    }
-
-    Menu initMenuSelection() {
-        Menu selection = new Menu("Selection");
-        MenuItem forcer = new MenuItem("Forcer l'affectation");
-        MenuItem interdire = new MenuItem("Interdire l'affection");
-        selection.getItems().addAll(forcer, interdire);
-
-        forcer.setOnAction(e-> Events.AddForcedAffectationHandler(this, false));
-        interdire.setOnAction(e->Events.AddForcedAffectationHandler(this, true));
-
-        return selection;
-    }
-
-    Menu initMenuListes() {
-        Menu listes = new Menu("Listes");
-        ajouter = new MenuItem("Ajouter un étudiant");
-        supprimer = new MenuItem("Supprimer l'étudiant");
-        MenuItem separator = new MenuItem("Trier par :");
-        separator.setDisable(true);
-        MenuItem triNom = new MenuItem("\tnom");
-        MenuItem triPrenom = new MenuItem("\tprénom");
-        MenuItem triNotes = new MenuItem("\tmoyennes");
-        MenuItem triAbs = new MenuItem("\tabsences");
-        MenuItem triMot = new MenuItem("\tmotivation");
-        listes.getItems().addAll(ajouter, supprimer, new SeparatorMenuItem(), separator, triNom, triPrenom, triNotes,
-                triAbs, triMot);
-
-        ajouter.setOnAction(e -> Events.AddStudentHandler(this));
-        supprimer.setOnAction(e -> Events.RemoveStudentHandler(this));
-        triNom.setOnAction(new SortListHandler(this, "nom"));
-        triPrenom.setOnAction(new SortListHandler(this, "pre"));
-        triNotes.setOnAction(new SortListHandler(this, "avg"));
-        triAbs.setOnAction(new SortListHandler(this, "abs"));
-        triMot.setOnAction(new SortListHandler(this, "mot"));
-
-        return listes;
-    }
-
-    Menu initMenuAffectation() {
-        Menu affectation = new Menu("Affectation");
-        affecter = new MenuItem("Lancer l'affectation");
-        MenuItem coefRst = new MenuItem("Réinitialiser les coefficients");
-        MenuItem coefAvg = new MenuItem("Maximiser la moyenne");
-        MenuItem coefAbs = new MenuItem("Maximiser les absences");
-        MenuItem coefLvl = new MenuItem("Maximiser la motivation");
-        MenuItem coefRng = new MenuItem("Coefficients aléatoires");
-        affectation.getItems().addAll(affecter, new SeparatorMenuItem(), coefRst, coefRng, new SeparatorMenuItem(),
-                coefAvg, coefAbs, coefLvl);
-
-        affecter.setOnAction(e -> Events.AffectationHandler(this));
-        affecter.setDisable(true);
-        coefRst.setOnAction(e -> setCoefs());
-        coefAvg.setOnAction(e -> setCoefs(2, .5, .5));
-        coefAbs.setOnAction(e -> setCoefs(.5, 2, .5));
-        coefLvl.setOnAction(e -> setCoefs(.5, .5, 2));
-        coefRng.setOnAction(e -> setCoefs(666));
-
-        return affectation;
-    }
-
     void setCoefs(double avg, double abs, double lvl) {
         slAvg.setValue(avg);
         slAbs.setValue(abs);
         slLvl.setValue(lvl);
-        if (!(avg == 1 && avg == abs && avg == lvl)){
-            SliderListener.saveCoefs(dpt.currentTutoring.getTeacher());
+        if (!(avg == 1 && avg == abs && avg == lvl)) {
+            SliderListener.saveCoefs(dpt.tutoring.getTeacher());
         }
     }
 
@@ -663,7 +776,7 @@ public class Interface extends Application {
         setCoefs(1, 1, 1);
     }
 
-    public void setCoefs(Teacher teacher){
+    public void setCoefs(Teacher teacher) {
         setCoefs(teacher.getAverageWeighting(), teacher.getAbsenceWeighting(), teacher.getLevelWeighting());
     }
 
@@ -673,47 +786,16 @@ public class Interface extends Application {
                 rng.nextDouble(Tutoring.getMaxWeighting()));
     }
 
-    Menu initMenuEdition() {
-        Menu edition = new Menu("Edition");
-        MenuItem changeMat = new MenuItem("Changer de matière");
-        changeMat.setDisable(true);
-        MenuItem editProfil = new MenuItem("Editer le profil");
-        editProfil.setDisable(true);
-        MenuItem changeProf = new MenuItem("Changer le professeur référent");
-        changeProf.setDisable(true);
-        edition.getItems().addAll(changeMat, new SeparatorMenuItem(), editProfil, new SeparatorMenuItem(), changeProf);
-
-        // changeMat.setOnAction(e->changeMat());
-        // editProfil.setOnAction(e->editprofil());
-        // changeProf.setOnAction(e->changeProf());
-
-        return edition;
-    }
-
-    void setProfilPhoto(String path) {
+    public void setProfilPhoto(String path) {
         sessionPhoto.setStroke(Color.DARKGREY);
         sessionPhoto.setFill(new ImagePattern(new Image(path)));
     }
 
-    void setProfilPhoto() {
+    public void setProfilPhoto() {
         setProfilPhoto("file:res/img/notlogged.jpg");
     }
 
-    public void updateSession() {
-        if (Login.loggedIn) {
-            sessionBt.setText(logged + Login.account);
-            login.setDisable(true);
-            logout.setDisable(false);
-            setProfilPhoto("file:res/img/root.jpg");
-            cbSession.setPromptText(Login.account);
-        } else {
-            sessionBt.setText(notLogged);
-            login.setDisable(false);
-            logout.setDisable(true);
-            setProfilPhoto();
-            cbSession.setPromptText(notLogged);
-        }
-    }
+
 
     public static void main(String[] args) {
         Application.launch(args);
