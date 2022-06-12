@@ -155,11 +155,12 @@ public class Interface extends Application {
         initScene();
         initData();
         initControls();
-        initDisplays();
 
         stage.setTitle("Tutorat du département " + this.dpt.getName());
         stage.setScene(scene);
         stage.show();
+        
+        initDisplays();
     }
 
     /**

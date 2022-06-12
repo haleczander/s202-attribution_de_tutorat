@@ -2,7 +2,7 @@ package ihm.utils;
 
 import ihm.Interface;
 import ihm.events.Events;
-import ihm.popup.AddStudent;
+import ihm.popup.StudentForm;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
@@ -33,7 +33,7 @@ public class RightClickMenu {
         forbid.setOnAction(e -> Events.AddForcedAffectationHandler(iface, true));
         remove.setOnAction(e -> Events.RemoveStudentHandler(iface));
         add.setOnAction(e -> Events.AddStudentHandler(iface));
-        replace.setOnAction(e -> new AddStudent(iface, (Tutor)iface.selectedStudent));
+        replace.setOnAction(e -> new StudentForm(iface, (Tutor)iface.selectedStudent));
         return menu;
     }
 }

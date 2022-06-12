@@ -7,12 +7,14 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 
 public class WidgetUtils {
     public static Region spacer(){
@@ -87,5 +89,20 @@ public class WidgetUtils {
         return new HBox(new Label(string), spacer(), n2);
     }
 
+    public static HBox labelInput(String label, Node node){
+        HBox retour = new HBox(
+            spacer(50),
+            new Label(label+" : "),
+            spacer(),
+            node,
+            spacer(50)
+        );
+        if (node instanceof TextField) {
+            ((TextField)node).setPromptText(label);
+        } 
+        retour.setAlignment(Pos.CENTER_LEFT);
+        return retour;
+        
+    }
 
 }

@@ -2,7 +2,7 @@ package ihm.utils;
 
 import ihm.Interface;
 import ihm.events.Events;
-import ihm.popup.AddStudent;
+import ihm.popup.StudentForm;
 import oop.Tutor;
 
 public class Shortcuts {
@@ -20,7 +20,7 @@ public class Shortcuts {
                 case F -> Events.AddForcedAffectationHandler(iface, false);
                 case I -> Events.AddForcedAffectationHandler(iface, true);
                 case ESCAPE -> iface.close();
-                case R -> {if (!iface.selectedStudent.isTutored()) new AddStudent(iface, (Tutor)iface.selectedStudent);}
+                case R -> {if (!iface.selectedStudent.isTutored()) new StudentForm(iface, (Tutor)iface.selectedStudent);}
                 default -> nothing();
             }
         });

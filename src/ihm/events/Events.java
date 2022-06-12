@@ -3,7 +3,7 @@ package ihm.events;
 import java.util.Optional;
 
 import ihm.Interface;
-import ihm.popup.AddStudent;
+import ihm.popup.StudentForm;
 import ihm.popup.Login;
 import ihm.utils.StudentCellFactory;
 import ihm.utils.TutoringUtils;
@@ -43,14 +43,14 @@ public class Events {
         if (iface.dpt.tutoring == null || iface.selectedStudent == null) {
             return;
         }
-        new AddStudent(iface, interdite);
+        new StudentForm(iface, interdite);
     }
 
     public static void AddStudentHandler(Interface iface) {
         if (iface.dpt.tutoring == null) {
             return;
         }
-        new AddStudent(iface);
+        new StudentForm(iface);
     }
 
     public static void AffectationHandler(Interface iface) {

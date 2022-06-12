@@ -37,7 +37,6 @@ V diversité des méthodes pour une même action
 
 TODO:
 
-> DARKMODE?
 > SAVE OLD COEFS
 
 > disable les menus
@@ -45,5 +44,4 @@ TODO:
 
 > Afficher touche des racxourcis (menu top, menu a gauche, et menu clic droit)
 
-> ordonner code
 
