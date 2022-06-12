@@ -15,6 +15,9 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class Login extends PopUp {
+    static String notLogged = "Non connecté";
+    static String logged = "Connecté en tant que ";
+
     public static boolean loggedIn = false;
     public static String account;
     public static int sizeX = 300;
@@ -37,14 +40,14 @@ public class Login extends PopUp {
                 erreur.setTextFill(Color.RED);
             } else {
                 Login.account = idTf.getText();
-                parent.updateSession();
+                updateSession(parent);
                 stage.close();
             }
         }
     }
 
     public void start(Stage stage) {
-        stage.setOnCloseRequest(e -> parent.updateSession());
+        stage.setOnCloseRequest(e -> updateSession(parent));
         VBox root = new VBox();
         stage.setTitle("Connexion");
         Scene scene = new Scene(root, sizeX, sizeY);
@@ -69,5 +72,20 @@ public class Login extends PopUp {
         root.requestFocus();
 
         stage.show();
+    }
+
+    public static void updateSession(Interface iface) {
+        if (Login.loggedIn) {
+            iface.sessionBt.setText(logged + Login.account);
+            iface.login.setDisable(true);
+            iface.setProfilPhoto("file:res/img/root.jpg");
+            iface.cbSession.setPromptText(Login.account);
+        } else {
+            iface.sessionBt.setText(notLogged);
+            iface.login.setDisable(false);
+            iface.setProfilPhoto();
+            iface.cbSession.setPromptText(notLogged);
+        }        
+        iface.logout.setDisable(!iface.login.isDisable());
     }
 }

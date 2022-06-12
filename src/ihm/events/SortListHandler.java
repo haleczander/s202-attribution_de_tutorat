@@ -33,7 +33,7 @@ public class SortListHandler implements EventHandler<ActionEvent> {
     public void handle(ActionEvent e) {
         boolean reverse = ((Button) e.getTarget()).getText().equals("▲");
 
-        if (iface.dpt.currentTutoring.affectations.size() == 0){
+        if (iface.dpt.tutoring.affectations.size() == 0){
             firstSorting(reverse);
         }
         else {
@@ -45,14 +45,14 @@ public class SortListHandler implements EventHandler<ActionEvent> {
     }
 
     private void affectationSorting(boolean reverse){
-        Collections.sort(iface.dpt.currentTutoring.affectations, new AffectationComparator(iface, getComparator(iface, filter)));
+        Collections.sort(iface.dpt.tutoring.affectations, new AffectationComparator(iface, getComparator(iface, filter)));
         if (reverse) {
-            Collections.reverse(iface.dpt.currentTutoring.affectations);
+            Collections.reverse(iface.dpt.tutoring.affectations);
         }
     }
 
     private void firstSorting(boolean reverse){
-        List<? extends Student> list = (iface.filterTutored) ? iface.dpt.currentTutoring.getTutored() : iface.dpt.currentTutoring.getTutors();
+        List<? extends Student> list = (iface.filterTutored) ? iface.dpt.tutoring.getTutored() : iface.dpt.tutoring.getTutors();
         list.sort(SortListHandler.getComparator(iface, filter));
         if (reverse){
             Collections.reverse(list);
@@ -64,7 +64,7 @@ public class SortListHandler implements EventHandler<ActionEvent> {
         switch (str) {
             case "nom" -> new StudentSurnameComparator();
             case "pre" -> new StudentForenameComparator();
-            case "avg" -> new StudentAverageComparator(iface.dpt.currentTutoring.getResource());
+            case "avg" -> new StudentAverageComparator(iface.dpt.tutoring.getResource());
             case "abs" -> new StudentAbsencesComparator();
             case "mot" -> new StudentMotivationComparator();           
             default -> null;

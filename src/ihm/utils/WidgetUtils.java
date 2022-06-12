@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
@@ -75,5 +76,16 @@ public class WidgetUtils {
     public static String getRgb(Color color){
         return "rgba("+color.getRed()+","+color.getGreen()+","+color.getBlue()+","+color.getOpacity()+")";
     }
+
+
+
+    public static HBox nodeSpaceNode(Node n1, Node n2){
+        return new HBox(n1, spacer(), n2);
+    }
+
+    public static HBox nodeSpaceNode(String string, Node n2){
+        return new HBox(new Label(string), spacer(), n2);
+    }
+
 
 }

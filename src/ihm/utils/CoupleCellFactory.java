@@ -36,19 +36,19 @@ public class CoupleCellFactory implements Callback<ListView<Couple>, ListCell<Co
         public void updateItem(Couple item, boolean empty) {
             super.updateItem(item, empty);
 
-            Canvas canvas = new Canvas(iface.couples.getWidth() - 10, TutoringUtils.LIST_CELL_HEIGHT);
+            Canvas canvas = new Canvas(iface.couplesView.getWidth() - 10, TutoringUtils.LIST_CELL_HEIGHT);
             GraphicsContext gc = canvas.getGraphicsContext2D();
             setGraphic(canvas);
 
             if (item != null) {
-                if (iface.dpt.currentTutoring.getForcedCouples().contains(item)) {
+                if (iface.dpt.tutoring.getForcedCouples().contains(item)) {
                     gc.setStroke(Color.CYAN);
-                } else if (iface.dpt.currentTutoring.getForbiddenCouples().contains(item)) {
+                } else if (iface.dpt.tutoring.getForbiddenCouples().contains(item)) {
                     gc.setStroke(Color.RED);
                 } else {
                     gc.setStroke(Color.BLACK);
                 }
-                gc.strokeLine(5, 5+TutoringUtils.LIST_CELL_HEIGHT / 2, iface.couples.getWidth() - 10,
+                gc.strokeLine(5, 5+TutoringUtils.LIST_CELL_HEIGHT / 2, iface.couplesView.getWidth() - 10,
                         5+TutoringUtils.LIST_CELL_HEIGHT / 2);
             }
             else {

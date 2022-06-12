@@ -94,15 +94,15 @@ public class AddStudent extends PopUp {
             alert.headerTextProperty().set("");
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.YES) {
-                selectedStudent.addGrade(parent.dpt.currentTutoring.getResource(), Student.getDefaultGrade());
-                parent.dpt.currentTutoring.addStudent(selectedStudent);
-                parent.dpt.currentTutoring.removeStudent(toRemove);
+                selectedStudent.addGrade(parent.dpt.tutoring.getResource(), Student.getDefaultGrade());
+                parent.dpt.tutoring.addStudent(selectedStudent);
+                parent.dpt.tutoring.removeStudent(toRemove);
                 if (toReaffect != null) {
-                    parent.dpt.currentTutoring.addForcedAssignments(toReaffect, (Tutor) selectedStudent);
+                    parent.dpt.tutoring.addForcedAssignments(toReaffect, (Tutor) selectedStudent);
                 }
-                parent.dpt.currentTutoring.getWaitingList().remove(toReaffect);
-                parent.dpt.currentTutoring.getWaitingList().remove(selectedStudent);
-                parent.dpt.currentTutoring.affectations.add(new Couple(toReaffect, (Tutor)selectedStudent));
+                parent.dpt.tutoring.getWaitingList().remove(toReaffect);
+                parent.dpt.tutoring.getWaitingList().remove(selectedStudent);
+                parent.dpt.tutoring.affectations.add(new Couple(toReaffect, (Tutor)selectedStudent));
             }
         }
 
@@ -113,8 +113,8 @@ public class AddStudent extends PopUp {
             alert.headerTextProperty().set("");
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.YES) {
-                selectedStudent.addGrade(parent.dpt.currentTutoring.getResource(), Student.getDefaultGrade());
-                parent.dpt.currentTutoring.addStudent(selectedStudent);
+                selectedStudent.addGrade(parent.dpt.tutoring.getResource(), Student.getDefaultGrade());
+                parent.dpt.tutoring.addStudent(selectedStudent);
             }
         }
 
@@ -174,13 +174,13 @@ public class AddStudent extends PopUp {
 
             if (niveauInt == 1) {
                 Tutored student = new Tutored(prenomString + " " + nomString, absencesInt, motivationValue.getAbbr());
-                student.addGrade(parent.dpt.currentTutoring.getResource(), moyenneDouble);
-                parent.dpt.currentTutoring.addStudent(student);
+                student.addGrade(parent.dpt.tutoring.getResource(), moyenneDouble);
+                parent.dpt.tutoring.addStudent(student);
             } else {
                 Tutor student = new Tutor(prenomString + " " + nomString, niveauInt, absencesInt,
                         motivationValue.getAbbr());
-                student.addGrade(parent.dpt.currentTutoring.getResource(), moyenneDouble);
-                parent.dpt.currentTutoring.addStudent(student);
+                student.addGrade(parent.dpt.tutoring.getResource(), moyenneDouble);
+                parent.dpt.tutoring.addStudent(student);
             }
         }
     }
@@ -232,18 +232,18 @@ public class AddStudent extends PopUp {
         List<Couple> containedIn;
 
         if (parent.affectationInterdite) {
-            containedIn = Couples.containedIn(parent.dpt.currentTutoring.getForbiddenCouples(), parent.selectedStudent);
+            containedIn = Couples.containedIn(parent.dpt.tutoring.getForbiddenCouples(), parent.selectedStudent);
         } else {
-            containedIn = Couples.containedIn(parent.dpt.currentTutoring.getForcedCouples(), parent.selectedStudent);
+            containedIn = Couples.containedIn(parent.dpt.tutoring.getForcedCouples(), parent.selectedStudent);
         }
 
         if (parent.selectedStudent.isTutored()) {
-            students = new ArrayList<>(parent.dpt.currentTutoring.getTutors());
+            students = new ArrayList<>(parent.dpt.tutoring.getTutors());
             students.removeAll(Couples.getTutors(containedIn));
             tutoredCb.setSelected(false);
 
         } else {
-            students = new ArrayList<>(parent.dpt.currentTutoring.getTutored());
+            students = new ArrayList<>(parent.dpt.tutoring.getTutored());
             students.removeAll(Couples.getTutored(containedIn));
             tutorCb.setSelected(false);
         }
@@ -266,13 +266,13 @@ public class AddStudent extends PopUp {
         //         students.add(student);
         //     }
         // }
-        students.removeAll(parent.dpt.currentTutoring.getTutors());
+        students.removeAll(parent.dpt.tutoring.getTutors());
         listCb.setDisable(true);
-        List<Couple> containedIn = Couples.containedIn(parent.dpt.currentTutoring.affectations, toRemove);
+        List<Couple> containedIn = Couples.containedIn(parent.dpt.tutoring.affectations, toRemove);
         if (containedIn.size()>0){
             toReaffect = containedIn.get(0).getTutored();
             students.removeAll(Couples
-                    .getTutors(Couples.containedIn(parent.dpt.currentTutoring.getForbiddenCouples(), toReaffect)));
+                    .getTutors(Couples.containedIn(parent.dpt.tutoring.getForbiddenCouples(), toReaffect)));
         }
         start(stage);
         tutorCb.setDisable(true);
@@ -288,8 +288,8 @@ public class AddStudent extends PopUp {
         super(parent);
 
         students = new ArrayList<>(parent.dpt.getStudents());
-        students.removeAll(parent.dpt.currentTutoring.getTutored());
-        students.removeAll(parent.dpt.currentTutoring.getTutors());
+        students.removeAll(parent.dpt.tutoring.getTutored());
+        students.removeAll(parent.dpt.tutoring.getTutors());
         stage.setTitle("Ajouter un étudiant");
 
         start(stage);

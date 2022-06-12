@@ -8,7 +8,7 @@ public class AffectationGlimpseManager {
 
     public AffectationGlimpseManager(Interface iface) {
         this.iface = iface;
-        if (iface.dpt.currentTutoring != null){
+        if (iface.dpt.tutoring != null){
             new AffectationGlimpse(iface);
         }
         else {

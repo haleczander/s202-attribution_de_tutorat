@@ -17,7 +17,7 @@ import oop.Tutored;
 public class Events {
 
     public static void RemoveStudentHandler(Interface iface) {
-        if (iface.dpt.currentTutoring == null) {
+        if (iface.dpt.tutoring == null) {
             return;
         }
         if (iface.selectedStudent != null) {
@@ -28,9 +28,9 @@ public class Events {
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.YES) {
                 if (!iface.selectedStudent.isTutored()) {
-                    iface.dpt.currentTutoring.removeStudent((Tutor) iface.selectedStudent);
+                    iface.dpt.tutoring.removeStudent((Tutor) iface.selectedStudent);
                 } else {
-                    iface.dpt.currentTutoring.removeStudent((Tutored) iface.selectedStudent);
+                    iface.dpt.tutoring.removeStudent((Tutored) iface.selectedStudent);
 
                 }
                 iface.selectedStudent = null;
@@ -40,24 +40,24 @@ public class Events {
     }
 
     public static void AddForcedAffectationHandler(Interface iface, boolean interdite){
-        if (iface.dpt.currentTutoring == null || iface.selectedStudent == null) {
+        if (iface.dpt.tutoring == null || iface.selectedStudent == null) {
             return;
         }
         new AddStudent(iface, interdite);
     }
 
     public static void AddStudentHandler(Interface iface) {
-        if (iface.dpt.currentTutoring == null) {
+        if (iface.dpt.tutoring == null) {
             return;
         }
         new AddStudent(iface);
     }
 
     public static void AffectationHandler(Interface iface) {
-        if (iface.dpt.currentTutoring == null) {
+        if (iface.dpt.tutoring == null) {
             return;
         }
-        iface.dpt.currentTutoring.affectations();
+        iface.dpt.tutoring.affectations();
         TutoringUtils.updateLists(iface);
 
     }
@@ -88,9 +88,9 @@ public class Events {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.YES) {
             if (interdite) {
-                iface.dpt.currentTutoring.addForbiddenAssignments(tutored, tutor);
+                iface.dpt.tutoring.addForbiddenAssignments(tutored, tutor);
             } else {
-                iface.dpt.currentTutoring.addForcedAssignments(tutored, tutor);
+                iface.dpt.tutoring.addForcedAssignments(tutored, tutor);
             }
         }
     }
@@ -107,7 +107,7 @@ public class Events {
             if (result.get() == ButtonType.YES) {
                 Login.loggedIn = false;
                 Login.account = null;
-                iface.updateSession();
+                Login.updateSession(iface);
             }
         }
     }

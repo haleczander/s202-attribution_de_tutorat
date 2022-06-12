@@ -3,9 +3,6 @@ package ihm.utils;
 import graphs.Couple;
 import graphs.Tutoring;
 import ihm.Interface;
-import ihm.events.TutoringSelectorListener;
-import javafx.geometry.Pos;
-import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import oop.Resource;
 import oop.Student;
@@ -16,32 +13,32 @@ public class TutoringUtils {
 
 
     public static void updateLists(Interface iface) {
-        iface.tutors.getItems().clear();
-        iface.tutored.getItems().clear();
-        iface.couples.getItems().clear();
-        if (iface.dpt.currentTutoring.affectations.size() ==0 ){
+        iface.tutorsView.getItems().clear();
+        iface.tutoredView.getItems().clear();
+        iface.couplesView.getItems().clear();
+        if (iface.dpt.tutoring.affectations.size() ==0 ){
             iface.scrollBarOne.valueProperty().unbindBidirectional(iface.scrollBarTwo.valueProperty());
             iface.scrollBarOne.valueProperty().unbindBidirectional(iface.scrollBarThree.valueProperty());
 
-            iface.tutors.getItems().addAll(iface.dpt.currentTutoring.getTutors()); 
-            iface.tutored.getItems().addAll(iface.dpt.currentTutoring.getTutored());
+            iface.tutorsView.getItems().addAll(iface.dpt.tutoring.getTutors()); 
+            iface.tutoredView.getItems().addAll(iface.dpt.tutoring.getTutored());
         }
         else {
             iface.scrollBarOne.valueProperty().bindBidirectional(iface.scrollBarTwo.valueProperty());
             iface.scrollBarOne.valueProperty().bindBidirectional(iface.scrollBarThree.valueProperty());
-            for (Couple couple : iface.dpt.currentTutoring.affectations){
-                iface.tutored.getItems().add(couple.getTutored());
-                iface.tutors.getItems().add(couple.getTutor());
-                iface.couples.getItems().add(couple);
+            for (Couple couple : iface.dpt.tutoring.affectations){
+                iface.tutoredView.getItems().add(couple.getTutored());
+                iface.tutorsView.getItems().add(couple.getTutor());
+                iface.couplesView.getItems().add(couple);
             }
-            for (Student student : iface.dpt.currentTutoring.getWaitingList()){
+            for (Student student : iface.dpt.tutoring.getWaitingList()){
                 if (student.isTutored()){
-                    iface.tutored.getItems().add(student);
-                    iface.tutors.getItems().add(null);
+                    iface.tutoredView.getItems().add(student);
+                    iface.tutorsView.getItems().add(null);
                 }
                 else {
-                    iface.tutors.getItems().add(student);
-                    iface.tutored.getItems().add(null);
+                    iface.tutorsView.getItems().add(student);
+                    iface.tutoredView.getItems().add(null);
                 }
             }
             
@@ -50,23 +47,11 @@ public class TutoringUtils {
         updateTutoringInfos(iface);
     }
 
-    public static HBox initMatieres(Interface iface) {
-        HBox matieres = new HBox();
-        matieres.setAlignment(Pos.CENTER_LEFT);
-        iface.cbMatieres.setPromptText("Choisir une matière");
-        iface.cbMatieres.setMaxWidth(150);
-        iface.cbMatieres.getSelectionModel().selectedItemProperty().addListener(new TutoringSelectorListener(iface));
-        for (Resource resource : iface.dpt.getTutorings().keySet()) {
-            iface.cbMatieres.getItems().add(resource);
-        }
 
-        matieres.getChildren().addAll(iface.cbMatieres);
-        return matieres;
-    }
 
     public static void updateTutoringInfos(Interface iface){
-        if (iface.dpt.currentTutoring == null){
-            iface.tutoringTeacherLb.setText(null); 
+        if (iface.dpt.tutoring == null){
+            // iface.tutoringTeacherLb.setText(null); 
             iface.tutoringAffectedLb.setText(null); 
             iface.tutoringForcedLb.setText(null); 
             iface.tutoringForbiddenLb.setText(null); 
@@ -76,8 +61,7 @@ public class TutoringUtils {
 
         }
         else {
-            Tutoring tut = iface.dpt.currentTutoring;
-            iface.tutoringTeacherLb.setText(tut.getTeacher().toString());
+            Tutoring tut = iface.dpt.tutoring;
             int ratio = (int) (100.00*( (double)tut.affectations.size() / tut.getTutored().size()));
             iface.tutoringAffectedLb.setText(ratio + "%");
             iface.tutoringAffectedLb.setTextFill( ratio == 100 ? Color.GREEN : Color.BLACK);
@@ -100,7 +84,7 @@ public class TutoringUtils {
     }
 
     public static String getStudentLabel(Student item, Interface iface) {
-        Resource resource=iface.dpt.currentTutoring.getResource();
+        Resource resource=iface.dpt.tutoring.getResource();
         return 
         item.getName() + "\t(" + (item.isTutored()? "Tutoré" : ("Tuteur" + (((Tutor)item).isDuplicate() ? " dupliqué" : ""))) + ")"
         + " \n" + 

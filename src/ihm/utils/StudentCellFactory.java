@@ -50,8 +50,8 @@ public class StudentCellFactory implements Callback<ListView<Student>,ListCell<S
                     setTooltip(new Tooltip(TutoringUtils.getStudentLabel(item, iface)));
                     getTooltip().setStyle("-fx-font-size : 15;");
 
-                    if (item.isTutored() &&  iface.dpt.currentTutoring.affectations.size()>0) {
-                        if (Couples.containsStudent(iface.dpt.currentTutoring.affectations, item)){
+                    if (item.isTutored() &&  iface.dpt.tutoring.affectations.size()>0) {
+                        if (Couples.containsStudent(iface.dpt.tutoring.affectations, item)){
                             setTextFill(Color.GREEN);
                         }
                         else {
@@ -75,7 +75,7 @@ public class StudentCellFactory implements Callback<ListView<Student>,ListCell<S
     }
 
     static boolean cursorContained(MouseEvent e, Interface iface){
-        return cursorContained(e, iface.tutored) || cursorContained(e, iface.tutors);
+        return cursorContained(e, iface.tutoredView) || cursorContained(e, iface.tutorsView);
     }
 
     static boolean cursorContained(MouseEvent e, ListView<Student> list){

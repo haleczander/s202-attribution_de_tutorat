@@ -1,10 +1,8 @@
 package ihm.popup;
 
 import java.util.Collection;
-import java.util.Optional;
 
 import graphs.Couple;
-import graphs.Tutoring;
 import ihm.Interface;
 import ihm.utils.TutoringUtils;
 import javafx.beans.binding.Bindings;
@@ -18,10 +16,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TabPane.TabClosingPolicy;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import oop.Tutor;
 
 public class AffectationGlimpse extends PopUp {
     Tab pairsTab;
@@ -30,6 +26,10 @@ public class AffectationGlimpse extends PopUp {
 
     TabPane root;
 
+    ListView<Couple> pairsView;
+    ListView<Couple> forcedView;
+    ListView<Couple> forbiddenView;
+
     public AffectationGlimpse(Interface parent) {
         super(parent);
         start(stage);
@@ -37,9 +37,9 @@ public class AffectationGlimpse extends PopUp {
 
     @Override
     public void start(Stage stage) {
-        pairsTab = newTab("Calculées", parent.dpt.currentTutoring.affectations);
-        forcedTab = newTab("Forcées", parent.dpt.currentTutoring.getForcedCouples());
-        forbiddenTab = newTab("Interdites", parent.dpt.currentTutoring.getForbiddenCouples());
+        pairsTab = newTab("Calculées", parent.dpt.tutoring.affectations);
+        forcedTab = newTab("Forcées", parent.dpt.tutoring.getForcedCouples());
+        forbiddenTab = newTab("Interdites", parent.dpt.tutoring.getForbiddenCouples());
         root = new TabPane(pairsTab, forcedTab, forbiddenTab);
 
         root.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
@@ -50,21 +50,28 @@ public class AffectationGlimpse extends PopUp {
 
     }
 
-    Tab newTab(String titre, Collection<Couple> liste) {
+    Tab newTab(String titre, Collection<Couple> list) {
         Tab retour = new Tab(titre);
 
         ListView<Couple> view = new ListView<>();
-        updateList(view, liste);
-
+        updateList(view, list);
 
         Button removeBt = new Button("Supprimer");
         removeBt.disableProperty().bind(Bindings.size(view.getSelectionModel().getSelectedItems()).isEqualTo(0));
-        removeBt.setOnAction(e -> predefinedAction(retour, view, liste));
+        removeBt.setOnAction(e -> predefinedAction(retour, view, list));
 
         VBox root = new VBox(view, removeBt);
         root.setAlignment(Pos.CENTER);
         root.setSpacing(10);
         root.setPadding(parent.PAD_MIN);
+
+        if (titre.equals("Calculées")) {
+            pairsView = view;
+        } else if (titre.equals("Forcées")) {
+            forcedView = view;
+        } else if (titre.equals("Interdites")) {
+            forbiddenView = view;
+        }
 
         retour.setContent(root);
 
@@ -72,12 +79,10 @@ public class AffectationGlimpse extends PopUp {
     }
 
     void updateLists() {
-        updateList(((ListView<Couple>) (((VBox) pairsTab.getContent()).getChildren().get(0))),
-                parent.dpt.currentTutoring.affectations);
-        updateList(((ListView<Couple>) (((VBox) forcedTab.getContent()).getChildren().get(0))),
-                parent.dpt.currentTutoring.getForcedCouples());
-        updateList(((ListView<Couple>) (((VBox) forbiddenTab.getContent()).getChildren().get(0))),
-                parent.dpt.currentTutoring.getForbiddenCouples());
+
+        updateList(pairsView, parent.dpt.tutoring.affectations);
+        updateList(forcedView, parent.dpt.tutoring.getForcedCouples());
+        updateList(forbiddenView, parent.dpt.tutoring.getForbiddenCouples());
     }
 
     void updateList(ListView<Couple> view, Collection<Couple> liste) {
@@ -92,20 +97,20 @@ public class AffectationGlimpse extends PopUp {
         if (tab == pairsTab) {
             alert.setContentText("Vous vous apprêtez à interdire cette  affectation. Êtes-vous certain(e)?");
             if (alert.showAndWait().get() == ButtonType.YES) {
-                parent.dpt.currentTutoring.addForbiddenAssignments(view.getSelectionModel().getSelectedItem());
+                parent.dpt.tutoring.addForbiddenAssignments(view.getSelectionModel().getSelectedItem());
             }
-                
+
         } else if (tab == forcedTab) {
             alert.setContentText("Vous vous apprêtez à ne plus forcer cette affectation. Êtes-vous certain(e)?");
-            if (alert.showAndWait().get() == ButtonType.YES){
-                parent.dpt.currentTutoring.getForcedCouples().remove(view.getSelectionModel().getSelectedItem());
+            if (alert.showAndWait().get() == ButtonType.YES) {
+                parent.dpt.tutoring.getForcedCouples().remove(view.getSelectionModel().getSelectedItem());
             }
         } else if (tab == forbiddenTab) {
             alert.setContentText("Vous vous apprêtez à ne plus interdire cette affectation. Êtes-vous certain(e)?");
-            if (alert.showAndWait().get() == ButtonType.YES){
-                parent.dpt.currentTutoring.getForbiddenCouples().remove(view.getSelectionModel().getSelectedItem());
+            if (alert.showAndWait().get() == ButtonType.YES) {
+                parent.dpt.tutoring.getForbiddenCouples().remove(view.getSelectionModel().getSelectedItem());
             }
-            
+
         }
         updateLists();
         TutoringUtils.updateLists(parent);
