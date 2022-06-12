@@ -27,13 +27,14 @@ public class CoupleCellFactory implements Callback<ListView<Couple>, ListCell<Co
 
         public CoupleCellStyler(Interface iface) {
             this.iface = iface;
+            getStyleClass().clear();
+            setBackground(null);
+            setPrefHeight(TutoringUtils.LIST_CELL_HEIGHT);
+            setPadding(Insets.EMPTY);
         }
 
         public void updateItem(Couple item, boolean empty) {
             super.updateItem(item, empty);
-            setBackground(null);
-            setPrefHeight(TutoringUtils.LIST_CELL_HEIGHT);
-            setPadding(Insets.EMPTY);
 
             Canvas canvas = new Canvas(iface.couples.getWidth() - 10, TutoringUtils.LIST_CELL_HEIGHT);
             GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -47,11 +48,10 @@ public class CoupleCellFactory implements Callback<ListView<Couple>, ListCell<Co
                 } else {
                     gc.setStroke(Color.BLACK);
                 }
-                gc.strokeLine(5, TutoringUtils.LIST_CELL_HEIGHT / 2, iface.couples.getWidth() - 10,
-                        TutoringUtils.LIST_CELL_HEIGHT / 2);
+                gc.strokeLine(5, 5+TutoringUtils.LIST_CELL_HEIGHT / 2, iface.couples.getWidth() - 10,
+                        5+TutoringUtils.LIST_CELL_HEIGHT / 2);
             }
             else {
-                getStyleClass().clear();
             }
         }
 

@@ -13,6 +13,7 @@ import oop.Resource;
 import oop.Student;
 import oop.Teacher;
 import oop.Tutor;
+import oop.TutorDuplicate;
 import oop.Tutored;
 import utility.Couples;
 import utility.Graphs;
@@ -173,7 +174,11 @@ public class Tutoring {
      * @throws IllegalArgumentException if this duo has already been put in the map.
      */
     public boolean addForcedAssignments(Tutored tutored, Tutor tutor) {
-        return this.forcedCouples.add(new Couple(tutored, tutor));
+        return addForcedAssignments(new Couple(tutored, tutor));
+    }
+
+    public boolean addForcedAssignments(Couple couple){
+        return this.forcedCouples.add(couple);
     }
 
     public boolean addForcedAssignments(String tutored, String tutor) {
@@ -189,8 +194,18 @@ public class Tutoring {
      * 
      * @throws IllegalArgumentException if this duo has already been put in the map.
      */
+
+
     public boolean addForbiddenAssignments(Tutored tutored, Tutor tutor) {
-        return this.forbiddenCouples.add(new Couple(tutored, tutor));
+        return addForbiddenAssignments(new Couple(tutored, tutor));
+    }
+
+    public boolean addForbiddenAssignments(Tutored tutored, TutorDuplicate tutorDuplicate) {
+        return addForbiddenAssignments(new Couple(tutored, tutorDuplicate.getTutor()));
+    }
+
+    public boolean addForbiddenAssignments(Couple couple){
+        return this.forbiddenCouples.add(couple);
     }
 
     public boolean addForbiddenAssignments(String tutored, String tutor) {

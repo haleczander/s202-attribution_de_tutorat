@@ -240,13 +240,17 @@ public class AddStudent extends PopUp {
         if (parent.selectedStudent.isTutored()) {
             students = new ArrayList<>(parent.dpt.currentTutoring.getTutors());
             students.removeAll(Couples.getTutors(containedIn));
+            tutoredCb.setSelected(false);
 
         } else {
             students = new ArrayList<>(parent.dpt.currentTutoring.getTutored());
             students.removeAll(Couples.getTutored(containedIn));
+            tutorCb.setSelected(false);
         }
 
         start(stage);
+        tutorCb.setDisable(true);
+        tutoredCb.setDisable(true);
         stage.setTitle((interdite ? "Interdire" : "Forcer") + " une affectation");
         root.getTabs().remove(0);
     }
@@ -256,11 +260,12 @@ public class AddStudent extends PopUp {
         replacing = true;
         this.toRemove = toRemove;
         students = new ArrayList<>();
-        for (Student student : parent.dpt.getStudents()) {
-            if (!student.isTutored()) {
-                students.add(student);
-            }
-        }
+        students.addAll(parent.dpt.getStudents());
+        // for (Student student : parent.dpt.getStudents()) {
+        //     if (!student.isTutored()) {
+        //         students.add(student);
+        //     }
+        // }
         students.removeAll(parent.dpt.currentTutoring.getTutors());
         listCb.setDisable(true);
         List<Couple> containedIn = Couples.containedIn(parent.dpt.currentTutoring.affectations, toRemove);
@@ -270,8 +275,12 @@ public class AddStudent extends PopUp {
                     .getTutors(Couples.containedIn(parent.dpt.currentTutoring.getForbiddenCouples(), toReaffect)));
         }
         start(stage);
+        tutorCb.setDisable(true);
+        tutoredCb.setDisable(true);
+        tutoredCb.setSelected(false);
         stage.setTitle("Remplacer " + toRemove.getName());
         root.getTabs().remove(0);
+
 
     }
 
