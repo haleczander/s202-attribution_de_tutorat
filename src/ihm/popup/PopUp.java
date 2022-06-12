@@ -2,11 +2,13 @@ package ihm.popup;
 
 import ihm.Interface;
 import javafx.application.Application;
+import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public abstract class PopUp extends Application {
     Stage stage;
+    public Scene scene;
     Interface parent;
     int sizeX;
     int sizeY;

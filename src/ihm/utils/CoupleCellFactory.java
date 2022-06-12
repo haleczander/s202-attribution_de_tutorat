@@ -36,7 +36,8 @@ public class CoupleCellFactory implements Callback<ListView<Couple>, ListCell<Co
         public void updateItem(Couple item, boolean empty) {
             super.updateItem(item, empty);
 
-            Canvas canvas = new Canvas(iface.couplesView.getWidth() - 10, TutoringUtils.LIST_CELL_HEIGHT);
+            Canvas canvas = new Canvas(iface.couplesView.getWidth() -10, TutoringUtils.LIST_CELL_HEIGHT);
+            canvas.widthProperty().bind(iface.couplesView.widthProperty());
             GraphicsContext gc = canvas.getGraphicsContext2D();
             setGraphic(canvas);
 
@@ -48,7 +49,7 @@ public class CoupleCellFactory implements Callback<ListView<Couple>, ListCell<Co
                 } else {
                     gc.setStroke(Color.BLACK);
                 }
-                gc.strokeLine(5, 5+TutoringUtils.LIST_CELL_HEIGHT / 2, iface.couplesView.getWidth() - 10,
+                gc.strokeLine(5, 5+TutoringUtils.LIST_CELL_HEIGHT / 2, 100,
                         5+TutoringUtils.LIST_CELL_HEIGHT / 2);
             }
             else {

@@ -54,6 +54,8 @@ import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -146,8 +148,7 @@ public class Interface extends Application {
     public boolean affectationInterdite;
 
     // Padding
-    public final Insets PAD_MIN = new Insets(5);
-    final Insets PAD_BTN = new Insets(5, 9, 5, 9);
+    public final Insets PAD_MIN = new Insets(10);
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -174,18 +175,31 @@ public class Interface extends Application {
         root.setCenter(initCenter());
         root.setBottom(initBottom());
         root.setLeft(initLeft());
+
+        stage.setMinHeight(592);
+        stage.setMinWidth(540);
     }
 
     // Init Border Pane
     VBox initCenter() {
-        HBox titres = new HBox(
-                WidgetUtils.spacer(200),
-                new HBox(new Label("Tutorés ("), tutoringTutoredNbLb, new Label(")")),
-                WidgetUtils.spacer(),
-                new HBox(new Label("Tuteurs ("), tutoringTutorNbLb, new Label(")")),
-                WidgetUtils.spacer(200));
 
+        HBox tutoredBox = new HBox(new Label("Tutorés ("), tutoringTutoredNbLb, new Label(")"));
+        tutoredBox.setAlignment(Pos.CENTER);
+        Region spacer = new Region();
+        HBox tutorBox = new HBox(new Label("Tuteurs ("), tutoringTutorNbLb, new Label(")"));
+        tutorBox.setAlignment(Pos.CENTER);
+
+        HBox titres = new HBox(
+                tutoredBox,
+                spacer,
+                tutorBox);
+        titres.setAlignment(Pos.CENTER);
         HBox listViews = initListViews();
+
+        
+        tutorBox.prefWidthProperty().bind(tutorsView.widthProperty());
+        tutoredBox.prefWidthProperty().bind(tutoredView.widthProperty());
+        spacer.prefWidthProperty().bind(couplesView.widthProperty());
 
         VBox retour = new VBox(titres, listViews);
         retour.setSpacing(10);
@@ -217,24 +231,29 @@ public class Interface extends Application {
     HBox initBottom() {
 
         ToggleGroup tGroup = new ToggleGroup();
+        ToggleButton candyMode = new ToggleButton("🍬");
         ToggleButton nightMode = new ToggleButton("🌙");
         ToggleButton dayMode = new ToggleButton("☀");
 
+        candyMode.setTooltip(new Tooltip("Passer en thème bonbon"));
         nightMode.setTooltip(new Tooltip("Passer en thème sombre"));
         dayMode.setTooltip(new Tooltip("Passer en thème jour"));
 
+        candyMode.setToggleGroup(tGroup);
         nightMode.setToggleGroup(tGroup);
         dayMode.setToggleGroup(tGroup);
         tGroup.selectToggle(dayMode);
 
-        nightMode.setOnAction(e -> DisplayUtils.setTheme(this, "black"));
-        dayMode.setOnAction(e -> DisplayUtils.setTheme(this, "#ececec"));
+        candyMode.setOnAction(e -> DisplayUtils.setTheme(scene, "pink"));
+        nightMode.setOnAction(e -> DisplayUtils.setTheme(scene, "black"));
+        dayMode.setOnAction(e -> DisplayUtils.setTheme(scene, "#ececec"));
 
         HBox retour = new HBox(
                 sessionBt,
                 WidgetUtils.spacer(),
                 nightMode,
-                dayMode);
+                dayMode,
+                candyMode);
 
         retour.setOnMouseClicked(e -> Events.AuthentificationHandler(this));
         retour.setPadding(PAD_MIN);
@@ -277,19 +296,17 @@ public class Interface extends Application {
 
         HBox retour = new HBox(
                 tutoredView,
-                WidgetUtils.spacer(50),
                 couplesView,
-                WidgetUtils.spacer(50),
                 tutorsView);
 
+        retour.setSpacing(10);
         // Tout le monde fait la hauteur max de vbox
         VBox.setVgrow(tutorsView, Priority.ALWAYS);
         VBox.setVgrow(tutoredView, Priority.ALWAYS);
         VBox.setVgrow(couplesView, Priority.ALWAYS);
 
-        couplesView.prefWidthProperty().bind(Bindings.divide(retour.prefWidthProperty(), 8));
+        couplesView.prefWidthProperty().bind(Bindings.divide(retour.widthProperty(), 6));
         couplesView.getStyleClass().clear();
-        couplesView.setMaxWidth(175);
 
         retour.setAlignment(Pos.CENTER);
 
@@ -459,16 +476,22 @@ public class Interface extends Application {
         ImageView logoImgView = new ImageView(new Image("file:res/img/logo.png"));
         logoImgView.setFitHeight(75);
         logoImgView.setPreserveRatio(true);
+        HBox logoWrapper = new HBox(logoImgView);
+        logoWrapper.setAlignment(Pos.CENTER);
 
-        HBox.setHgrow(logoImgView, Priority.ALWAYS);
+        HBox.setHgrow(logoWrapper, Priority.ALWAYS);
 
         HBox session = new HBox(
                 cbSession,
                 sessionPhoto);
+        
+        
 
         session.setAlignment(Pos.CENTER_RIGHT);
         session.setSpacing(10);
 
+        HBox matieresWRapper = new HBox(cbMatieres);
+        matieresWRapper.setAlignment(Pos.CENTER_LEFT);
         cbMatieres.setPromptText("Choisir une matière");
         cbMatieres.setMaxWidth(150);
         cbMatieres.getSelectionModel().selectedItemProperty().addListener(new TutoringSelectorListener(this));
@@ -477,13 +500,13 @@ public class Interface extends Application {
         }
 
         HBox retour = new HBox(
-                cbMatieres,
-                WidgetUtils.spacer(),
-                logoImgView,
-                WidgetUtils.spacer(),
+                matieresWRapper,
+                // WidgetUtils.spacer(),
+                logoWrapper,
+                // WidgetUtils.spacer(),
                 session);
 
-        cbMatieres.prefWidthProperty().bind(Bindings.divide(retour.widthProperty(), 4));
+        matieresWRapper.prefWidthProperty().bind(Bindings.divide(retour.widthProperty(), 3));
         session.prefWidthProperty().bind(Bindings.divide(retour.widthProperty(), 3));
 
         retour.setPadding(PAD_MIN);
@@ -649,7 +672,8 @@ public class Interface extends Application {
             consult);
 
         etudiantsControls.setPadding(PAD_MIN);
-        return new TitledPane("Etudiants", etudiantsControls);
+        TitledPane retour = new TitledPane("Etudiants", etudiantsControls);
+        return retour;
     }
 
     TitledPane listSortingControls() {
@@ -703,13 +727,15 @@ public class Interface extends Application {
             motiv);
         triControls.setSpacing(5);
 
-        VBox retour = new VBox(
+        VBox filter = new VBox(
             filterGroup, 
             WidgetUtils.filler(), 
             triControls);
 
-        retour.setPadding(PAD_MIN);
-        return new TitledPane("Trier par", retour);
+        filter.setPadding(PAD_MIN);
+        TitledPane retour = new TitledPane("Trier par", filter);        
+        retour.setExpanded(false);
+        return retour;
     }
 
 
@@ -750,6 +776,7 @@ public class Interface extends Application {
 
     void initDisplays(){        
         DisplayUtils.setScrollBars(this);
+        DisplayUtils.setTheme(scene);
     }
 
 

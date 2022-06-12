@@ -8,6 +8,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Callback;
 import oop.Student;
 import oop.Tutor;
@@ -42,6 +43,7 @@ public class StudentCellFactory implements Callback<ListView<Student>,ListCell<S
         public void updateItem(Student item, boolean empty) {
             super.updateItem(item, empty);
                 if (item != null) {
+                    setWidth(Double.MAX_VALUE);
                     setOnDragDetected(e -> {draggedStudent=item;});
                     setOnMouseReleased(e -> {if (!cursorContained(e, iface)) draggedStudent = null; });
                     setOnMouseEntered(e -> {if (draggedStudent != null) Events.DragNDropHandler(iface, item, e.getButton() == MouseButton.SECONDARY);});
@@ -53,6 +55,7 @@ public class StudentCellFactory implements Callback<ListView<Student>,ListCell<S
                     if (item.isTutored() &&  iface.dpt.tutoring.affectations.size()>0) {
                         if (Couples.containsStudent(iface.dpt.tutoring.affectations, item)){
                             setTextFill(Color.GREEN);
+                            setTextAlignment(TextAlignment.RIGHT);
                         }
                         else {
                             setTextFill(Color.RED);
