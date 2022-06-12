@@ -7,6 +7,7 @@ import java.util.Optional;
 import graphs.Couple;
 import ihm.Interface;
 import ihm.events.Events;
+import ihm.utils.DisplayUtils;
 import ihm.utils.StudentCellFactory;
 import ihm.utils.TutoringUtils;
 import ihm.utils.WidgetUtils;
@@ -25,7 +26,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.Tab;
@@ -245,11 +245,7 @@ public class StudentForm extends PopUp {
         this.toRemove = toRemove;
         students = new ArrayList<>();
         students.addAll(parent.dpt.getStudents());
-        // for (Student student : parent.dpt.getStudents()) {
-        //     if (!student.isTutored()) {
-        //         students.add(student);
-        //     }
-        // }
+
         students.removeAll(parent.dpt.tutoring.getTutors());
         listCb.setDisable(true);
         List<Couple> containedIn = Couples.containedIn(parent.dpt.tutoring.affectations, toRemove);
@@ -286,9 +282,10 @@ public class StudentForm extends PopUp {
         root.getTabs().addAll(fresh(), fromList());
         root.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 
-        Scene scene = new Scene(root, 400, 400);
+        scene = new Scene(root, 400, 400);
         stage.setScene(scene);
         stage.show();
+        DisplayUtils.setTheme(scene);
     }
 
     Tab fresh() {
@@ -395,6 +392,7 @@ public class StudentForm extends PopUp {
             WidgetUtils.labelInput("Motivation", motivation)
         );
         inputs.setSpacing(10);
+        inputs.setAlignment(Pos.CENTER);
 
         VBox root = new VBox(
             inputs,

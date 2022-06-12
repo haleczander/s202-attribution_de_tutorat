@@ -1,6 +1,7 @@
 package ihm.popup;
 
 import ihm.Interface;
+import ihm.utils.DisplayUtils;
 import ihm.utils.WidgetUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -30,6 +31,8 @@ public class Login extends PopUp {
     public Login(Interface parent) {
         super(parent);
         start(stage);
+        DisplayUtils.setTheme(scene);
+        
     }
 
     private class LoginChecker implements EventHandler<ActionEvent> {
@@ -50,7 +53,7 @@ public class Login extends PopUp {
         stage.setOnCloseRequest(e -> updateSession(parent));
         VBox root = new VBox();
         stage.setTitle("Connexion");
-        Scene scene = new Scene(root, sizeX, sizeY);
+        scene = new Scene(root, sizeX, sizeY);
         stage.setScene(scene);
         stage.setResizable(false);
 

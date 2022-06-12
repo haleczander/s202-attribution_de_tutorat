@@ -1,6 +1,7 @@
 package ihm.utils;
 
 import ihm.Interface;
+import ihm.events.AffectationGlimpseManager;
 import ihm.events.Events;
 import ihm.popup.StudentForm;
 import oop.Tutor;
@@ -21,6 +22,7 @@ public class Shortcuts {
                 case I -> Events.AddForcedAffectationHandler(iface, true);
                 case ESCAPE -> iface.close();
                 case R -> {if (!iface.selectedStudent.isTutored()) new StudentForm(iface, (Tutor)iface.selectedStudent);}
+                case V -> new AffectationGlimpseManager(iface);
                 default -> nothing();
             }
         });

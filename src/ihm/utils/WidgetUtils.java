@@ -14,7 +14,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 
 public class WidgetUtils {
     public static Region spacer(){
@@ -70,8 +69,8 @@ public class WidgetUtils {
         bt.setTooltip(new Tooltip(tooltip));
         bt.getTooltip().setStyle("-fx-font-size : 15;");
         bt.setStyle("-fx-font-size : " + (int) (1.5*15/n) + ";");
-        bt.setPadding(new Insets(0));
-        bt.setPrefSize((int) (25/n), (int) (20/n));
+        bt.setPadding(Insets.EMPTY);
+        bt.setPrefSize((int) (25/n), (int) (15/n));
         return bt;
     }
 
@@ -91,16 +90,15 @@ public class WidgetUtils {
 
     public static HBox labelInput(String label, Node node){
         HBox retour = new HBox(
-            spacer(50),
             new Label(label+" : "),
             spacer(),
-            node,
-            spacer(50)
+            node
         );
         if (node instanceof TextField) {
             ((TextField)node).setPromptText(label);
         } 
-        retour.setAlignment(Pos.CENTER_LEFT);
+        retour.setMaxWidth(300);
+        retour.setAlignment(Pos.CENTER);
         return retour;
         
     }
