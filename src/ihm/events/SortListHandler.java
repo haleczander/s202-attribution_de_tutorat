@@ -31,7 +31,13 @@ public class SortListHandler implements EventHandler<ActionEvent> {
     }
 
     public void handle(ActionEvent e) {
-        boolean reverse = ((Button) e.getTarget()).getText().equals("▲");
+        boolean reverse;
+        if (e.getTarget() instanceof Button) {
+            reverse = ((Button) e.getTarget()).getText().equals("▲");
+        }
+        else {
+            reverse = false;
+        } 
 
         if (iface.dpt.tutoring.affectations.size() == 0){
             firstSorting(reverse);

@@ -5,6 +5,8 @@ import ihm.utils.DisplayUtils;
 import ihm.utils.WidgetUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -22,7 +24,7 @@ public class Login extends PopUp {
     public static boolean loggedIn = false;
     public static String account;
     public static int sizeX = 300;
-    public static int sizeY = 100;
+    public static int sizeY = 125;
 
     PasswordField mdpTf = new PasswordField();
     TextField idTf = new TextField();
@@ -70,9 +72,11 @@ public class Login extends PopUp {
 
         Button btn = new Button("Se connecter");
         btn.setOnAction(new LoginChecker());
-        root.getChildren().addAll(erreur, id, mdp, btn);
+        root.getChildren().addAll(erreur, id, mdp, WidgetUtils.filler(20),btn);
 
         root.requestFocus();
+        root.setPadding(new Insets(10));
+        root.setAlignment(Pos.CENTER);
 
         stage.show();
     }

@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import graphs.Couple;
 import ihm.Interface;
+import ihm.utils.DisplayUtils;
 import ihm.utils.TutoringUtils;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
@@ -45,8 +46,10 @@ public class AffectationGlimpse extends PopUp {
         root.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 
         stage.setTitle("Visualiser les affectations");
-        stage.setScene(new Scene(root, 300, 300));
+        scene = new Scene(root, 300, 300);
+        stage.setScene(scene);
         stage.show();
+        DisplayUtils.setTheme(scene);
 
     }
 
